@@ -1,0 +1,574 @@
+[
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AdminController",
+    "Method": "BlockTutor",
+    "RelativePath": "api/admin/block-tutor/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AdminController",
+    "Method": "CreateTutor",
+    "RelativePath": "api/admin/create-tutor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.CreateTutorDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AdminController",
+    "Method": "DeleteTutor",
+    "RelativePath": "api/admin/delete-tutor/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AdminController",
+    "Method": "GetTutors",
+    "RelativePath": "api/admin/tutors",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AdminController",
+    "Method": "GetTutorById",
+    "RelativePath": "api/admin/tutors/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AdminController",
+    "Method": "UnblockTutor",
+    "RelativePath": "api/admin/unblock-tutor/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AdminController",
+    "Method": "UpdateTutor",
+    "RelativePath": "api/admin/update-tutor/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.UpdateTutorDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.LoginDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AuthController",
+    "Method": "RegisterStudent",
+    "RelativePath": "api/auth/student-register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.RegisterStudentDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AuthController",
+    "Method": "VerifyEmail",
+    "RelativePath": "api/auth/verify-email",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "token",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.AuthController",
+    "Method": "VerifyToken",
+    "RelativePath": "api/auth/verify-token",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.VerifyTokenDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorConnectAPI.Controllers.AvailabilityController",
+    "Method": "AddAvailability",
+    "RelativePath": "api/availability",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.AvailabilityDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorConnectAPI.Controllers.AvailabilityController",
+    "Method": "GetAvailability",
+    "RelativePath": "api/availability/tutor/{tutorId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorConnectAPI.Controllers.ModulesController",
+    "Method": "GetModules",
+    "RelativePath": "api/module",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorConnectAPI.Controllers.RatingController",
+    "Method": "RateTutor",
+    "RelativePath": "api/rating",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.RatingDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorConnectAPI.Controllers.RatingController",
+    "Method": "GetTutorRatings",
+    "RelativePath": "api/rating/tutor/{tutorId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.SessionsController",
+    "Method": "ApproveSession",
+    "RelativePath": "api/sessions/{sessionId}/approve",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.SessionsController",
+    "Method": "CompleteSession",
+    "RelativePath": "api/sessions/{sessionId}/complete",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "feedback",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.SessionsController",
+    "Method": "RejectSession",
+    "RelativePath": "api/sessions/{sessionId}/reject",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "reason",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.SessionsController",
+    "Method": "BookSession",
+    "RelativePath": "api/sessions/book",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.SessionBookingDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.SessionsController",
+    "Method": "GetStudentSessions",
+    "RelativePath": "api/sessions/student/{studentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.StudentDashboardController",
+    "Method": "BookSession",
+    "RelativePath": "api/student-dashboard/book-session",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.DTOs.SessionBookingDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.StudentDashboardController",
+    "Method": "GetStudentByUserId",
+    "RelativePath": "api/student-dashboard/by-user/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.StudentDashboardController",
+    "Method": "GetStudentSessions",
+    "RelativePath": "api/student-dashboard/sessions/{studentId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "studentId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.StudentDashboardController",
+    "Method": "BrowseTutors",
+    "RelativePath": "api/student-dashboard/tutors",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.StudentDashboardController",
+    "Method": "GetTutorAvailability",
+    "RelativePath": "api/student-dashboard/tutors/{tutorId}/availability",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "UpdateTutorBio",
+    "RelativePath": "api/tutor-dashboard/{tutorId}/bio",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "newBio",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "GetAssignedModules",
+    "RelativePath": "api/tutor-dashboard/{tutorId}/modules",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "GetTutorSessionSummary",
+    "RelativePath": "api/tutor-dashboard/{tutorId}/session-summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "GetUpcomingSessions",
+    "RelativePath": "api/tutor-dashboard/{tutorId}/sessions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "GetPastSessions",
+    "RelativePath": "api/tutor-dashboard/{tutorId}/sessions/past",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "ApproveSession",
+    "RelativePath": "api/tutor-dashboard/sessions/{sessionId}/approve",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "CompleteSession",
+    "RelativePath": "api/tutor-dashboard/sessions/{sessionId}/complete",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "TutorConnectAPI.Controllers.TutorDashboardController\u002BCompleteSessionDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "RejectSession",
+    "RelativePath": "api/tutor-dashboard/sessions/{sessionId}/reject",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "sessionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "reason",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorDashboardController",
+    "Method": "GetTutorByUserId",
+    "RelativePath": "api/tutor-dashboard/user/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

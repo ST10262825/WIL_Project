@@ -1,0 +1,6 @@
+@TutorConnectAPI_HostAddress = http://localhost:5063
+
+GET {{TutorConnectAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
