@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "U4wXyNWc2oSgSYY3EiBRIliRp8tNkUxvAtTaIVRZcoM=",
+  "Source": "TutorConnectAPI",
+  "BasePath": "_content/TutorConnectAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
