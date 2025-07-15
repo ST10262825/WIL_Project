@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\TutorConnect.WebApp.props" />
+</Project>

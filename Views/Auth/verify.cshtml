@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Verify Email";
+}
+
+<h2>Email Verification</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+@if (ViewBag.SuccessMessage != null)
+{
+    <div class="alert alert-success">@ViewBag.SuccessMessage</div>
+}
+
+<form method="post">
+    <input type="hidden" name="email" value="@ViewBag.Email" />
+    <div class="form-group">
+        <label>Enter Verification Token</label>
+        <input name="token" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-success mt-2">Verify Email</button>
+</form>
+
+<p>
+    Didn't receive a token? <a href="/Auth/ResendToken?email=@ViewBag.Email">Resend it</a>
+</p>

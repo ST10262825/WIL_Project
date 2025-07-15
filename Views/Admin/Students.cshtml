@@ -1,0 +1,19 @@
+﻿@model List<StudentDTO>
+<h2>All Students</h2>
+
+<table class="table">
+    <thead>
+        <tr><th>Name</th><th>Email</th><th>Course</th><th>Assigned Tutor</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+                <tr>
+                    <td>@s.Name</td>
+                  @*   <td>@s.Email</td> *@
+                    <td>@s.Course</td>
+                   @*  <td>@s.AssignedTutor?.Name ?? "Unassigned"</td> *@
+                </tr>
+        }
+    </tbody>
+</table>

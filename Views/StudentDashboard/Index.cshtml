@@ -1,0 +1,50 @@
+﻿@model List<TutorConnect.WebApp.Models.SessionViewModel>
+
+<h2>Your Upcoming Sessions</h2>
+
+@if (!Model.Any())
+{
+    <p>You have no sessions booked.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Tutor</th>
+                <th>Module</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var session in Model)
+            {
+                <tr>
+                    <td>@session.TutorName</td>
+                    <td>@session.ModuleName</td>
+                    <td>@session.StartTime.ToString("g")</td>
+                    <td>@session.EndTime.ToString("g")</td>
+                    <td>
+                        @switch (session.Status?.ToLower())
+                        {
+                            case "approved":
+                                <span class="text-success">Approved</span>
+                                break;
+                            case "rejected":
+                                <span class="text-danger">Rejected</span>
+                                break;
+                            case "pending":
+                            default:
+                                <span class="text-warning">Pending</span>
+                                break;
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a class="btn btn-primary" href="@Url.Action("BookSession", "StudentDashboard")">Book a New Session</a>

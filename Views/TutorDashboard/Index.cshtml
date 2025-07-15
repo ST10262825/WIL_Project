@@ -1,0 +1,60 @@
+﻿@model TutorConnect.WebApp.Models.TutorDashboardViewModel
+@{
+    ViewData["Title"] = "Tutor Dashboard";
+}
+
+<h2>Tutor Dashboard</h2>
+
+<h4>Session Summary</h4>
+<ul>
+    <li>Total: @Model.Summary.Total</li>
+    <li>Pending: @Model.Summary.Pending</li>
+    <li>Approved: @Model.Summary.Approved</li>
+    <li>Rejected: @Model.Summary.Rejected</li>
+</ul>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student</th>
+            <th>Module</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var session in Model.Sessions)
+        {
+            <tr>
+                <td>@session.StudentName</td>
+                <td>@session.ModuleName</td>
+                <td>@session.StartTime.ToString("g")</td>
+                <td>@session.EndTime.ToString("g")</td>
+                <td>@session.Status</td>
+                <td>
+                    @if (session.Status == "Pending")
+                    {
+                        <form asp-action="UpdateSessionStatus" method="post" style="display:inline;">
+                            <input type="hidden" name="sessionId" value="@session.Id" />
+                            <input type="hidden" name="approve" value="true" />
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+
+                        <form asp-action="UpdateSessionStatus" method="post" style="display:inline;">
+                            <input type="hidden" name="sessionId" value="@session.Id" />
+                            <input type="hidden" name="approve" value="false" />
+                            <input type="text" name="rejectionReason" placeholder="Reason" required class="form-control d-inline-block" style="width: 150px;" />
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span>-</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

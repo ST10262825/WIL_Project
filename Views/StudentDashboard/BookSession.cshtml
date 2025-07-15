@@ -1,0 +1,49 @@
+﻿@model TutorConnect.WebApp.Models.BookSessionViewModel
+
+<h2>Book a Session</h2>
+
+@* Add this inside the form *@
+<div asp-validation-summary="All" class="text-danger"></div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+<form asp-action="BookSession" method="post">
+    <div class="form-group">
+        <label for="TutorId">Tutor</label>
+        <select asp-for="TutorId" class="form-control" asp-items="@(new SelectList(Model.AvailableTutors, "Id", "Name"))">
+            <option value="">-- Select a Tutor --</option>
+        </select>
+        <span asp-validation-for="TutorId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ModuleId">Module</label>
+        <select asp-for="ModuleId" class="form-control" asp-items="@(new SelectList(Model.AvailableModules, "Id", "Name"))">
+            <option value="">-- Select a Module --</option>
+        </select>
+        <span asp-validation-for="ModuleId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="StartTime">Start Time</label>
+        <input asp-for="StartTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="EndTime">End Time</label>
+        <input asp-for="EndTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book Session</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,18 @@
+﻿@model List<TutorConnect.WebApp.Models.ModuleDTO>
+
+<h2>Available Modules</h2>
+
+<table class="table">
+    <thead>
+        <tr><th>Code</th><th>Name</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var module in Model)
+        {
+            <tr>
+                <td>@module.Code</td>
+                <td>@module.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

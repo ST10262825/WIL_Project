@@ -1,0 +1,12 @@
+﻿@model TutorConnect.WebApp.Models.LoginDTO
+<h2>Login</h2>
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+<form method="post">
+    <div>Email: <input asp-for="Email" /></div>
+    <div>Password: <input asp-for="Password" type="password" /></div>
+    <button type="submit">Login</button>
+
+</form>

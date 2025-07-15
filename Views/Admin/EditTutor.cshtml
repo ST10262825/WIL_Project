@@ -1,0 +1,50 @@
+﻿@model TutorConnect.WebApp.Models.UpdateTutorDTO
+@{
+    var modules = ViewBag.Modules as List<ModuleDTO>;
+}
+
+<h2>Edit Tutor</h2>
+
+<form asp-action="EditTutor" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Surname"></label>
+        <input asp-for="Surname" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Bio"></label>
+        <textarea asp-for="Bio" class="form-control"></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label>Modules</label>
+        @foreach (var module in modules)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       name="ModuleIds" value="@module.Id"
+                @(Model.ModuleIds.Contains(module.Id) ? "checked" : "") />
+                <label class="form-check-label">@module.Code - @module.Name</label>
+            </div>
+        }
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" asp-for="IsBlocked" />
+        <label class="form-check-label">Blocked</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>

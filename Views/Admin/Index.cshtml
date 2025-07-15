@@ -1,0 +1,44 @@
+﻿@model List<TutorConnect.WebApp.Models.TutorDTO>
+
+<h2>All Tutors</h2>
+
+<a class="btn btn-primary mb-3" href="/Admin/CreateTutor">Add Tutor</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Modules</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tutor in Model)
+        {
+            <tr>
+                <td>@tutor.Name @tutor.Surname</td>
+                <td>@tutor.Phone</td>
+                <td>@string.Join(", ", tutor.Modules.Select(m => m.Code))</td>
+                <td>
+                    @if (tutor.IsBlocked)
+                    {
+                        <span class="badge bg-danger">Blocked</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                </td>
+                <td>
+                    <a href="/Admin/EditTutor/@tutor.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="/Admin/DeleteTutor/@tutor.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                    <a href="/Admin/ToggleBlockTutor/@tutor.Id" class="btn btn-sm btn-secondary">
+                        @(tutor.IsBlocked ? "Unblock" : "Block")
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
