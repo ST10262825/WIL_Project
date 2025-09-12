@@ -48,48 +48,6 @@
         }
       }
     },
-    "/api/admin/update-tutor/{id}": {
-      "put": {
-        "tags": [
-          "Admin"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTutorDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTutorDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTutorDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/admin/delete-tutor/{id}": {
       "delete": {
         "tags": [
@@ -296,26 +254,26 @@
         }
       }
     },
-    "/api/availability": {
+    "/api/bookings/create": {
       "post": {
         "tags": [
-          "Availability"
+          "Booking"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AvailabilityDTO"
+                "$ref": "#/components/schemas/CreateBookingDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/AvailabilityDTO"
+                "$ref": "#/components/schemas/CreateBookingDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/AvailabilityDTO"
+                "$ref": "#/components/schemas/CreateBookingDTO"
               }
             }
           }
@@ -327,10 +285,63 @@
         }
       }
     },
-    "/api/availability/tutor/{tutorId}": {
+    "/api/bookings/student/{studentId}": {
       "get": {
         "tags": [
-          "Availability"
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "studentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/bookings/update-status/{bookingId}": {
+      "put": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "bookingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/bookings/tutor/{tutorId}": {
+      "get": {
+        "tags": [
+          "Booking"
         ],
         "parameters": [
           {
@@ -343,6 +354,141 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/chat/users": {
+      "get": {
+        "tags": [
+          "Chat"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/chat/unread-count/{userId}": {
+      "get": {
+        "tags": [
+          "Chat"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/chat/messages/{receiverId}": {
+      "get": {
+        "tags": [
+          "Chat"
+        ],
+        "parameters": [
+          {
+            "name": "receiverId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/chat/mark-read/{senderId}": {
+      "put": {
+        "tags": [
+          "Chat"
+        ],
+        "parameters": [
+          {
+            "name": "senderId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/messages/history/{otherUserId}": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "parameters": [
+          {
+            "name": "otherUserId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/messages/send": {
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMessageDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMessageDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMessageDTO"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -362,52 +508,10 @@
         }
       }
     },
-    "/api/rating": {
-      "post": {
-        "tags": [
-          "Rating"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RatingDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RatingDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RatingDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/rating/tutor/{tutorId}": {
+    "/api/student/dashboard-summary": {
       "get": {
         "tags": [
-          "Rating"
-        ],
-        "parameters": [
-          {
-            "name": "tutorId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
+          "Student"
         ],
         "responses": {
           "200": {
@@ -416,505 +520,14 @@
         }
       }
     },
-    "/api/sessions/book": {
-      "post": {
-        "tags": [
-          "Sessions"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SessionBookingDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SessionBookingDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SessionBookingDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/sessions/student/{studentId}": {
+    "/api/student/by-user/{userId}": {
       "get": {
         "tags": [
-          "Sessions"
-        ],
-        "parameters": [
-          {
-            "name": "studentId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/sessions/{sessionId}/approve": {
-      "put": {
-        "tags": [
-          "Sessions"
-        ],
-        "parameters": [
-          {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/sessions/{sessionId}/reject": {
-      "put": {
-        "tags": [
-          "Sessions"
-        ],
-        "parameters": [
-          {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/sessions/{sessionId}/complete": {
-      "put": {
-        "tags": [
-          "Sessions"
-        ],
-        "parameters": [
-          {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/student-dashboard/tutors": {
-      "get": {
-        "tags": [
-          "StudentDashboard"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/student-dashboard/tutors/{tutorId}/availability": {
-      "get": {
-        "tags": [
-          "StudentDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "tutorId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/student-dashboard/book-session": {
-      "post": {
-        "tags": [
-          "StudentDashboard"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SessionBookingDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SessionBookingDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/SessionBookingDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/student-dashboard/by-user/{userId}": {
-      "get": {
-        "tags": [
-          "StudentDashboard"
+          "Student"
         ],
         "parameters": [
           {
             "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/student-dashboard/sessions/{studentId}": {
-      "get": {
-        "tags": [
-          "StudentDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "studentId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/{tutorId}/modules": {
-      "get": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "tutorId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/{tutorId}/bio": {
-      "put": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "tutorId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/{tutorId}/sessions": {
-      "get": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "tutorId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/sessions/{sessionId}/approve": {
-      "put": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/sessions/{sessionId}/reject": {
-      "put": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/{tutorId}/sessions/past": {
-      "get": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "tutorId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/sessions/{sessionId}/complete": {
-      "put": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "sessionId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CompleteSessionDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CompleteSessionDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CompleteSessionDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/tutor-dashboard/{tutorId}/session-summary": {
-      "get": {
-        "tags": [
-          "TutorDashboard"
-        ],
-        "parameters": [
-          {
-            "name": "tutorId",
             "in": "path",
             "required": true,
             "schema": {
@@ -933,7 +546,7 @@
     "/api/tutor-dashboard/user/{userId}": {
       "get": {
         "tags": [
-          "TutorDashboard"
+          "Tutor"
         ],
         "parameters": [
           {
@@ -952,32 +565,251 @@
           }
         }
       }
+    },
+    "/api/tutor-dashboard/{tutorId}/profile": {
+      "put": {
+        "tags": [
+          "Tutor"
+        ],
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Bio": {
+                    "type": "string"
+                  },
+                  "ProfileImage": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "AboutMe": {
+                    "type": "string"
+                  },
+                  "Expertise": {
+                    "type": "string"
+                  },
+                  "Education": {
+                    "type": "string"
+                  }
+                }
+              },
+              "encoding": {
+                "Bio": {
+                  "style": "form"
+                },
+                "ProfileImage": {
+                  "style": "form"
+                },
+                "AboutMe": {
+                  "style": "form"
+                },
+                "Expertise": {
+                  "style": "form"
+                },
+                "Education": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/tutor-dashboard/{id}": {
+      "get": {
+        "tags": [
+          "Tutor"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TutorDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TutorDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TutorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tutor-dashboard/sessions/{tutorId}": {
+      "get": {
+        "tags": [
+          "Tutor"
+        ],
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/tutor-dashboard/sessions/{sessionId}/status": {
+      "put": {
+        "tags": [
+          "Tutor"
+        ],
+        "parameters": [
+          {
+            "name": "sessionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSessionStatusDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSessionStatusDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSessionStatusDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/tutor-dashboard/stats/{tutorId}": {
+      "get": {
+        "tags": [
+          "Tutor"
+        ],
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/tutor-dashboard/browse": {
+      "get": {
+        "tags": [
+          "Tutor"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
-      "AvailabilityDTO": {
+      "CreateBookingDTO": {
         "type": "object",
         "properties": {
           "tutorId": {
             "type": "integer",
             "format": "int32"
           },
-          "startTime": {
+          "studentId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "moduleId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sessionDate": {
             "type": "string",
             "format": "date-time"
           },
-          "endTime": {
+          "notes": {
             "type": "string",
-            "format": "date-time"
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "CompleteSessionDTO": {
+      "CreateMessageDTO": {
         "type": "object",
         "properties": {
-          "feedback": {
+          "receiverId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
             "type": "string",
             "nullable": true
           }
@@ -1036,22 +868,18 @@
         },
         "additionalProperties": false
       },
-      "RatingDTO": {
+      "ModuleDTO": {
         "type": "object",
         "properties": {
-          "tutorId": {
+          "id": {
             "type": "integer",
             "format": "int32"
           },
-          "studentId": {
-            "type": "integer",
-            "format": "int32"
+          "code": {
+            "type": "string",
+            "nullable": true
           },
-          "stars": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "comment": {
+          "name": {
             "type": "string",
             "nullable": true
           }
@@ -1080,35 +908,17 @@
         },
         "additionalProperties": false
       },
-      "SessionBookingDTO": {
+      "TutorDTO": {
         "type": "object",
         "properties": {
-          "studentId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "tutorId": {
             "type": "integer",
             "format": "int32"
           },
-          "moduleId": {
+          "userId": {
             "type": "integer",
             "format": "int32"
           },
-          "startTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endTime": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateTutorDTO": {
-        "type": "object",
-        "properties": {
           "name": {
             "type": "string",
             "nullable": true
@@ -1121,20 +931,49 @@
             "type": "string",
             "nullable": true
           },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "bio": {
             "type": "string",
             "nullable": true
           },
-          "moduleIds": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "nullable": true
-          },
           "isBlocked": {
             "type": "boolean"
+          },
+          "aboutMe": {
+            "type": "string",
+            "nullable": true
+          },
+          "expertise": {
+            "type": "string",
+            "nullable": true
+          },
+          "education": {
+            "type": "string",
+            "nullable": true
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModuleDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateSessionStatusDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "rejectionReason": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

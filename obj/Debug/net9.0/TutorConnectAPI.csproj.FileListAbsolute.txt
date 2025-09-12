@@ -164,6 +164,7 @@ C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\Tuto
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\TutorConnectAPI.csproj.CoreCompileInputs.cache
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\TutorConnectAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\TutorConnectAPI.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\TutorConnectAPI.sourcelink.json
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\scopedcss\bundle\TutorConnectAPI.styles.css
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\staticwebassets.development.json
@@ -181,4 +182,4 @@ C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\refi
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\TutorConnectAPI.pdb
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\TutorConnectAPI.genruntimeconfig.cache
 C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\ref\TutorConnectAPI.dll
-C:\Users\lab_services_student\source\repos\TutorConnectAPI\obj\Debug\net9.0\TutorConnectAPI.sourcelink.json
+C:\Users\lab_services_student\source\repos\TutorConnectAPI\bin\Debug\net9.0\TutorConnectAPI.staticwebassets.runtime.json
