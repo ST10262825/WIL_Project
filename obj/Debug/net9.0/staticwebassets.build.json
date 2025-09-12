@@ -1,12 +1,1979 @@
 {
   "Version": 1,
-  "Hash": "U4wXyNWc2oSgSYY3EiBRIliRp8tNkUxvAtTaIVRZcoM=",
+  "Hash": "TangQy8r6uO3kDhKf9aw0VgK1eB5lOacAHAEqnHw6xs=",
   "Source": "TutorConnectAPI",
   "BasePath": "_content/TutorConnectAPI",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "TutorConnectAPI\\wwwroot",
+      "Source": "TutorConnectAPI",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\01892b78-1008-47dc-8580-d467b9493ec4_tutor1.jpeg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/01892b78-1008-47dc-8580-d467b9493ec4_tutor1#[.{fingerprint}]?.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "3dfkj89xob",
+      "Integrity": "OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\01892b78-1008-47dc-8580-d467b9493ec4_tutor1.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2.jpeg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2#[.{fingerprint}]?.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "r6nwwdnt6h",
+      "Integrity": "Y2FXqa7kjEonKkXwpY2z6qymz90q7HIjFEPxnr9wWpI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\0639e54c-a068-4269-b673-20b4c4445c92_santiago.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/0639e54c-a068-4269-b673-20b4c4445c92_santiago#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "o9qh17tpcq",
+      "Integrity": "xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\0639e54c-a068-4269-b673-20b4c4445c92_santiago.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f9rnwbbkgl",
+      "Integrity": "PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "o9qh17tpcq",
+      "Integrity": "xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\64433c8d-bb7e-432c-8f07-a03349eef576_shaka.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/64433c8d-bb7e-432c-8f07-a03349eef576_shaka#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f9rnwbbkgl",
+      "Integrity": "PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\64433c8d-bb7e-432c-8f07-a03349eef576_shaka.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f9rnwbbkgl",
+      "Integrity": "PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\77806889-e81b-4945-97e8-6ace07be26a3_santiago.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/77806889-e81b-4945-97e8-6ace07be26a3_santiago#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "o9qh17tpcq",
+      "Integrity": "xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\77806889-e81b-4945-97e8-6ace07be26a3_santiago.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1.jpeg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1#[.{fingerprint}]?.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "3dfkj89xob",
+      "Integrity": "OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "zzurwi247b",
+      "Integrity": "r51R6THrkicqVA8mZ/LCTYDsYaGp2FwTzJnoT+z013Q=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\95f285ee-f1b4-46c7-a902-03f4c874902b_santiago.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/95f285ee-f1b4-46c7-a902-03f4c874902b_santiago#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "o9qh17tpcq",
+      "Integrity": "xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\95f285ee-f1b4-46c7-a902-03f4c874902b_santiago.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f9rnwbbkgl",
+      "Integrity": "PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1.jpeg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1#[.{fingerprint}]?.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "3dfkj89xob",
+      "Integrity": "OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1.jpeg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1#[.{fingerprint}]?.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "3dfkj89xob",
+      "Integrity": "OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f9rnwbbkgl",
+      "Integrity": "PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.png",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "o231m1cq3g",
+      "Integrity": "MIC2TqiE5puhSs2LzL7TKAlRTydEOye9LKqYdFdZKnk=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.png"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f9rnwbbkgl",
+      "Integrity": "PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\ee00369e-2b16-413c-8e94-20455a56fe45_shaka.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/ee00369e-2b16-413c-8e94-20455a56fe45_shaka#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "f9rnwbbkgl",
+      "Integrity": "PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\ee00369e-2b16-413c-8e94-20455a56fe45_shaka.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.jpg",
+      "SourceId": "TutorConnectAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\",
+      "BasePath": "_content/TutorConnectAPI",
+      "RelativePath": "images/f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "o9qh17tpcq",
+      "Integrity": "xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.jpg"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "images/01892b78-1008-47dc-8580-d467b9493ec4_tutor1.3dfkj89xob.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\01892b78-1008-47dc-8580-d467b9493ec4_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:31:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3dfkj89xob"
+        },
+        {
+          "Name": "label",
+          "Value": "images/01892b78-1008-47dc-8580-d467b9493ec4_tutor1.jpeg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/01892b78-1008-47dc-8580-d467b9493ec4_tutor1.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\01892b78-1008-47dc-8580-d467b9493ec4_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:31:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "8150"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Y2FXqa7kjEonKkXwpY2z6qymz90q7HIjFEPxnr9wWpI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:32:36 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-Y2FXqa7kjEonKkXwpY2z6qymz90q7HIjFEPxnr9wWpI="
+        }
+      ]
+    },
+    {
+      "Route": "images/031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2.r6nwwdnt6h.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "8150"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"Y2FXqa7kjEonKkXwpY2z6qymz90q7HIjFEPxnr9wWpI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:32:36 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "r6nwwdnt6h"
+        },
+        {
+          "Name": "label",
+          "Value": "images/031c17d7-c636-4d1a-ad7c-ef9796d95bec_tutor2.jpeg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-Y2FXqa7kjEonKkXwpY2z6qymz90q7HIjFEPxnr9wWpI="
+        }
+      ]
+    },
+    {
+      "Route": "images/0639e54c-a068-4269-b673-20b4c4445c92_santiago.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\0639e54c-a068-4269-b673-20b4c4445c92_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:41:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/0639e54c-a068-4269-b673-20b4c4445c92_santiago.o9qh17tpcq.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\0639e54c-a068-4269-b673-20b4c4445c92_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:41:09 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "o9qh17tpcq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/0639e54c-a068-4269-b673-20b4c4445c92_santiago.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka.f9rnwbbkgl.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 01:20:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f9rnwbbkgl"
+        },
+        {
+          "Name": "label",
+          "Value": "images/4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\4cdf1c5f-f9fc-43fd-93f4-63a695b2fcdb_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 01:20:21 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 00:49:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago.o9qh17tpcq.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 00:49:18 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "o9qh17tpcq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/6158b79f-f71a-4445-b788-35cee2e2fbf4_santiago.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/64433c8d-bb7e-432c-8f07-a03349eef576_shaka.f9rnwbbkgl.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\64433c8d-bb7e-432c-8f07-a03349eef576_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:40:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f9rnwbbkgl"
+        },
+        {
+          "Name": "label",
+          "Value": "images/64433c8d-bb7e-432c-8f07-a03349eef576_shaka.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/64433c8d-bb7e-432c-8f07-a03349eef576_shaka.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\64433c8d-bb7e-432c-8f07-a03349eef576_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:40:22 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka.f9rnwbbkgl.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:09:42 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f9rnwbbkgl"
+        },
+        {
+          "Name": "label",
+          "Value": "images/6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\6c3ce6b8-a790-4735-adf1-3a497a2f20b2_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:09:42 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/77806889-e81b-4945-97e8-6ace07be26a3_santiago.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\77806889-e81b-4945-97e8-6ace07be26a3_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:57:49 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/77806889-e81b-4945-97e8-6ace07be26a3_santiago.o9qh17tpcq.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\77806889-e81b-4945-97e8-6ace07be26a3_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:57:49 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "o9qh17tpcq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/77806889-e81b-4945-97e8-6ace07be26a3_santiago.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1.3dfkj89xob.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:32:20 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3dfkj89xob"
+        },
+        {
+          "Name": "label",
+          "Value": "images/7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1.jpeg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\7ceb71a7-ba58-40d3-b969-a8ab51302939_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:32:20 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6047"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"r51R6THrkicqVA8mZ/LCTYDsYaGp2FwTzJnoT+z013Q=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 01:23:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-r51R6THrkicqVA8mZ/LCTYDsYaGp2FwTzJnoT+z013Q="
+        }
+      ]
+    },
+    {
+      "Route": "images/94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator.zzurwi247b.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6047"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"r51R6THrkicqVA8mZ/LCTYDsYaGp2FwTzJnoT+z013Q=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 01:23:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "zzurwi247b"
+        },
+        {
+          "Name": "label",
+          "Value": "images/94cfe073-7b2d-4e86-9596-7a6664079ad2_calculator.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-r51R6THrkicqVA8mZ/LCTYDsYaGp2FwTzJnoT+z013Q="
+        }
+      ]
+    },
+    {
+      "Route": "images/95f285ee-f1b4-46c7-a902-03f4c874902b_santiago.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\95f285ee-f1b4-46c7-a902-03f4c874902b_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:00:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/95f285ee-f1b4-46c7-a902-03f4c874902b_santiago.o9qh17tpcq.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\95f285ee-f1b4-46c7-a902-03f4c874902b_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:00:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "o9qh17tpcq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/95f285ee-f1b4-46c7-a902-03f4c874902b_santiago.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka.f9rnwbbkgl.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:32:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f9rnwbbkgl"
+        },
+        {
+          "Name": "label",
+          "Value": "images/a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\a1e20241-9199-4db4-81e1-4ff15b51cfcb_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:32:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1.3dfkj89xob.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:41:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3dfkj89xob"
+        },
+        {
+          "Name": "label",
+          "Value": "images/a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1.jpeg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\a739b53c-a5de-4a8a-86c3-4ea6f9a641d0_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:41:39 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1.3dfkj89xob.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:12:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "3dfkj89xob"
+        },
+        {
+          "Name": "label",
+          "Value": "images/b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1.jpeg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1.jpeg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\b4294f3c-e29b-43af-a467-30c8b352bb54_tutor1.jpeg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "6645"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 17:12:07 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-OZLTieYy4p7i617Ghob70/YFuoPJnzQtopqRplymUuM="
+        }
+      ]
+    },
+    {
+      "Route": "images/b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka.f9rnwbbkgl.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 15:41:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f9rnwbbkgl"
+        },
+        {
+          "Name": "label",
+          "Value": "images/b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\b87b4006-e4c0-4986-96f0-1f2d02b25661_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 15:41:53 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.o231m1cq3g.png",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3214"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"MIC2TqiE5puhSs2LzL7TKAlRTydEOye9LKqYdFdZKnk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 00:58:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "o231m1cq3g"
+        },
+        {
+          "Name": "label",
+          "Value": "images/d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-MIC2TqiE5puhSs2LzL7TKAlRTydEOye9LKqYdFdZKnk="
+        }
+      ]
+    },
+    {
+      "Route": "images/d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.png",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3214"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"MIC2TqiE5puhSs2LzL7TKAlRTydEOye9LKqYdFdZKnk=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 00:58:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-MIC2TqiE5puhSs2LzL7TKAlRTydEOye9LKqYdFdZKnk="
+        }
+      ]
+    },
+    {
+      "Route": "images/d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.f9rnwbbkgl.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:24:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f9rnwbbkgl"
+        },
+        {
+          "Name": "label",
+          "Value": "images/d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 03 Sep 2025 16:24:19 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/ee00369e-2b16-413c-8e94-20455a56fe45_shaka.f9rnwbbkgl.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\ee00369e-2b16-413c-8e94-20455a56fe45_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 00:42:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "f9rnwbbkgl"
+        },
+        {
+          "Name": "label",
+          "Value": "images/ee00369e-2b16-413c-8e94-20455a56fe45_shaka.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/ee00369e-2b16-413c-8e94-20455a56fe45_shaka.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\ee00369e-2b16-413c-8e94-20455a56fe45_shaka.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7750"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 00:42:52 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-PTpPcOr3gajdBEjUxlP1qNc+izVPUSgiJoW+zkgBDo0="
+        }
+      ]
+    },
+    {
+      "Route": "images/f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 01:05:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    },
+    {
+      "Route": "images/f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.o9qh17tpcq.jpg",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\wwwroot\\images\\f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "9292"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 30 Aug 2025 01:05:13 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "o9qh17tpcq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-xDPi5y9RH57PD0j1YnBVe7AJF7H6mx/PZEbbilvSgtQ="
+        }
+      ]
+    }
+  ]
 }

@@ -60,7 +60,7 @@ namespace TutorConnectAPI.Controllers
 
             var student = new Student
             {
-                UserId = user.Id,
+                UserId = user.UserId,
                 Name = dto.Name,
                 Course = dto.Course
             };

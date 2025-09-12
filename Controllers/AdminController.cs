@@ -43,7 +43,7 @@ namespace TutorConnectAPI.Controllers
 
             var tutor = new Tutor
             {
-                UserId = user.Id,
+                UserId = user.UserId,
                 Name = dto.Name,
                 Surname = dto.Surname,
                 Phone = dto.Phone,
@@ -57,7 +57,7 @@ namespace TutorConnectAPI.Controllers
             {
                 _context.TutorModules.Add(new TutorModule
                 {
-                    TutorId = tutor.Id,
+                    TutorId = tutor.TutorId,
                     ModuleId = moduleId
                 });
             }
@@ -78,7 +78,7 @@ namespace TutorConnectAPI.Controllers
 
             var tutorDtos = tutors.Select(t => new TutorDTO
             {
-                Id = t.Id,
+                TutorId = t.TutorId,
                 Name = t.Name,
                 Surname = t.Surname,
                 Phone = t.Phone,
@@ -87,7 +87,7 @@ namespace TutorConnectAPI.Controllers
 
                 Modules = t.TutorModules.Select(tm => new ModuleDTO
                 {
-                    Id = tm.Module.Id,
+                    Id = tm.Module.ModuleId,
                     Code = tm.Module.Code,
                     Name = tm.Module.Name
                 }).ToList()
@@ -97,45 +97,14 @@ namespace TutorConnectAPI.Controllers
         }
 
 
-        [HttpPut("update-tutor/{id}")]
-        public async Task<IActionResult> UpdateTutor(int id, UpdateTutorDTO dto)
-        {
-            var tutor = await _context.Tutors
-                .Include(t => t.TutorModules)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (tutor == null)
-                return NotFound("Tutor not found.");
-
-            tutor.Name = dto.Name;
-            tutor.Surname = dto.Surname;
-            tutor.Phone = dto.Phone;
-            tutor.Bio = dto.Bio;
-            tutor.IsBlocked = dto.IsBlocked;
-
-            // Update module assignments
-            _context.TutorModules.RemoveRange(tutor.TutorModules);
-
-            foreach (var moduleId in dto.ModuleIds)
-            {
-                _context.TutorModules.Add(new TutorModule
-                {
-                    TutorId = tutor.Id,
-                    ModuleId = moduleId
-                });
-            }
-
-            await _context.SaveChangesAsync();
-
-            return Ok("Tutor updated successfully.");
-        }
+        
 
         [HttpDelete("delete-tutor/{id}")]
         public async Task<IActionResult> DeleteTutor(int id)
         {
             var tutor = await _context.Tutors
                 .Include(t => t.User)
-                .FirstOrDefaultAsync(t => t.Id == id);
+                .FirstOrDefaultAsync(t => t.TutorId == id);
 
             if (tutor == null)
                 return NotFound("Tutor not found.");
@@ -149,7 +118,7 @@ namespace TutorConnectAPI.Controllers
         [HttpPut("block-tutor/{id}")]
         public async Task<IActionResult> BlockTutor(int id)
         {
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.Id == id);
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.TutorId == id);
             if (tutor == null)
                 return NotFound("Tutor not found.");
 
@@ -162,7 +131,7 @@ namespace TutorConnectAPI.Controllers
         [HttpPut("unblock-tutor/{id}")]
         public async Task<IActionResult> UnblockTutor(int id)
         {
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.Id == id);
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.TutorId == id);
             if (tutor == null)
                 return NotFound("Tutor not found.");
 
@@ -179,14 +148,14 @@ namespace TutorConnectAPI.Controllers
                 .Include(t => t.User)
                 .Include(t => t.TutorModules)
                     .ThenInclude(tm => tm.Module)
-                .FirstOrDefaultAsync(t => t.Id == id);
+                .FirstOrDefaultAsync(t => t.TutorId == id);
 
             if (tutor == null)
                 return NotFound("Tutor not found.");
 
             var dto = new TutorDTO
             {
-                Id = tutor.Id,
+                TutorId = tutor.TutorId,
                 Name = tutor.Name,
                 Surname = tutor.Surname,
                 Phone = tutor.Phone,
@@ -194,7 +163,7 @@ namespace TutorConnectAPI.Controllers
                 IsBlocked = tutor.IsBlocked,
                 Modules = tutor.TutorModules.Select(tm => new ModuleDTO
                 {
-                    Id = tm.Module.Id,
+                    Id = tm.Module.ModuleId,
                     Code = tm.Module.Code,
                     Name = tm.Module.Name
                 }).ToList()
