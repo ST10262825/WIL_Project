@@ -1,4 +1,4 @@
-﻿@model TutorConnect.WebApp.Models.UpdateTutorDTO
+﻿@model UpdateTutorDTO
 @{
     var modules = ViewBag.Modules as List<ModuleDTO>;
 }
@@ -34,8 +34,8 @@
         {
             <div class="form-check">
                 <input class="form-check-input" type="checkbox"
-                       name="ModuleIds" value="@module.Id"
-                @(Model.ModuleIds.Contains(module.Id) ? "checked" : "") />
+                       name="ModuleIds" value="@module.ModuleId"
+                @(Model.ModuleIds.Contains(module.ModuleId) ? "checked" : "") />
                 <label class="form-check-label">@module.Code - @module.Name</label>
             </div>
         }

@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\images\\default-profile.png",
+      "PackagePath": "staticwebassets\\images\\default-profile.png"
+    },
+    {
       "Id": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

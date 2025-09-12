@@ -1,0 +1,112 @@
+﻿@page
+@using TutorConnect.WebApp.Models
+@inject IHttpContextAccessor HttpContextAccessor
+
+<h2>Real-Time Chat</h2>
+
+<div>
+    <label>Select User:</label>
+    <select id="chatUserSelect">
+        <option value="">-- Select --</option>
+    </select>
+</div>
+
+<div id="chatWindow" style="border:1px solid #ccc; height:400px; overflow-y:scroll; padding:10px; margin-top:10px;"></div>
+
+<div style="margin-top:10px;">
+    <input type="text" id="chatMessage" style="width:70%;" placeholder="Type a message..." />
+    <button id="sendBtn">Send</button>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        let currentUserId = parseInt('@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value');
+        let authToken = '@HttpContextAccessor.HttpContext.Session.GetString("AuthToken")';
+        let selectedReceiverId = null;
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub", { accessTokenFactory: () => authToken })
+            .build();
+
+        // Listen for incoming messages
+        connection.on("ReceiveMessage", (senderId, message, sentAt) => {
+            appendMessage(senderId, message, sentAt);
+        });
+
+        async function sendMessage() {
+            if (!selectedReceiverId) {
+                alert("Please select a user to chat with.");
+                return;
+            }
+
+            let message = document.getElementById("chatMessage").value;
+            if (!message) return;
+
+            await connection.invoke("SendMessage", currentUserId, parseInt(selectedReceiverId), message);
+            document.getElementById("chatMessage").value = "";
+        }
+
+        function appendMessage(senderId, message, sentAt) {
+            const chatWindow = document.getElementById("chatWindow");
+            const div = document.createElement("div");
+            div.style.marginBottom = "5px";
+
+            const senderName = senderId === currentUserId ? "You" : document.querySelector(`#chatUserSelect option[value='${senderId}']`)?.text;
+            div.textContent = `${senderName}: ${message} (${new Date(sentAt).toLocaleTimeString()})`;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function loadUsers() {
+            const response = await fetch("/api/chat/users", {
+                headers: { "Authorization": `Bearer ${authToken}` }
+            });
+            if (!response.ok) {
+                console.error("Failed to fetch users:", response.status);
+                return;
+            }
+
+            const users = await response.json();
+            const select = document.getElementById("chatUserSelect");
+            users.forEach(u => {
+                let option = document.createElement("option");
+                option.value = u.userId;
+                option.text = u.name;
+                select.add(option);
+            });
+
+            select.addEventListener("change", async () => {
+                selectedReceiverId = select.value;
+                if (selectedReceiverId) {
+                    await loadMessages(parseInt(selectedReceiverId));
+                }
+            });
+        }
+
+        async function loadMessages(receiverId) {
+            const response = await fetch(`/api/chat/messages/${receiverId}`, {
+                headers: { "Authorization": `Bearer ${authToken}` }
+            });
+            if (!response.ok) {
+                console.error("Failed to load messages:", response.status);
+                return;
+            }
+
+            const messages = await response.json();
+            const chatWindow = document.getElementById("chatWindow");
+            chatWindow.innerHTML = "";
+            messages.forEach(m => appendMessage(m.senderId, m.message, m.sentAt));
+        }
+
+        // Start SignalR connection
+        connection.start()
+            .then(() => console.log("SignalR connected"))
+            .catch(err => console.error(err.toString()));
+
+        document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+        // Load users on page load
+        loadUsers();
+    </script>
+}

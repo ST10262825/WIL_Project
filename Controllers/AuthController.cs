@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TutorConnect.WebApp.Models;
 using TutorConnect.WebApp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
@@ -9,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
+using TutorConnect.WebApp.Models;
 
 namespace TutorConnect.WebApp.Controllers
 {

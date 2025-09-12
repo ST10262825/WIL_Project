@@ -1,0 +1,41 @@
+﻿@model TutorConnect.WebApp.Models.BookingViewModel
+
+<h2>Book a Tutoring Session</h2>
+
+<form asp-action="BookSession" method="post">
+    <input type="hidden" asp-for="StudentId" />
+
+    <div>
+        <label>Tutor</label>
+        <select asp-for="TutorId" class="form-control" asp-items="ViewBag.Tutors"></select>
+    </div>
+
+    <div>
+        <label>Module</label>
+        <select asp-for="ModuleId" class="form-control" asp-items="ViewBag.Modules"></select>
+    </div>
+
+    <div>
+        <label>Session Date</label>
+        <input asp-for="SessionDate" type="datetime-local" class="form-control" />
+    </div>
+
+    <div>
+        <label>Notes</label>
+        <textarea asp-for="Notes" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Book</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-success">@ViewBag.Message</div>
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+<div class="dashboard-actions">
+    <a class="btn btn-primary" href="/Student/Chat">Open Chat</a>
+</div>

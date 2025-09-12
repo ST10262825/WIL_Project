@@ -1,6 +1,6 @@
-﻿@model TutorConnect.WebApp.Models.CreateTutorDTO
+﻿@model CreateTutorDTO
 @{
-    var modules = ViewBag.Modules as List<TutorConnect.WebApp.Models.ModuleDTO>;
+    var modules = ViewBag.Modules as List<ModuleDTO>;
 }
 
 <h2>Create Tutor</h2>
@@ -40,7 +40,7 @@
         @foreach (var module in modules)
         {
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="ModuleIds" value="@module.Id" />
+                <input class="form-check-input" type="checkbox" name="ModuleIds" value="@module.ModuleId" />
                 <label class="form-check-label">@module.Code</label>
             </div>
         }

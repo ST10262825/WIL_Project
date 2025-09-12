@@ -48,6 +48,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFx2ZXJpZnkuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Chat/Inbox.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxJbmJveC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Chat/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -60,6 +68,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kdWxlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Shared/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENoYXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -68,16 +80,44 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/StudentDashboard/BookSession.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudERhc2hib2FyZFxCb29rU2Vzc2lvbi5jc2h0bWw=
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Student/BookSession.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxCb29rU2Vzc2lvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/StudentDashboard/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudERhc2hib2FyZFxJbmRleC5jc2h0bWw=
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Student/BrowseTutors.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxCcm93c2VUdXRvcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/TutorDashboard/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHV0b3JEYXNoYm9hcmRcSW5kZXguY3NodG1s
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Student/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxDaGF0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Student/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Student/MyBookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudFxNeUJvb2tpbmdzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Tutor/Browse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHV0b3JcQnJvd3NlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Tutor/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHV0b3JcQ2hhdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Tutor/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHV0b3JcRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Tutor/MyProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHV0b3JcTXlQcm9maWxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/Tutor/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHV0b3JcUHJvZmlsZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/lab_services_student/source/repos/TutorConnect.WebApp/Views/_ViewImports.cshtml]

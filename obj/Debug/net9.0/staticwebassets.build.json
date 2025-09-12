@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GoNf/aE/jT4b6WVt2XuWNSws6iRZb1wTCE+5Y/qlFqo=",
+  "Hash": "lRN42fbXTDFq9bV09qdpJNw/gRGlgU81kXVkKdexFNM=",
   "Source": "TutorConnect.WebApp",
   "BasePath": "_content/TutorConnect.WebApp",
   "Mode": "Default",
@@ -1443,6 +1443,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\images\\default-profile.png",
+      "SourceId": "TutorConnect.WebApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\",
+      "BasePath": "_content/TutorConnect.WebApp",
+      "RelativePath": "images/default-profile#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "pk13802esr",
+      "Integrity": "udJ8QvwS4JoTFMjL86m8vhHGC5fJKGji2GcIf2JdA/c=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\default-profile.png"
     },
     {
       "Identity": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\js\\site.js",
@@ -3320,6 +3341,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-jcY0RXFOlcp4VNTCcYQtWVZZBlr+ZY+AOv6/0S5dnF8="
+        }
+      ]
+    },
+    {
+      "Route": "images/default-profile.pk13802esr.png",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\images\\default-profile.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1590"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"udJ8QvwS4JoTFMjL86m8vhHGC5fJKGji2GcIf2JdA/c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 29 Aug 2025 21:50:44 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "pk13802esr"
+        },
+        {
+          "Name": "label",
+          "Value": "images/default-profile.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-udJ8QvwS4JoTFMjL86m8vhHGC5fJKGji2GcIf2JdA/c="
+        }
+      ]
+    },
+    {
+      "Route": "images/default-profile.png",
+      "AssetFile": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\images\\default-profile.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1590"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"udJ8QvwS4JoTFMjL86m8vhHGC5fJKGji2GcIf2JdA/c=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 29 Aug 2025 21:50:44 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-udJ8QvwS4JoTFMjL86m8vhHGC5fJKGji2GcIf2JdA/c="
         }
       ]
     },
@@ -21310,7 +21413,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21363,7 +21466,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21400,7 +21503,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21447,7 +21550,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21500,7 +21603,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21537,7 +21640,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21584,7 +21687,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21645,7 +21748,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21690,7 +21793,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21745,7 +21848,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21806,7 +21909,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -21851,7 +21954,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Fri, 11 Jul 2025 14:49:03 GMT"
+          "Value": "Thu, 04 Sep 2025 11:42:40 GMT"
         },
         {
           "Name": "Cache-Control",

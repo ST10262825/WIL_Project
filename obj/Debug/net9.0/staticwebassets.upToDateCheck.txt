@@ -62,6 +62,7 @@ C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\wwwroot\lib\boots
 C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js.map
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\images\default-profile.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap.css
 wwwroot\lib\bootstrap\dist\css\bootstrap.css.map

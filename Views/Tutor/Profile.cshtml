@@ -1,0 +1,67 @@
+﻿@model TutorConnect.WebApp.Models.TutorDTO
+@{
+    ViewData["Title"] = "Tutor Profile";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Tutor Profile Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
+                <div class="card-body text-center">
+                    <img src="@(!string.IsNullOrEmpty(Model.ProfileImageUrl) ? Model.ProfileImageUrl : Url.Content("~/images/default-profile.png"))"
+                         alt="Tutor" class="rounded-circle mb-3"
+                         style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #42E695;">
+
+                    <h3 style="color: #0B2E3D;">@Model.Name @Model.Surname</h3>
+
+                    <p class="badge mb-2" style="background-color: #3BB2B8;">
+                        @(Model.Modules.Any() ? Model.Modules.First().Name : "General Tutor")
+                    </p>
+
+                    <div class="mb-3">
+                        <span class="badge rounded-pill" style="background-color: #42E695; color: #0B2E3D;">
+                            <i class="fas fa-check-circle me-1"></i> Verified
+                        </span>
+                    </div>
+
+                    <a href="#book-session" class="btn w-100 mb-3"
+                       style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">
+                        Book Session
+                    </a>
+                    <a href="#" class="btn w-100"
+                       style="background-color: #0B2E3D; color: white; border-radius: 30px;">
+                        <i class="fas fa-comment-dots me-2"></i> Message
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutor Details -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm mb-4">
+                <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
+                <div class="card-body p-4">
+                    <h4 style="color: #0B2E3D;">About Me</h4>
+                    <p>@Model.Bio</p>
+
+                    <h4 class="mt-4" style="color: #0B2E3D;">Expertise</h4>
+                    <p>@Model.Expertise</p>
+
+                    <h4 class="mt-4" style="color: #0B2E3D;">Education & Qualifications</h4>
+                    <p>@Model.Education</p>
+                </div>
+            </div>
+
+            <!-- Booking Section (for later integration with your existing booking API) -->
+            <div class="card border-0 shadow-sm mb-4" id="book-session">
+                <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
+                <div class="card-body p-4">
+                    <h4 class="mb-4" style="color: #0B2E3D;">Book a Session</h4>
+                    <p class="text-muted">Booking integration goes here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

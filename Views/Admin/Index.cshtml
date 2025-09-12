@@ -1,4 +1,4 @@
-﻿@model List<TutorConnect.WebApp.Models.TutorDTO>
+﻿@model List<TutorDTO>
 
 <h2>All Tutors</h2>
 
@@ -32,9 +32,9 @@
                     }
                 </td>
                 <td>
-                    <a href="/Admin/EditTutor/@tutor.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="/Admin/DeleteTutor/@tutor.Id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
-                    <a href="/Admin/ToggleBlockTutor/@tutor.Id" class="btn btn-sm btn-secondary">
+                    <a href="/Admin/EditTutor/@tutor.TutorId" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="/Admin/DeleteTutor/@tutor.TutorId" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                    <a href="/Admin/ToggleBlockTutor/@tutor.TutorId" class="btn btn-sm btn-secondary">
                         @(tutor.IsBlocked ? "Unblock" : "Block")
                     </a>
                 </td>

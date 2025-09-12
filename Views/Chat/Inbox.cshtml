@@ -1,0 +1,25 @@
+﻿@model List<TutorConnect.WebApp.Models.ChatUserDTO>
+
+@{
+    ViewData["Title"] = "Messages";
+}
+
+<h2>Inbox</h2>
+
+<div class="row">
+    <div class="col-4 border-end" style="height:500px; overflow-y:auto;">
+        <ul class="list-group">
+            @foreach (var user in Model)
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("Index", "Chat", new { otherUserId = user.UserId, otherUserName = user.Name })">
+                        @user.Name
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-8">
+        <p>Select a user to start chatting.</p>
+    </div>
+</div>

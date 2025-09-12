@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TutorConnect.WebApp.Models;
 using TutorConnect.WebApp.Services;
 using System.Linq;
 using System.Threading.Tasks;
+using TutorConnect.WebApp.Models;
 
 namespace TutorConnect.WebApp.Controllers
 {
@@ -59,13 +59,13 @@ namespace TutorConnect.WebApp.Controllers
 
             var updateDto = new UpdateTutorDTO
             {
-                Id = tutor.Id,
+                Id = tutor.TutorId,
                 Name = tutor.Name,
                 Surname = tutor.Surname,
                 Phone = tutor.Phone,
                 Bio = tutor.Bio,
                 IsBlocked = tutor.IsBlocked,
-                ModuleIds = tutor.Modules.Select(m => m.Id).ToList()
+                ModuleIds = tutor.Modules.Select(m => m.ModuleId).ToList()
             };
 
             return View(updateDto);

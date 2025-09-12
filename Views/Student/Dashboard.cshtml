@@ -1,0 +1,34 @@
+﻿@model TutorConnect.WebApp.Models.StudentDashboardSummaryDTO
+
+<h2>Welcome, @Model.StudentName!</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-warning">@ViewBag.Error</div>
+}
+
+<div class="row mt-3">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Available Tutors</h5>
+                <p class="display-6">@Model.AvailableTutors</p>
+                <a href="/Student/BrowseTutors" class="btn btn-primary">Browse Tutors</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mt-3 mt-md-0">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Upcoming Bookings</h5>
+                <p class="display-6">@Model.UpcomingBookings</p>
+                <a href="/Student/Bookings" class="btn btn-secondary">My Bookings</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="/Student/Tutors" class="btn btn-outline-primary me-2">Find a Tutor</a>
+    <a href="/Student/Bookings" class="btn btn-outline-secondary">Manage Bookings</a>
+</div>

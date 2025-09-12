@@ -11,6 +11,7 @@ namespace TutorConnect.WebApp
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSignalR();
 
             // Register HttpClient for API
             builder.Services.AddHttpClient("TutorConnectAPI", client =>
@@ -45,6 +46,8 @@ namespace TutorConnect.WebApp
             app.UseStaticFiles();
 
             app.UseRouting();
+           
+
 
             // Add authentication & authorization middleware
             app.UseAuthentication();

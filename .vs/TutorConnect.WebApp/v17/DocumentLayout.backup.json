@@ -1,0 +1,871 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\moduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\moduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\tutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\tutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\browse.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\browse.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\browsetutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\browsetutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\browsetutorsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\browsetutorsviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\bookingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\bookingviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\tutorprofileviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\tutorprofileviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\tutordashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\tutordashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\tutormoduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\tutormoduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\student\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\myprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\myprofile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\tutorsummarydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\tutorsummarydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\shared\\chat.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\shared\\chat.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\studentdashboardsummarydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\studentdashboardsummarydto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\upcomingsessiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\upcomingsessiondto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\student\\mybookings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\mybookings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\chat\\inbox.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\chat\\inbox.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\chat.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\chat.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\student\\chat.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\chat.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\student\\booksession.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\booksession.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\chatuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\chatuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\chatviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\chatviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\chat\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\chat\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\messagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\messagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\studentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\studentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\tutorconnect.webapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:tutorconnect.webapp.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\modulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\modulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\student\\browsetutors.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\browsetutors.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\admin\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\module\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\module\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\auth\\verify.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\verify.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\auth\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\admin\\students.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\admin\\students.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\admin\\edittutor.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\admin\\edittutor.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\admin\\createtutor.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\admin\\createtutor.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\createtutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\createtutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\registerstudentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\registerstudentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 21,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Profile.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Profile.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tutor\\Profile.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Profile.cshtml",
+              "RelativeToolTip": "Views\\Tutor\\Profile.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-03T22:09:24.054Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BrowseTutorDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BrowseTutorDTO.cs",
+              "RelativeDocumentMoniker": "Models\\BrowseTutorDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BrowseTutorDTO.cs",
+              "RelativeToolTip": "Models\\BrowseTutorDTO.cs",
+              "ViewState": "AgIAAAIAAABuZmZmZiY0wAUAAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-03T20:58:05.547Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Browse.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Browse.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tutor\\Browse.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Browse.cshtml",
+              "RelativeToolTip": "Views\\Tutor\\Browse.cshtml",
+              "ViewState": "AgIAADEAAAAAAAAAAAAswD0AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-09-03T19:28:30.885Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BrowseTutorsViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BrowseTutorsViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\BrowseTutorsViewModel.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BrowseTutorsViewModel.cs",
+              "RelativeToolTip": "Models\\BrowseTutorsViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-03T19:26:18.326Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "MyProfile.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\MyProfile.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tutor\\MyProfile.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\MyProfile.cshtml",
+              "RelativeToolTip": "Views\\Tutor\\MyProfile.cshtml",
+              "ViewState": "AgIAAC4AAACAMzMzMzMkwD8AAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-29T20:56:36.049Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "TutorProfileViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorProfileViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\TutorProfileViewModel.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorProfileViewModel.cs",
+              "RelativeToolTip": "Models\\TutorProfileViewModel.cs",
+              "ViewState": "AgIAAA0AAADAzMzMzEwWwCQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-29T20:28:52.147Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "StudentDashboardSummaryDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\StudentDashboardSummaryDTO.cs",
+              "RelativeDocumentMoniker": "Models\\StudentDashboardSummaryDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\StudentDashboardSummaryDTO.cs",
+              "RelativeToolTip": "Models\\StudentDashboardSummaryDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-29T17:23:21.895Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "UpcomingSessionDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\UpcomingSessionDTO.cs",
+              "RelativeDocumentMoniker": "Models\\UpcomingSessionDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\UpcomingSessionDTO.cs",
+              "RelativeToolTip": "Models\\UpcomingSessionDTO.cs",
+              "ViewState": "AgIAAAcAAABAZmZmZmYNwAoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-29T17:23:11.253Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "TutorDashboardViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorDashboardViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\TutorDashboardViewModel.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorDashboardViewModel.cs",
+              "RelativeToolTip": "Models\\TutorDashboardViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA3AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-29T17:21:29.682Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "Chat.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\Chat.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\Chat.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\Chat.cshtml",
+              "RelativeToolTip": "Views\\Shared\\Chat.cshtml",
+              "ViewState": "AgIAAGoCAAAAQJqZmZnJv34CAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-29T08:06:49.441Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "ChatUserDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ChatUserDTO.cs",
+              "RelativeDocumentMoniker": "Models\\ChatUserDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ChatUserDTO.cs",
+              "RelativeToolTip": "Models\\ChatUserDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T13:39:48.026Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "Inbox.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Chat\\Inbox.cshtml",
+              "RelativeDocumentMoniker": "Views\\Chat\\Inbox.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Chat\\Inbox.cshtml",
+              "RelativeToolTip": "Views\\Chat\\Inbox.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-28T13:39:13.473Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "ChatController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\ChatController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\ChatController.cs",
+              "RelativeToolTip": "Controllers\\ChatController.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAIwEIAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T13:38:34.548Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "ChatViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ChatViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\ChatViewModel.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ChatViewModel.cs",
+              "RelativeToolTip": "Models\\ChatViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T13:37:49.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Chat\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Chat\\Index.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Chat\\Index.cshtml",
+              "RelativeToolTip": "Views\\Chat\\Index.cshtml",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAwwEYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-28T13:37:08.31Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 32,
+              "Title": "MessageDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\MessageDTO.cs",
+              "RelativeDocumentMoniker": "Models\\MessageDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\MessageDTO.cs",
+              "RelativeToolTip": "Models\\MessageDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T13:34:11.62Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "Chat.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Chat.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tutor\\Chat.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Chat.cshtml",
+              "RelativeToolTip": "Views\\Tutor\\Chat.cshtml",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAkwHAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-28T13:18:17.055Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "Chat.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Chat.cshtml",
+              "RelativeDocumentMoniker": "Views\\Student\\Chat.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Chat.cshtml",
+              "RelativeToolTip": "Views\\Student\\Chat.cshtml",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAcwF0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-28T13:17:42.555Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "BookingDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BookingDTO.cs",
+              "RelativeDocumentMoniker": "Models\\BookingDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BookingDTO.cs",
+              "RelativeToolTip": "Models\\BookingDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T13:04:32.001Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Dashboard.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Dashboard.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tutor\\Dashboard.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Dashboard.cshtml",
+              "RelativeToolTip": "Views\\Tutor\\Dashboard.cshtml",
+              "ViewState": "AgIAANoAAAAAMjMzMzMUwOMAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-28T09:03:19.422Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApiService.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Services\\ApiService.cs",
+              "RelativeDocumentMoniker": "Services\\ApiService.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Services\\ApiService.cs",
+              "RelativeToolTip": "Services\\ApiService.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAAAC4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T09:00:37.084Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "TutorController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\TutorController.cs",
+              "RelativeDocumentMoniker": "Controllers\\TutorController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\TutorController.cs",
+              "RelativeToolTip": "Controllers\\TutorController.cs",
+              "ViewState": "AgIAAK0AAAAAAAAAAAAAAK0AAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-28T08:59:22.681Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "MyBookings.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\MyBookings.cshtml",
+              "RelativeDocumentMoniker": "Views\\Student\\MyBookings.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\MyBookings.cshtml",
+              "RelativeToolTip": "Views\\Student\\MyBookings.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-27T21:34:58.798Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "BookingViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BookingViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\BookingViewModel.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BookingViewModel.cs",
+              "RelativeToolTip": "Models\\BookingViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-27T21:13:30.476Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "BookSession.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\BookSession.cshtml",
+              "RelativeDocumentMoniker": "Views\\Student\\BookSession.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\BookSession.cshtml",
+              "RelativeToolTip": "Views\\Student\\BookSession.cshtml",
+              "ViewState": "AgIAABIAAABAMzMzMzMbwCcAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-27T20:38:55.024Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 35,
+              "Title": "BookingController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\BookingController.cs",
+              "RelativeDocumentMoniker": "Controllers\\BookingController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\BookingController.cs",
+              "RelativeToolTip": "Controllers\\BookingController.cs",
+              "ViewState": "AgIAABYAAACwMzMzMzMBwEYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-27T20:31:09.675Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 40,
+              "Title": "BrowseTutors.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\BrowseTutors.cshtml",
+              "RelativeDocumentMoniker": "Views\\Student\\BrowseTutors.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\BrowseTutors.cshtml",
+              "RelativeToolTip": "Views\\Student\\BrowseTutors.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T20:59:53.858Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "Dashboard.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Dashboard.cshtml",
+              "RelativeDocumentMoniker": "Views\\Student\\Dashboard.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Dashboard.cshtml",
+              "RelativeToolTip": "Views\\Student\\Dashboard.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T15:10:34.852Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAB4AAACAmJmZmZkewDEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T13:50:22.118Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "StudentController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\StudentController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StudentController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\StudentController.cs",
+              "RelativeToolTip": "Controllers\\StudentController.cs",
+              "ViewState": "AgIAAMQAAACg2MzMzMwRwMAAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T13:34:46.697Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 42,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Module\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Module\\Index.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Module\\Index.cshtml",
+              "RelativeToolTip": "Views\\Module\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:30:58.595Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 43,
+              "Title": "verify.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\verify.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\verify.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\verify.cshtml",
+              "RelativeToolTip": "Views\\Auth\\verify.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:30:36.355Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 44,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Register.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\Register.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Register.cshtml",
+              "RelativeToolTip": "Views\\Auth\\Register.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:30:05.276Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 45,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\Login.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Login.cshtml",
+              "RelativeToolTip": "Views\\Auth\\Login.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:29:57.229Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 46,
+              "Title": "Students.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\Students.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\Students.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\Students.cshtml",
+              "RelativeToolTip": "Views\\Admin\\Students.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:29:29.624Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 41,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\Index.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\Index.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\Index.cshtml",
+              "RelativeToolTip": "Views\\Admin\\Index.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:26:47.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 47,
+              "Title": "EditTutor.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\EditTutor.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\EditTutor.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\EditTutor.cshtml",
+              "RelativeToolTip": "Views\\Admin\\EditTutor.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:25:38.473Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 48,
+              "Title": "CreateTutor.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\CreateTutor.cshtml",
+              "RelativeDocumentMoniker": "Views\\Admin\\CreateTutor.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\CreateTutor.cshtml",
+              "RelativeToolTip": "Views\\Admin\\CreateTutor.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-13T11:25:22.153Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "ModuleController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\ModuleController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ModuleController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\ModuleController.cs",
+              "RelativeToolTip": "Controllers\\ModuleController.cs",
+              "ViewState": "AgIAAA4AAAAAZ2ZmZmYAwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T11:20:06.315Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 50,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T11:20:03.991Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 36,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAACMAAAAAZWZmZiYuwI8AAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T11:19:33.643Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 34,
+              "Title": "TutorConnect.WebApp.csproj",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\TutorConnect.WebApp.csproj",
+              "RelativeDocumentMoniker": "TutorConnect.WebApp.csproj",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\TutorConnect.WebApp.csproj",
+              "RelativeToolTip": "TutorConnect.WebApp.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-08-13T11:15:20.314Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 49,
+              "Title": "CreateTutorDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\CreateTutorDTO.cs",
+              "RelativeDocumentMoniker": "Models\\CreateTutorDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\CreateTutorDTO.cs",
+              "RelativeToolTip": "Models\\CreateTutorDTO.cs",
+              "ViewState": "AgIAAAMAAABQMzMzM5MwwAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:56:13.751Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 52,
+              "Title": "ErrorViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ErrorViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\ErrorViewModel.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ErrorViewModel.cs",
+              "RelativeToolTip": "Models\\ErrorViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:56:10.926Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 37,
+              "Title": "LoginDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\LoginDTO.cs",
+              "RelativeDocumentMoniker": "Models\\LoginDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\LoginDTO.cs",
+              "RelativeToolTip": "Models\\LoginDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:56:08.779Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ModuleDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ModuleDTO.cs",
+              "RelativeDocumentMoniker": "Models\\ModuleDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ModuleDTO.cs",
+              "RelativeToolTip": "Models\\ModuleDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:56:06.881Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 51,
+              "Title": "RegisterStudentDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\RegisterStudentDTO.cs",
+              "RelativeDocumentMoniker": "Models\\RegisterStudentDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\RegisterStudentDTO.cs",
+              "RelativeToolTip": "Models\\RegisterStudentDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:56:02.491Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "TutorModuleDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorModuleDTO.cs",
+              "RelativeDocumentMoniker": "Models\\TutorModuleDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorModuleDTO.cs",
+              "RelativeToolTip": "Models\\TutorModuleDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:55:12.732Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "TutorSummaryDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorSummaryDTO.cs",
+              "RelativeDocumentMoniker": "Models\\TutorSummaryDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorSummaryDTO.cs",
+              "RelativeToolTip": "Models\\TutorSummaryDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:54:52.617Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TutorDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorDTO.cs",
+              "RelativeDocumentMoniker": "Models\\TutorDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\TutorDTO.cs",
+              "RelativeToolTip": "Models\\TutorDTO.cs",
+              "ViewState": "AgIAAAUAAADgzMzMzEw3wAgAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-13T10:54:18.007Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 33,
+              "Title": "StudentDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\StudentDTO.cs",
+              "RelativeDocumentMoniker": "Models\\StudentDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\StudentDTO.cs",
+              "RelativeToolTip": "Models\\StudentDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-24T13:07:39.529Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAgwD4AAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-24T12:54:03.925Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 38,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Controllers\\AdminController.cs",
+              "ViewState": "AgIAAFsAAAAAm5mZmVkvwEMAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-15T16:34:44.526Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

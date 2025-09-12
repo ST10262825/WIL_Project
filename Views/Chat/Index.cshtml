@@ -1,0 +1,70 @@
+﻿@model TutorConnect.WebApp.Models.ChatViewModel
+
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<h2>Chat with @Model.OtherUserName</h2>
+
+<div id="chatContainer" style="border:1px solid #ccc; padding:10px; height:400px; overflow-y:scroll;">
+    <!-- Messages will appear here -->
+</div>
+
+<div class="mt-2">
+    <input type="text" id="messageInput" placeholder="Type a message..." class="form-control" />
+    <button id="sendBtn" class="btn btn-primary mt-1">Send</button>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const chatContainer = document.getElementById("chatContainer");
+        const messageInput = document.getElementById("messageInput");
+        const sendBtn = document.getElementById("sendBtn");
+
+        const authToken = '@Model.AuthToken';
+        const currentUserId = @Model.CurrentUserId;
+        const otherUserId = @Model.OtherUserId;
+
+        function appendMessage(senderId, message, sentAt) {
+            const msgDiv = document.createElement("div");
+            msgDiv.className = senderId === currentUserId ? "text-end" : "text-start";
+            msgDiv.innerHTML = `<b>${senderId === currentUserId ? "You" : "@Model.OtherUserName"}:</b> ${message} <small class="text-muted">${new Date(sentAt).toLocaleTimeString()}</small>`;
+            chatContainer.appendChild(msgDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // 1️⃣ Setup SignalR
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub", { accessTokenFactory: () => authToken })
+            .build();
+
+        connection.on("ReceiveMessage", (senderId, message, sentAt) => {
+            appendMessage(senderId, message, sentAt);
+        });
+
+        connection.start().catch(err => console.error(err.toString()));
+
+        // 2️⃣ Send message
+        sendBtn.addEventListener("click", async () => {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            await connection.invoke("SendMessage", currentUserId, otherUserId, message);
+            messageInput.value = "";
+        });
+
+        messageInput.addEventListener("keypress", async (e) => {
+            if (e.key === "Enter") {
+                sendBtn.click();
+            }
+        });
+
+        // 3️⃣ Load chat history
+        fetch(`@Url.Action("GetChatHistory", "Chat")?otherUserId=${otherUserId}`)
+            .then(res => res.json())
+            .then(messages => {
+                messages.forEach(m => appendMessage(m.senderId, m.content, m.sentAt));
+            });
+    </script>
+}
