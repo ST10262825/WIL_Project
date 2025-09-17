@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using TutorConnectAPI.Data;
 using TutorConnectAPI.DTOs;
 using TutorConnectAPI.Models;
@@ -89,6 +90,26 @@ public class ChatController : ControllerBase
         return Ok();
     }
 
+    [HttpGet("contacts")]
+    [Authorize]
+    public async Task<IActionResult> GetChatContacts()
+    {
+        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        // Get bookings where user is involved
+        var bookings = await _context.Bookings
+            .Where(b => b.StudentId == userId || b.TutorId == userId)
+            .ToListAsync();
+
+        var contacts = bookings
+            .Select(b => b.StudentId == userId
+                         ? new { UserId = b.TutorId, Name = b.Tutor.Name }
+                         : new { UserId = b.StudentId, Name = b.Student.Name })
+            .Distinct()
+            .ToList();
+
+        return Ok(contacts);
+    }
 
 
 }

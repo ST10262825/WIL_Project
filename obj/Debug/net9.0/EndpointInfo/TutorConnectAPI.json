@@ -442,6 +442,18 @@
         }
       }
     },
+    "/api/chat/contacts": {
+      "get": {
+        "tags": [
+          "Chat"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/messages/history/{otherUserId}": {
       "get": {
         "tags": [
@@ -633,46 +645,6 @@
         }
       }
     },
-    "/api/tutor-dashboard/{id}": {
-      "get": {
-        "tags": [
-          "Tutor"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TutorDTO"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TutorDTO"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TutorDTO"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/tutor-dashboard/sessions/{tutorId}": {
       "get": {
         "tags": [
@@ -765,6 +737,29 @@
       "get": {
         "tags": [
           "Tutor"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/tutor-dashboard/by-id/{tutorId}": {
+      "get": {
+        "tags": [
+          "Tutor"
+        ],
+        "parameters": [
+          {
+            "name": "tutorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -868,24 +863,6 @@
         },
         "additionalProperties": false
       },
-      "ModuleDTO": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "RegisterStudentDTO": {
         "type": "object",
         "properties": {
@@ -903,62 +880,6 @@
           },
           "course": {
             "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TutorDTO": {
-        "type": "object",
-        "properties": {
-          "tutorId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "surname": {
-            "type": "string",
-            "nullable": true
-          },
-          "phone": {
-            "type": "string",
-            "nullable": true
-          },
-          "profileImageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "bio": {
-            "type": "string",
-            "nullable": true
-          },
-          "isBlocked": {
-            "type": "boolean"
-          },
-          "aboutMe": {
-            "type": "string",
-            "nullable": true
-          },
-          "expertise": {
-            "type": "string",
-            "nullable": true
-          },
-          "education": {
-            "type": "string",
-            "nullable": true
-          },
-          "modules": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ModuleDTO"
-            },
             "nullable": true
           }
         },

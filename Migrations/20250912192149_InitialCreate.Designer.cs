@@ -12,8 +12,8 @@ using TutorConnectAPI.Data;
 namespace TutorConnectAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250829204823_profilepic")]
-    partial class profilepic
+    [Migration("20250912192149_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,8 +244,17 @@ namespace TutorConnectAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TutorId"));
 
+                    b.Property<string>("AboutMe")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Bio")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Education")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Expertise")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsBlocked")
@@ -328,21 +337,21 @@ namespace TutorConnectAPI.Migrations
             modelBuilder.Entity("TutorConnectAPI.Models.Booking", b =>
                 {
                     b.HasOne("TutorConnectAPI.Models.Module", "Module")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.Student", "Student")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.Tutor", "Tutor")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Module");
@@ -357,13 +366,13 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.User", "Receiver")
                         .WithMany()
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Receiver");
@@ -376,13 +385,13 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.Course", "Course")
                         .WithMany("Enrollments")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.Student", "Student")
                         .WithMany("Enrollments")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Course");
@@ -395,19 +404,19 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.Module", "Module")
                         .WithMany("Sessions")
                         .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.Student", "Student")
                         .WithMany("Sessions")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.Tutor", "Tutor")
                         .WithMany("Sessions")
                         .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Module");
@@ -422,7 +431,7 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -433,7 +442,7 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -444,13 +453,13 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.Module", "Module")
                         .WithMany("TutorModules")
                         .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.Tutor", "Tutor")
                         .WithMany("TutorModules")
                         .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Module");
@@ -465,6 +474,8 @@ namespace TutorConnectAPI.Migrations
 
             modelBuilder.Entity("TutorConnectAPI.Models.Module", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Sessions");
 
                     b.Navigation("TutorModules");
@@ -472,6 +483,8 @@ namespace TutorConnectAPI.Migrations
 
             modelBuilder.Entity("TutorConnectAPI.Models.Student", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Enrollments");
 
                     b.Navigation("Sessions");
@@ -479,6 +492,8 @@ namespace TutorConnectAPI.Migrations
 
             modelBuilder.Entity("TutorConnectAPI.Models.Tutor", b =>
                 {
+                    b.Navigation("Bookings");
+
                     b.Navigation("Sessions");
 
                     b.Navigation("TutorModules");

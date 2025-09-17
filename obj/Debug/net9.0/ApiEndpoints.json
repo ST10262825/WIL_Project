@@ -224,6 +224,16 @@
   },
   {
     "ContainingType": "ChatController",
+    "Method": "GetChatContacts",
+    "RelativePath": "api/chat/contacts",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ChatController",
     "Method": "MarkMessagesAsRead",
     "RelativePath": "api/chat/mark-read/{senderId}",
     "HttpMethod": "PUT",
@@ -350,32 +360,6 @@
   },
   {
     "ContainingType": "TutorConnectAPI.Controllers.TutorController",
-    "Method": "GetTutorById",
-    "RelativePath": "api/tutor-dashboard/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "TutorConnectAPI.DTOs.TutorDTO",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "TutorConnectAPI.Controllers.TutorController",
     "Method": "UpdateProfile",
     "RelativePath": "api/tutor-dashboard/{tutorId}/profile",
     "HttpMethod": "PUT",
@@ -423,6 +407,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "TutorConnectAPI.Controllers.TutorController",
+    "Method": "GetTutorById",
+    "RelativePath": "api/tutor-dashboard/by-id/{tutorId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tutorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

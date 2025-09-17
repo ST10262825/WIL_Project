@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 using TutorConnectAPI.Data;
 using TutorConnectAPI.DTOs;
 using TutorConnectAPI.Models;
@@ -44,7 +45,7 @@ namespace TutorConnectAPI.Controllers
                 return BadRequest("Password must be at least 6 characters long.");
 
             // 4. Create user and student
-            string verificationToken = Guid.NewGuid().ToString();
+            string verificationToken = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
 
             var user = new User
             {
