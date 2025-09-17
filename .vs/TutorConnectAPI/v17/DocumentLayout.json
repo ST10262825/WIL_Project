@@ -3,48 +3,48 @@
   "WorkspaceRootPath": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\tutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\tutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\browsetutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\browsetutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\tutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\tutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\tutorprofileupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\tutorprofileupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\studentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\studentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\chatmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -55,44 +55,92 @@
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\chatuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\chatuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\student.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\student.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\createtutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\createtutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\moduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\moduledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\module.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\module.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\messagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\messagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\registerstudentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\registerstudentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\chatmessagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\chatmessagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:data\\dbseeder.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:data\\applicationdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912190243_FixBookingFKs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250912190243_FixBookingFKs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185900_FixBookingsNoAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250912185900_FixBookingsNoAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185326_FixBookingsNoAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250912185326_FixBookingsNoAction.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185017_FixBookingsRestrict.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250912185017_FixBookingsRestrict.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912184701_fixedCascade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Migrations\\20250912184701_fixedCascade.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\tutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\tutor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\tutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\tutordto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\tutorprofileupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\tutorprofileupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\chatuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\chatuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\chatmessagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\chatmessagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\createmessagedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -103,48 +151,16 @@
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:tutorconnectapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\verifytokendto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\verifytokendto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\dtos\\studentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:dtos\\studentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:controllers\\bookingcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\models\\course.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:models\\course.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\migrations\\20250828140333_messages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:migrations\\20250828140333_messages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\migrations\\20250829090912_students.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:migrations\\20250829090912_students.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\migrations\\20250829083606_admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:migrations\\20250829083606_admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\migrations\\20250829204823_profilepic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:migrations\\20250829204823_profilepic.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\migrations\\20250829174606_tutordash.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:migrations\\20250829174606_tutordash.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\migrations\\20250903184231_tutorupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:migrations\\20250903184231_tutorupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnectapi\\migrations\\20250912192149_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB16587E-38A3-4869-867A-4D33A2AED344}|TutorConnectAPI.csproj|solutionrelative:migrations\\20250912192149_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -154,35 +170,169 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 28,
+          "SelectedChildIndex": 35,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "BrowseTutorDTO.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\BrowseTutorDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\BrowseTutorDTO.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\BrowseTutorDTO.cs",
-              "RelativeToolTip": "DTOs\\BrowseTutorDTO.cs",
+              "DocumentIndex": 10,
+              "Title": "BookingDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\BookingDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\BookingDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\BookingDTO.cs",
+              "RelativeToolTip": "DTOs\\BookingDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-03T20:52:59.445Z"
+              "WhenOpened": "2025-09-16T12:28:46.074Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
-              "Title": "20250903184231_tutorUpdate.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250903184231_tutorUpdate.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250903184231_tutorUpdate.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250903184231_tutorUpdate.cs",
-              "RelativeToolTip": "Migrations\\20250903184231_tutorUpdate.cs",
-              "ViewState": "AgIAABwAAADAmZmZmRklwAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 14,
+              "Title": "CreateTutorDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\CreateTutorDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\CreateTutorDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\CreateTutorDTO.cs",
+              "RelativeToolTip": "DTOs\\CreateTutorDTO.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAcwAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-03T18:42:31.476Z"
+              "WhenOpened": "2025-09-15T18:46:03.665Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 15,
+              "Title": "ModuleDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\ModuleDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\ModuleDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\ModuleDTO.cs",
+              "RelativeToolTip": "DTOs\\ModuleDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-15T18:45:54.568Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "RegisterStudentDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\RegisterStudentDTO.cs",
+              "RelativeDocumentMoniker": "DTOs\\RegisterStudentDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\RegisterStudentDTO.cs",
+              "RelativeToolTip": "DTOs\\RegisterStudentDTO.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAqwAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-15T10:44:55.612Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "DbSeeder.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Data\\DbSeeder.cs",
+              "RelativeDocumentMoniker": "Data\\DbSeeder.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Data\\DbSeeder.cs",
+              "RelativeToolTip": "Data\\DbSeeder.cs",
+              "ViewState": "AgIAAAcAAAAAZGZmZmbWvw0AAABPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T19:32:09.74Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 39,
+              "Title": "20250912192149_InitialCreate.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912192149_InitialCreate.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250912192149_InitialCreate.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912192149_InitialCreate.cs",
+              "RelativeToolTip": "Migrations\\20250912192149_InitialCreate.cs",
+              "ViewState": "AgIAADEAAABAmZmZmdkgwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T19:21:49.374Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "20250912190243_FixBookingFKs.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912190243_FixBookingFKs.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250912190243_FixBookingFKs.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912190243_FixBookingFKs.cs",
+              "RelativeToolTip": "Migrations\\20250912190243_FixBookingFKs.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T19:02:43.642Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "20250912185900_FixBookingsNoAction.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185900_FixBookingsNoAction.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250912185900_FixBookingsNoAction.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185900_FixBookingsNoAction.cs",
+              "RelativeToolTip": "Migrations\\20250912185900_FixBookingsNoAction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T18:59:01.151Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "20250912185326_FixBookingsNoAction.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185326_FixBookingsNoAction.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250912185326_FixBookingsNoAction.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185326_FixBookingsNoAction.cs",
+              "RelativeToolTip": "Migrations\\20250912185326_FixBookingsNoAction.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T18:53:26.837Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "20250912185017_FixBookingsRestrict.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185017_FixBookingsRestrict.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250912185017_FixBookingsRestrict.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912185017_FixBookingsRestrict.cs",
+              "RelativeToolTip": "Migrations\\20250912185017_FixBookingsRestrict.cs",
+              "ViewState": "AgIAAAkAAACgmZmZmVkhwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T18:50:17.971Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "20250912184701_fixedCascade.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912184701_fixedCascade.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250912184701_fixedCascade.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250912184701_fixedCascade.cs",
+              "RelativeToolTip": "Migrations\\20250912184701_fixedCascade.cs",
+              "ViewState": "AgIAABAAAACg/////38owAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T18:47:01.949Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "Module.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Module.cs",
+              "RelativeDocumentMoniker": "Models\\Module.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Module.cs",
+              "RelativeToolTip": "Models\\Module.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T18:45:51.036Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Student.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Student.cs",
+              "RelativeDocumentMoniker": "Models\\Student.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Student.cs",
+              "RelativeToolTip": "Models\\Student.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-12T18:41:02.401Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -194,7 +344,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 29,
               "Title": "TutorProfileUpdateDto.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\TutorProfileUpdateDto.cs",
               "RelativeDocumentMoniker": "DTOs\\TutorProfileUpdateDto.cs",
@@ -206,91 +356,32 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
-              "Title": "20250829204823_profilepic.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829204823_profilepic.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250829204823_profilepic.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829204823_profilepic.cs",
-              "RelativeToolTip": "Migrations\\20250829204823_profilepic.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-29T20:48:23.884Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 34,
-              "Title": "20250829174606_TutorDash.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829174606_TutorDash.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250829174606_TutorDash.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829174606_TutorDash.cs",
-              "RelativeToolTip": "Migrations\\20250829174606_TutorDash.cs",
-              "ViewState": "AgIAAAUAAABgZmZmZmYkwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-29T17:46:06.911Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 31,
-              "Title": "20250829090912_Students.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829090912_Students.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250829090912_Students.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829090912_Students.cs",
-              "RelativeToolTip": "Migrations\\20250829090912_Students.cs",
-              "ViewState": "AgIAABgAAAAANTMzMzMFwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-29T09:09:12.193Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 28,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAcwBAAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAgwBAAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-08-29T08:48:48.375Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 1,
               "Title": "EmailService.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Services\\EmailService.cs",
               "RelativeDocumentMoniker": "Services\\EmailService.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Services\\EmailService.cs",
               "RelativeToolTip": "Services\\EmailService.cs",
-              "ViewState": "AgIAAB8AAADAmZmZmVkgwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-29T08:48:39.196Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 32,
-              "Title": "20250829083606_Admin.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829083606_Admin.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250829083606_Admin.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250829083606_Admin.cs",
-              "RelativeToolTip": "Migrations\\20250829083606_Admin.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-29T08:36:06.943Z"
+              "WhenOpened": "2025-08-29T08:48:39.196Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "20250828140333_Messages.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250828140333_Messages.cs",
-              "RelativeDocumentMoniker": "Migrations\\20250828140333_Messages.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Migrations\\20250828140333_Messages.cs",
-              "RelativeToolTip": "Migrations\\20250828140333_Messages.cs",
-              "ViewState": "AgIAAE0AAAAAAAAAAAAgwFoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T14:03:33.92Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 34,
               "Title": "ChatMessageDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\ChatMessageDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\ChatMessageDTO.cs",
@@ -302,7 +393,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 33,
               "Title": "ChatUserDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\ChatUserDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\ChatUserDTO.cs",
@@ -314,19 +405,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 5,
               "Title": "ChatController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\ChatController.cs",
               "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\ChatController.cs",
               "RelativeToolTip": "Controllers\\ChatController.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAiwF4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAGcAAAAAAAAAAAAwwHMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T13:33:23.923Z"
+              "WhenOpened": "2025-08-28T13:33:23.923Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 35,
               "Title": "CreateMessageDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\CreateMessageDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\CreateMessageDTO.cs",
@@ -338,31 +430,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
-              "Title": "MessageDTO.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\MessageDTO.cs",
-              "RelativeDocumentMoniker": "DTOs\\MessageDTO.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\MessageDTO.cs",
-              "RelativeToolTip": "DTOs\\MessageDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAsAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T13:24:56.662Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 6,
               "Title": "MessagesController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\MessagesController.cs",
               "RelativeDocumentMoniker": "Controllers\\MessagesController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\MessagesController.cs",
               "RelativeToolTip": "Controllers\\MessagesController.cs",
-              "ViewState": "AgIAADEAAACAZ2ZmZuYmwEIAAAAZAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAABAmZmZmdkhwEIAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T13:14:48.428Z"
+              "WhenOpened": "2025-08-28T13:14:48.428Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 30,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -374,7 +455,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 32,
               "Title": "ChatHub.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Hubs\\ChatHub.cs",
               "RelativeDocumentMoniker": "Hubs\\ChatHub.cs",
@@ -386,7 +467,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 36,
               "Title": "TutorConnectAPI.csproj",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\TutorConnectAPI.csproj",
               "RelativeDocumentMoniker": "TutorConnectAPI.csproj",
@@ -404,25 +485,27 @@
               "RelativeDocumentMoniker": "Models\\ChatMessage.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\ChatMessage.cs",
               "RelativeToolTip": "Models\\ChatMessage.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T13:09:45.442Z"
+              "WhenOpened": "2025-08-28T13:09:45.442Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 2,
               "Title": "TokenService.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Services\\TokenService.cs",
               "RelativeDocumentMoniker": "Services\\TokenService.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Services\\TokenService.cs",
               "RelativeToolTip": "Services\\TokenService.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAAACUAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAAACUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T13:01:46.543Z"
+              "WhenOpened": "2025-08-28T13:01:46.543Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 37,
               "Title": "VerifyTokenDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\VerifyTokenDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\VerifyTokenDTO.cs",
@@ -434,20 +517,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 27,
               "Title": "TutorDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\TutorDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\TutorDTO.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\TutorDTO.cs",
               "RelativeToolTip": "DTOs\\TutorDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAABYMzMzM3MvwA0AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T13:00:30.9Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-28T13:00:30.9Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 9,
               "Title": "StudentDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\DTOs\\StudentDTO.cs",
               "RelativeDocumentMoniker": "DTOs\\StudentDTO.cs",
@@ -455,84 +537,89 @@
               "RelativeToolTip": "DTOs\\StudentDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T13:00:08.73Z"
+              "WhenOpened": "2025-08-28T13:00:08.73Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 19,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Data\\ApplicationDbContext.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Data\\ApplicationDbContext.cs",
               "RelativeToolTip": "Data\\ApplicationDbContext.cs",
-              "ViewState": "AgIAAAsAAABAAAAAAKA8wBEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAMUAAAAAAAAAAAAwwNEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-28T12:59:35.415Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 7,
               "Title": "BookingController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\BookingController.cs",
               "RelativeDocumentMoniker": "Controllers\\BookingController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\BookingController.cs",
               "RelativeToolTip": "Controllers\\BookingController.cs",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAAAGgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAUwGgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T12:58:51.056Z"
+              "WhenOpened": "2025-08-28T12:58:51.056Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 4,
               "Title": "AdminController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\AdminController.cs",
               "RelativeToolTip": "Controllers\\AdminController.cs",
-              "ViewState": "AgIAACsAAAAAmZmZmVkowLEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEcAAACgMzMzM7MgwF4AAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T12:58:11.958Z"
+              "WhenOpened": "2025-08-28T12:58:11.958Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "TutorController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\TutorController.cs",
               "RelativeDocumentMoniker": "Controllers\\TutorController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\TutorController.cs",
               "RelativeToolTip": "Controllers\\TutorController.cs",
-              "ViewState": "AgIAAGcAAAAAAAAAAAAYwG4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAOEAAAAAAAAAAAAQwPAAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-28T12:57:49.435Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 8,
               "Title": "StudentController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\StudentController.cs",
               "RelativeDocumentMoniker": "Controllers\\StudentController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\StudentController.cs",
               "RelativeToolTip": "Controllers\\StudentController.cs",
-              "ViewState": "AgIAADQAAACgMzMzMzMpwEMAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAAD8AAAAAAAAAAADwv1UAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T12:57:25.999Z"
+              "WhenOpened": "2025-08-28T12:57:25.999Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 0,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAawEQAAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAQAAAEAmwC8AAABiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T12:57:09.752Z"
+              "WhenOpened": "2025-08-28T12:57:09.752Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 38,
               "Title": "Course.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Course.cs",
               "RelativeDocumentMoniker": "Models\\Course.cs",
@@ -544,7 +631,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 26,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\User.cs",
               "RelativeDocumentMoniker": "Models\\User.cs",
@@ -562,33 +649,22 @@
               "RelativeDocumentMoniker": "Models\\Booking.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Booking.cs",
               "RelativeToolTip": "Models\\Booking.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAmwB8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAzwB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T12:55:49.486Z"
+              "WhenOpened": "2025-08-28T12:55:49.486Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 25,
               "Title": "Tutor.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Tutor.cs",
               "RelativeDocumentMoniker": "Models\\Tutor.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Tutor.cs",
               "RelativeToolTip": "Models\\Tutor.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAswA0AAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAwwBEAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-28T12:55:35.604Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Student.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Student.cs",
-              "RelativeDocumentMoniker": "Models\\Student.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnectAPI\\Models\\Student.cs",
-              "RelativeToolTip": "Models\\Student.cs",
-              "ViewState": "AgIAAAQAAAAAcGZmZmbGvwgAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T12:54:58.808Z"
             }
           ]
         }

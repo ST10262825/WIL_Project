@@ -17,3 +17,5 @@ wwwroot\images\d1993692-1779-4a64-baed-c9ddfa74ecf4_Mylogo.png
 wwwroot\images\d19ada58-2e4a-42eb-84f6-7eb8df5fced6_shaka.jpg
 wwwroot\images\ee00369e-2b16-413c-8e94-20455a56fe45_shaka.jpg
 wwwroot\images\f07907ef-6c5c-44b9-b21e-ebf2cc9c6609_santiago.jpg
+wwwroot\images\f111d78b-f6c5-4b92-9b52-f9cb58931b21_Logo.jpg
+wwwroot\images\e9439e81-d27a-4126-8cd1-cd4d6d9b2abf_Logo.jpg

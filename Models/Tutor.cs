@@ -15,7 +15,7 @@
         public bool IsBlocked { get; set; } = false;
        
         public ICollection<Session> Sessions { get; set; }
-
+        public ICollection<Booking> Bookings { get; set; }
         public ICollection<TutorModule> TutorModules { get; set; }
       
         public User User { get; set; }

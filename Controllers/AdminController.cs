@@ -90,8 +90,14 @@ namespace TutorConnectAPI.Controllers
                     Id = tm.Module.ModuleId,
                     Code = tm.Module.Code,
                     Name = tm.Module.Name
-                }).ToList()
+                }).ToList(),
+
+                Expertise = t.Expertise,           // Add these to mapping
+                Education = t.Education,
+                ProfileImageUrl = t.ProfileImageUrl
             }).ToList();
+
+
 
             return Ok(tutorDtos);
         }

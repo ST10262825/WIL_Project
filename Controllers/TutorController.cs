@@ -209,6 +209,41 @@ namespace TutorConnectAPI.Controllers
             return Ok(dtoList);
         }
 
+        [HttpGet("by-id/{tutorId}")]
+        public async Task<IActionResult> GetTutorById(int tutorId)
+        {
+            var tutor = await _context.Tutors
+                .Include(t => t.TutorModules)
+                    .ThenInclude(tm => tm.Module)
+                .FirstOrDefaultAsync(t => t.TutorId == tutorId);
+
+            if (tutor == null)
+                return NotFound("Tutor not found.");
+
+            var dto = new TutorDTO
+            {
+                TutorId = tutor.TutorId,
+                UserId = tutor.UserId,
+                Name = tutor.Name,
+                Surname = tutor.Surname,
+                Phone = tutor.Phone,
+                Bio = tutor.Bio,
+                AboutMe = tutor.AboutMe,
+                Expertise = tutor.Expertise,
+                Education = tutor.Education,
+                IsBlocked = tutor.IsBlocked,
+                ProfileImageUrl = string.IsNullOrEmpty(tutor.ProfileImageUrl) ? "/images/default-profile.png" : tutor.ProfileImageUrl,
+                Modules = tutor.TutorModules.Select(tm => new ModuleDTO
+                {
+                    Id = tm.Module.ModuleId,
+                    Code = tm.Module.Code,
+                    Name = tm.Module.Name
+                }).ToList()
+            };
+
+            return Ok(dto);
+        }
+
 
     }
 }

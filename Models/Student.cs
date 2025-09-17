@@ -9,6 +9,7 @@
         public string? ProfileImage { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
         public ICollection<Session> Sessions { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
         public User User { get; set; }
     }
 }
