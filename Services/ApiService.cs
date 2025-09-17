@@ -30,7 +30,20 @@ namespace TutorConnect.WebApp.Services
 
         private void AddAuthHeader()
         {
-            var token = _httpContextAccessor.HttpContext?.Session.GetString("AuthToken");
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user == null) return;
+
+            var token = user.FindFirst("Token")?.Value;
+            var jwtExpiresStr = user.FindFirst("JWT_Expires")?.Value;
+
+            // Check if JWT has expired
+            if (!string.IsNullOrEmpty(jwtExpiresStr) &&
+                DateTime.TryParse(jwtExpiresStr, null, System.Globalization.DateTimeStyles.RoundtripKind, out var jwtExpires) &&
+                jwtExpires < DateTime.UtcNow)
+            {
+                token = null; // token expired
+            }
 
             if (!string.IsNullOrWhiteSpace(token))
             {
@@ -44,6 +57,9 @@ namespace TutorConnect.WebApp.Services
                 _client.DefaultRequestHeaders.Authorization = null;
             }
         }
+
+
+
 
         public async Task<StudentDashboardSummaryDTO> GetStudentDashboardSummaryAsync()
         {
@@ -80,12 +96,13 @@ namespace TutorConnect.WebApp.Services
             return await HandleResponse<List<TutorDTO>>(response);
         }
 
-        public async Task<TutorDTO> GetTutorByIdAsync(int id)
+        public async Task<TutorDTO> GetTutorByIdAsync(int tutorId)
         {
             AddAuthHeader();
-            var response = await _client.GetAsync($"api/admin/tutors/{id}");
+            var response = await _client.GetAsync($"api/tutor-dashboard/by-id/{tutorId}");
             return await HandleResponse<TutorDTO>(response);
         }
+
 
         public async Task<bool> CreateTutorAsync(CreateTutorDTO dto)
         {
@@ -127,6 +144,14 @@ namespace TutorConnect.WebApp.Services
             var response = await _client.DeleteAsync($"api/admin/delete-tutor/{id}");
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<TutorDTO> GetTutorProfileAsync(int tutorId)
+        {
+            AddAuthHeader();
+            var response = await _client.GetAsync($"api/admin/tutors/{tutorId}");
+            return await HandleResponse<TutorDTO>(response);
+        }
+
 
         public async Task<bool> ToggleBlockTutorAsync(int id)
         {
@@ -326,6 +351,14 @@ namespace TutorConnect.WebApp.Services
             var response = await _client.PutAsync($"api/chat/mark-read/{senderId}", null);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<List<ChatUserDTO>> GetChatContactsAsync()
+{
+    AddAuthHeader();
+    var response = await _client.GetAsync("api/chat/contacts");
+    return await HandleResponse<List<ChatUserDTO>>(response);
+}
+
 
 
         public async Task<(bool IsSuccess, string ErrorMessage, string? ProfileImageUrl)>

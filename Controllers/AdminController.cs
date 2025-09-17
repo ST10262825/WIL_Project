@@ -33,9 +33,14 @@ namespace TutorConnect.WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                              .Select(e => e.ErrorMessage)
+                                              .ToList();
+                ViewBag.Errors = errors;
                 ViewBag.Modules = await _api.GetModulesAsync();
                 return View(dto);
             }
+
 
             try
             {

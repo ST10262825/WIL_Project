@@ -9,20 +9,17 @@ namespace TutorConnect.WebApp
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // Add services
             builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
 
-            // Register HttpClient for API
+            // HttpClient for API
             builder.Services.AddHttpClient("TutorConnectAPI", client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44374/");
             });
 
             builder.Services.AddScoped<ApiService>();
-
-            // Add session and HTTP context accessor
-            builder.Services.AddSession();
             builder.Services.AddHttpContextAccessor();
 
             // Add authentication using cookies
@@ -31,11 +28,17 @@ namespace TutorConnect.WebApp
                 {
                     options.LoginPath = "/Auth/Login";
                     options.LogoutPath = "/Auth/Logout";
+
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    options.SlidingExpiration = true;
+
+                    // Do NOT set ExpireTimeSpan globally
+                    // Session cookies will die on browser close by default
                 });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -44,17 +47,11 @@ namespace TutorConnect.WebApp
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
-           
 
-
-            // Add authentication & authorization middleware
+            // Authentication & authorization
             app.UseAuthentication();
             app.UseAuthorization();
-
-            // Enable session middleware
-            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",

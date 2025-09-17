@@ -3,12 +3,24 @@
     var modules = ViewBag.Modules as List<ModuleDTO>;
 }
 
+
+
 <h2>Create Tutor</h2>
 
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">@ViewBag.Error</div>
 }
+@if (ViewBag.Errors != null)
+{
+    <ul class="text-danger">
+        @foreach (var err in ViewBag.Errors)
+        {
+            <li>@err</li>
+        }
+    </ul>
+}
+
 
 <form method="post">
     <div class="form-group">

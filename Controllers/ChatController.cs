@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using TutorConnect.WebApp.Models;
 using TutorConnect.WebApp.Services;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace TutorConnect.WebApp.Controllers
 {
@@ -25,6 +26,8 @@ namespace TutorConnect.WebApp.Controllers
         }
 
         // Returns all users except current user
+       
+
         [HttpGet]
         public async Task<IActionResult> Inbox()
         {
@@ -46,6 +49,7 @@ namespace TutorConnect.WebApp.Controllers
 
             return Json(jsonUsers);
         }
+
 
         // Returns chat messages between current user and selected user
         [HttpGet]
@@ -69,6 +73,8 @@ namespace TutorConnect.WebApp.Controllers
 
             return Json(jsonMessages);
         }
+
+
 
 
     }

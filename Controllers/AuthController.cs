@@ -1,14 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TutorConnect.WebApp.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Collections.Generic;
-using System.Net.Http;
+using TutorConnect.WebApp.Services;
 using TutorConnect.WebApp.Models;
+using System.Net.Http;
 
 namespace TutorConnect.WebApp.Controllers
 {
@@ -21,50 +18,87 @@ namespace TutorConnect.WebApp.Controllers
             _apiService = apiService;
         }
 
+        // =============================
+        // Views
+        // =============================
+        [HttpGet]
         public IActionResult Login() => View();
+
+        [HttpGet]
         public IActionResult Register() => View();
-        public IActionResult Verify(string email = "")
+
+        [HttpGet]
+        public IActionResult Verify(string? email)
         {
-            ViewBag.Email = email;
+            var resolvedEmail = email ?? TempData["UnverifiedEmail"] as string;
+            if (string.IsNullOrEmpty(resolvedEmail))
+                return RedirectToAction("Login");
+
+            ViewBag.Email = resolvedEmail;
             return View();
         }
 
+        // =============================
+        // Login
+        // =============================
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO loginDto)
         {
+            if (!ModelState.IsValid)
+                return View(loginDto);
+
             try
             {
                 var token = await _apiService.LoginAsync(loginDto);
-
                 if (token == null)
                 {
                     ViewBag.Error = "Login failed. Please try again.";
-                    return View();
+                    return View(loginDto);
                 }
 
-                // normal login flow
-                HttpContext.Session.SetString("AuthToken", token);
-
+                // Parse JWT
                 var handler = new JwtSecurityTokenHandler();
                 var jwtToken = handler.ReadJwtToken(token);
-                var role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-                var studentId = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
+                if (jwtToken.ValidTo < DateTime.UtcNow)
+                {
+                    ViewBag.Error = "Session expired. Please log in again.";
+                    return View(loginDto);
+                }
+
+                var role = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                var userId = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                // Claims for cookie
                 var claims = new List<Claim>
-{
-    new Claim(ClaimTypes.Name, loginDto.Email),
-    new Claim("Token", token)
-};
+        {
+            new Claim(ClaimTypes.Name, loginDto.Email),
+            new Claim(ClaimTypes.NameIdentifier, userId ?? ""),
+            new Claim("Token", token),
+            new Claim("JWT_Expires", jwtToken.ValidTo.ToString("o")) // <-- added claim
+        };
 
                 if (!string.IsNullOrEmpty(role))
                     claims.Add(new Claim(ClaimTypes.Role, role));
 
-                if (!string.IsNullOrEmpty(studentId))
-                    claims.Add(new Claim(ClaimTypes.NameIdentifier, studentId));
-
-
                 var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-                await HttpContext.SignInAsync("Cookies", new ClaimsPrincipal(claimsIdentity));
+
+                // Authentication properties
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = loginDto.RememberMe
+                };
+
+                if (loginDto.RememberMe)
+                {
+                    authProperties.ExpiresUtc = DateTime.UtcNow.AddDays(7);
+                }
+
+                await HttpContext.SignInAsync(
+                    "Cookies",
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties
+                );
 
                 return RedirectToAction("Index", "Home");
             }
@@ -72,28 +106,22 @@ namespace TutorConnect.WebApp.Controllers
             {
                 if (ex.Message.Contains("Email not verified"))
                 {
-                    // Redirect to verify view
                     TempData["UnverifiedEmail"] = loginDto.Email;
                     return RedirectToAction("Verify");
                 }
 
                 ViewBag.Error = ex.Message;
-                return View();
+                return View(loginDto);
             }
         }
 
 
-        [HttpGet]
-        public IActionResult Verify()
-        {
-            var email = TempData["UnverifiedEmail"] as string;
-            if (string.IsNullOrEmpty(email))
-                return RedirectToAction("Login");
 
-            ViewBag.Email = email;
-            return View();
-        }
 
+
+        // =============================
+        // Email Verification
+        // =============================
         [HttpPost]
         public async Task<IActionResult> Verify(string email, string token)
         {
@@ -118,34 +146,47 @@ namespace TutorConnect.WebApp.Controllers
             }
         }
 
-
+        // =============================
+        // Register
+        // =============================
         [HttpPost]
         public async Task<IActionResult> Register(RegisterStudentDTO dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dto); // stops here if passwords don’t match
+            }
+
             try
             {
-                var success = await _apiService.RegisterStudentAsync(dto);
-                if (!success)
+                await _apiService.RegisterStudentAsync(new RegisterStudentDTO
                 {
-                    ViewBag.Error = "Registration failed.";
-                    return View();
-                }
+                    Email = dto.Email,
+                    Password = dto.Password,
+                    Name = dto.Name,
+                    Course = dto.Course
+                });
 
-                TempData["SuccessMessage"] = "Registration successful. Please check your email and enter your verification token.";
+                TempData["SuccessMessage"] = "Registration successful. Please verify your email.";
                 return RedirectToAction("Verify", new { email = dto.Email });
             }
             catch (HttpRequestException ex)
             {
                 ViewBag.Error = ex.Message;
-                return View();
+                return View(dto);
             }
         }
 
+
+        // =============================
+        // Logout
+        // =============================
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("Cookies");
-            HttpContext.Session.Clear();
+       
+            Response.Cookies.Delete(".AspNetCore.Cookies");
             return RedirectToAction("Login");
         }
 

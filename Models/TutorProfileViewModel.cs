@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace TutorConnect.WebApp.Models
 {
@@ -25,12 +26,32 @@ namespace TutorConnect.WebApp.Models
         [StringLength(2000, ErrorMessage = "About Me cannot exceed 2000 characters.")]
         public string? AboutMe { get; set; }
 
+        // Optional: Legacy single-line expertise field
         [Display(Name = "Expertise (comma separated)")]
         [StringLength(500, ErrorMessage = "Expertise cannot exceed 500 characters.")]
         public string? Expertise { get; set; }
 
+        // Optional: Legacy single-line education field
         [Display(Name = "Education & Qualifications")]
         [StringLength(2000, ErrorMessage = "Education & Qualifications cannot exceed 2000 characters.")]
         public string? Education { get; set; }
+
+        // New: multiple expertise entries
+        public List<string> ExpertiseList { get; set; } = new();
+
+        // New: structured education entries
+        public List<EducationDTO> EducationList { get; set; } = new();
+    }
+
+    public class EducationDTO
+    {
+        [Display(Name = "Qualification")]
+        public string Qualification { get; set; } = string.Empty;
+
+        [Display(Name = "School / University")]
+        public string School { get; set; } = string.Empty;
+
+        [Display(Name = "Graduation Year")]
+        public string Year { get; set; } = string.Empty;
     }
 }

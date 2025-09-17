@@ -17,21 +17,20 @@
 }
 
 <form asp-action="MyProfile" method="post" enctype="multipart/form-data">
-    <!-- Hidden field for TutorId -->
     <input type="hidden" asp-for="TutorId" />
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label asp-for="Name">Name</label>
         <input asp-for="Name" class="form-control" readonly />
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label asp-for="Bio">Bio</label>
         <textarea asp-for="Bio" class="form-control" maxlength="500"></textarea>
         <span asp-validation-for="Bio" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         <label asp-for="ProfileImage">Profile Image</label>
         <input asp-for="ProfileImage" type="file" class="form-control-file" />
         @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
@@ -39,28 +38,80 @@
             <img src="@Model.ProfileImageUrl" alt="Current Profile Image" style="max-width: 150px; margin-top:10px;" />
         }
     </div>
-    <!-- 🔹 About Me -->
-    <div class="form-group">
+
+    <div class="form-group mb-3">
         <label asp-for="AboutMe">About Me</label>
         <textarea asp-for="AboutMe" class="form-control" rows="6" maxlength="2000"
-                  placeholder="Write a summary about yourself (up to ~200 words)"></textarea>
+                  placeholder="Write a summary about yourself"></textarea>
         <span asp-validation-for="AboutMe" class="text-danger"></span>
     </div>
 
-    <!-- 🔹 Expertise -->
-    <div class="form-group">
-        <label asp-for="Expertise">Expertise</label>
-        <input asp-for="Expertise" class="form-control"
-               placeholder="e.g. Mathematics, Physics, Programming" />
-        <span asp-validation-for="Expertise" class="text-danger"></span>
+    <!-- Expertise -->
+    <div class="form-group mb-3">
+        <label>Expertise <button type="button" class="btn btn-sm btn-success" id="addExpertise">+</button></label>
+        <div id="expertiseContainer">
+            @if (Model.ExpertiseList != null && Model.ExpertiseList.Any())
+            {
+                foreach (var exp in Model.ExpertiseList)
+                {
+                    <div class="input-group mb-2">
+                        <input type="text" name="ExpertiseList" class="form-control" value="@exp" placeholder="e.g. Calculus, Physics" />
+                        <button type="button" class="btn btn-danger remove-btn">-</button>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="input-group mb-2">
+                    <input type="text" name="ExpertiseList" class="form-control" placeholder="e.g. Calculus, Physics" />
+                    <button type="button" class="btn btn-danger remove-btn">-</button>
+                </div>
+            }
+        </div>
     </div>
 
-    <!-- 🔹 Education -->
-    <div class="form-group">
-        <label asp-for="Education">Education & Qualifications</label>
-        <textarea asp-for="Education" class="form-control" rows="4" maxlength="2000"
-                  placeholder="List your qualifications, schools, and graduation years"></textarea>
-        <span asp-validation-for="Education" class="text-danger"></span>
+    <!-- Education -->
+    <div class="form-group mb-3">
+        <label>Education & Qualifications <button type="button" class="btn btn-sm btn-success" id="addEducation">+</button></label>
+        <div id="educationContainer">
+            @if (Model.EducationList != null && Model.EducationList.Any())
+            {
+                for (int i = 0; i < Model.EducationList.Count; i++)
+                {
+                    <div class="row mb-2 align-items-center education-row">
+                        <div class="col-md-5">
+                            <input type="text" name="EducationList[@i].Qualification" class="form-control" value="@Model.EducationList[i].Qualification" placeholder="Qualification" />
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" name="EducationList[@i].School" class="form-control" value="@Model.EducationList[i].School" placeholder="School / University" />
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="EducationList[@i].Year" class="form-control" value="@Model.EducationList[i].Year" placeholder="Year" />
+                        </div>
+                        <div class="col-md-12 mt-1">
+                            <button type="button" class="btn btn-danger remove-edu-btn">Remove</button>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row mb-2 align-items-center education-row">
+                    <div class="col-md-5">
+                        <input type="text" name="EducationList[0].Qualification" class="form-control" placeholder="Qualification" />
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" name="EducationList[0].School" class="form-control" placeholder="School / University" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" name="EducationList[0].Year" class="form-control" placeholder="Year" />
+                    </div>
+                    <div class="col-md-12 mt-1">
+                        <button type="button" class="btn btn-danger remove-edu-btn">Remove</button>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 
     <button type="submit" class="btn btn-primary mt-2">Save Changes</button>
@@ -68,4 +119,55 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Add Expertise
+        document.getElementById('addExpertise').addEventListener('click', () => {
+            const container = document.getElementById('expertiseContainer');
+            const div = document.createElement('div');
+            div.className = 'input-group mb-2';
+            div.innerHTML = `
+                <input type="text" name="ExpertiseList" class="form-control" placeholder="e.g. Calculus, Physics" />
+                <button type="button" class="btn btn-danger remove-btn">-</button>
+            `;
+            container.appendChild(div);
+
+            div.querySelector('.remove-btn').addEventListener('click', () => div.remove());
+        });
+
+        // Remove existing Expertise inputs
+        document.querySelectorAll('#expertiseContainer .remove-btn').forEach(btn => {
+            btn.addEventListener('click', e => e.target.closest('.input-group').remove());
+        });
+
+        // Add Education
+        let eduIndex = @Model.EducationList?.Count() ?? 1;
+        document.getElementById('addEducation').addEventListener('click', () => {
+            const container = document.getElementById('educationContainer');
+            const div = document.createElement('div');
+            div.className = 'row mb-2 align-items-center education-row';
+            div.innerHTML = `
+                <div class="col-md-5">
+                    <input type="text" name="EducationList[${eduIndex}].Qualification" class="form-control" placeholder="Qualification" />
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="EducationList[${eduIndex}].School" class="form-control" placeholder="School / University" />
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="EducationList[${eduIndex}].Year" class="form-control" placeholder="Year" />
+                </div>
+                <div class="col-md-12 mt-1">
+                    <button type="button" class="btn btn-danger remove-edu-btn">Remove</button>
+                </div>
+            `;
+            container.appendChild(div);
+            eduIndex++;
+
+            div.querySelector('.remove-edu-btn').addEventListener('click', () => div.remove());
+        });
+
+        // Remove existing Education rows
+        document.querySelectorAll('.remove-edu-btn').forEach(btn => {
+            btn.addEventListener('click', e => e.target.closest('.education-row').remove());
+        });
+    </script>
 }

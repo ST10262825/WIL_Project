@@ -1,5 +1,9 @@
 ﻿@using TutorConnect.WebApp.Models
-@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    var authToken = User.FindFirst("Token")?.Value ?? "";
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0";
+}
 
 <style>
     .chat-container {
@@ -462,8 +466,8 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
     <script>
-        const currentUserId = parseInt('@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value');
-        const authToken = '@HttpContextAccessor.HttpContext.Session.GetString("AuthToken")';
+        const currentUserId = parseInt('@currentUserId');
+        const authToken = '@authToken';
         let selectedReceiverId = null;
         let selectedUserName = '';
 
