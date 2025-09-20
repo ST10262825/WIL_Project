@@ -7,6 +7,7 @@
         public string Name { get; set; }
         public string Course { get; set; }
         public string? ProfileImage { get; set; }
+        public string? Bio { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
         public ICollection<Session> Sessions { get; set; }
         public ICollection<Booking> Bookings { get; set; }

@@ -20,7 +20,11 @@ namespace TutorConnectAPI.Models
         public int ModuleId { get; set; }
         public Module Module { get; set; }
 
-        public DateTime SessionDate { get; set; }
+        [Required]
+        public DateTime StartTime { get; set; }  // e.g., 2025-09-20 10:00
+
+        [Required]
+        public DateTime EndTime { get; set; }    // e.g., 2025-09-20 11:00
 
         [MaxLength(500)]
         public string? Notes { get; set; }
