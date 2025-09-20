@@ -1,17 +1,17 @@
-﻿using System.Net.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using System;
-using static System.Net.WebRequestMethods;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using TutorConnect.WebApp.Models;
-using System.Text.Json;
-using System.Text;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using TutorConnect.WebApp.Models;
+using static System.Net.WebRequestMethods;
 
 
 namespace TutorConnect.WebApp.Services
@@ -58,15 +58,201 @@ namespace TutorConnect.WebApp.Services
             }
         }
 
+        // ==========================
+        // Booking-related methods
+        // ==========================
+
+        // Create booking (supports start/end time)
+        public async Task<bool> CreateBookingAsync(CreateBookingDTO dto)
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(dto);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("api/bookings/create", content);
+            return response.IsSuccessStatusCode;
+        }
+
+        // Get student bookings
+        //public async Task<List<BookingDTO>> GetStudentBookingsAsync(int studentId)
+        //{
+        //    var response = await _client.GetAsync($"api/bookings/student/{studentId}");
+        //    if (!response.IsSuccessStatusCode)
+        //        return new List<BookingDTO>();
+
+        //    var json = await response.Content.ReadAsStringAsync();
+        //    return System.Text.Json.JsonSerializer.Deserialize<List<BookingDTO>>(json, new JsonSerializerOptions
+        //    {
+        //        PropertyNameCaseInsensitive = true
+        //    }) ?? new List<BookingDTO>();
+        //}
+
+        // Get tutor bookings
+        public async Task<List<BookingDTO>> GetTutorBookingsAsync(int tutorId)
+        {
+            var response = await _client.GetAsync($"api/bookings/tutor/{tutorId}");
+            if (!response.IsSuccessStatusCode)
+                return new List<BookingDTO>();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return System.Text.Json.JsonSerializer.Deserialize<List<BookingDTO>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new List<BookingDTO>();
+        }
+
+        // Get available slots for a tutor on a specific date
+        public async Task<List<TimeSlotDTO>> GetTutorAvailabilityAsync(int tutorId, DateTime date)
+        {
+            var response = await _client.GetAsync($"api/bookings/tutor/{tutorId}/availability?date={date:yyyy-MM-dd}");
+            if (!response.IsSuccessStatusCode)
+                return new List<TimeSlotDTO>();
+
+            var json = await response.Content.ReadAsStringAsync();
+            return System.Text.Json.JsonSerializer.Deserialize<List<TimeSlotDTO>>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            }) ?? new List<TimeSlotDTO>();
+        }
+
+        // Update booking status
+        public async Task<bool> UpdateBookingStatusAsync(int bookingId, string status)
+        {
+            var response = await _client.PutAsync($"api/bookings/update-status/{bookingId}?status={status}", null);
+            return response.IsSuccessStatusCode;
+        }
 
 
+
+
+
+
+
+        public async Task<StudentDTO> GetStudentByUserIdAsync()
+        {
+            try
+            {
+                AddAuthHeader();
+
+                var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                    return null;
+
+                var response = await _client.GetAsync($"api/student/by-user/{userId}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<StudentDTO>(content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting student by user ID: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<List<BookingDTO>> GetStudentBookingsAsync(int studentId)
+        {
+            try
+            {
+                AddAuthHeader();
+                var response = await _client.GetAsync($"api/student/{studentId}/bookings");
+
+                if (!response.IsSuccessStatusCode)
+                    return new List<BookingDTO>();
+
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<BookingDTO>>(content) ?? new List<BookingDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting student bookings: {ex.Message}");
+                return new List<BookingDTO>();
+            }
+        }
 
         public async Task<StudentDashboardSummaryDTO> GetStudentDashboardSummaryAsync()
         {
-            AddAuthHeader();
-            var response = await _client.GetAsync("api/student/dashboard-summary");
-            return await HandleResponse<StudentDashboardSummaryDTO>(response);
+            try
+            {
+                AddAuthHeader();
+                var student = await GetStudentByUserIdAsync();
+                if (student == null) return null;
+
+                var response = await _client.GetAsync($"api/student/{student.StudentId}/dashboard-summary");
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                return await response.Content.ReadFromJsonAsync<StudentDashboardSummaryDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting dashboard summary: {ex.Message}");
+                return null;
+            }
         }
+
+        public async Task<(bool Success, string ProfileImageUrl, string Message)> UpdateStudentProfileAsync(int studentId, string bio, IFormFile profileImage)
+        {
+            AddAuthHeader();
+            try
+            {
+                using var form = new MultipartFormDataContent();
+
+                if (!string.IsNullOrEmpty(bio))
+                {
+                    form.Add(new StringContent(bio), "Bio");
+                }
+
+                if (profileImage != null)
+                {
+                    var streamContent = new StreamContent(profileImage.OpenReadStream());
+                    form.Add(streamContent, "ProfileImage", profileImage.FileName);
+                }
+
+                var response = await _client.PutAsync($"api/student/{studentId}/profile", form);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<dynamic>(content);
+
+                    bool success = result?.success ?? false;
+                    string message = result?.message?.ToString();
+                    string imageUrl = result?.profileImageUrl?.ToString();
+
+                    return (success, imageUrl, message);
+                }
+
+                return (false, null, "Failed to update profile");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating student profile: {ex.Message}");
+                return (false, null, "Error updating profile");
+            }
+        }
+
+        public async Task<List<BookingDTO>> GetUpcomingSessionsAsync(int studentId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/student/{studentId}/upcoming-sessions");
+                if (!response.IsSuccessStatusCode)
+                    return new List<BookingDTO>();
+
+                return await response.Content.ReadFromJsonAsync<List<BookingDTO>>() ?? new List<BookingDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting upcoming sessions: {ex.Message}");
+                return new List<BookingDTO>();
+            }
+        }
+
+
 
 
         private async Task<T> HandleResponse<T>(HttpResponseMessage response)
@@ -120,22 +306,22 @@ namespace TutorConnect.WebApp.Services
 
 
         // ✅ Get tutor bookings
-        public async Task<List<BookingDTO>> GetTutorBookingsAsync(int tutorId)
-        {
-            var response = await _client.GetAsync($"api/bookings/tutor/{tutorId}");
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<List<BookingDTO>>();
-            }
-            return new List<BookingDTO>();
-        }
+        //public async Task<List<BookingDTO>> GetTutorBookingsAsync(int tutorId)
+        //{
+        //    var response = await _client.GetAsync($"api/bookings/tutor/{tutorId}");
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        return await response.Content.ReadFromJsonAsync<List<BookingDTO>>();
+        //    }
+        //    return new List<BookingDTO>();
+        //}
 
         // ✅ Update booking status
-        public async Task<bool> UpdateBookingStatusAsync(int bookingId, string status)
-        {
-            var response = await _client.PutAsync($"api/bookings/update-status/{bookingId}?status={status}", null);
-            return response.IsSuccessStatusCode;
-        }
+        //public async Task<bool> UpdateBookingStatusAsync(int bookingId, string status)
+        //{
+        //    var response = await _client.PutAsync($"api/bookings/update-status/{bookingId}?status={status}", null);
+        //    return response.IsSuccessStatusCode;
+        //}
 
 
         public async Task<bool> DeleteTutorAsync(int id)
@@ -223,49 +409,42 @@ namespace TutorConnect.WebApp.Services
 
 
 
-        public async Task<StudentDTO?> GetStudentByUserIdAsync()
+        public async Task<StudentDTO> GetStudentByUserIdAsync(int? userId = null)
         {
             AddAuthHeader();
 
-            // Get UserId from the logged-in user claims
-            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
-                throw new HttpRequestException("UserId claim missing. Please re-login.");
-
-            // Call the correct API endpoint
-            var response = await _client.GetAsync($"api/student/by-user/{userId}");
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<StudentDTO>(content);
-        }
-
-
-
-        public async Task<bool> CreateBookingAsync(CreateBookingDTO dto)
-        {
-            var json = System.Text.Json.JsonSerializer.Serialize(dto);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _client.PostAsync("api/bookings/create", content);
-            return response.IsSuccessStatusCode;
-        }
-
-        public async Task<List<BookingDTO>> GetStudentBookingsAsync(int studentId)
-        {
-            var response = await _client.GetAsync($"api/bookings/student/{studentId}");
-            if (!response.IsSuccessStatusCode)
-                return new List<BookingDTO>();
-
-            var json = await response.Content.ReadAsStringAsync();
-            return System.Text.Json.JsonSerializer.Deserialize<List<BookingDTO>>(json, new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true
-            }) ?? new List<BookingDTO>();
+                int actualUserId;
+                if (userId.HasValue)
+                {
+                    actualUserId = userId.Value;
+                }
+                else
+                {
+                    // Get UserId from the logged-in user claims
+                    var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out actualUserId))
+                        throw new HttpRequestException("UserId claim missing. Please re-login.");
+                }
+
+                // Call the API endpoint - you need to implement this in your API
+                var response = await _client.GetAsync($"api/student/by-user/{actualUserId}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<StudentDTO>(content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting student by user ID: {ex.Message}");
+                return null;
+            }
         }
+
+
 
 
 

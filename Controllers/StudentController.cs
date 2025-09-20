@@ -1,82 +1,4 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using TutorConnect.WebApp.Models;
-//using TutorConnect.WebApp.Services;
-
-//namespace TutorConnect.WebApp.Controllers
-//{
-//    public class StudentController : Controller
-//    {
-//        private readonly ApiService _api;
-
-//        public StudentController(ApiService api)
-//        {
-//            _api = api;
-//        }
-
-//        public async Task<IActionResult> Dashboard()
-//        {
-//            try
-//            {
-//                var summary = await _api.GetStudentDashboardSummaryAsync();
-//                return View(summary);
-//            }
-//            catch (HttpRequestException ex)
-//            {
-//                ViewBag.Error = ex.Message;
-//                return View(new StudentDashboardSummaryDTO
-//                {
-//                    StudentName = "Student",
-//                    AvailableTutors = 0,
-//                    UpcomingBookings = 0
-//                });
-//            }
-//        }
-
-//        [HttpGet]
-//        public async Task<IActionResult> BrowseTutors(string searchTerm = "", int? moduleId = null)
-//        {
-//            var tutors = await _api.GetTutorsAsync();
-//            var modules = await _api.GetModulesAsync(); // ✅ Fetch all modules for dropdown
-
-//            if (tutors == null)
-//            {
-//                ViewBag.Error = "Failed to load tutors.";
-//                tutors = new List<TutorDTO>();
-//            }
-
-//            // Filter by search term
-//            if (!string.IsNullOrWhiteSpace(searchTerm))
-//            {
-//                searchTerm = searchTerm.ToLower();
-//                tutors = tutors.Where(t =>
-//                    t.Name.ToLower().Contains(searchTerm) ||
-//                    t.Surname.ToLower().Contains(searchTerm) ||
-//                    t.Modules.Any(m => m.Name.ToLower().Contains(searchTerm) || m.Code.ToLower().Contains(searchTerm))
-//                ).ToList();
-//            }
-
-//            // Filter by selected module
-//            if (moduleId.HasValue)
-//            {
-//                tutors = tutors.Where(t => t.Modules.Any(m => m.ModuleId == moduleId.Value)).ToList();
-//            }
-
-//            ViewBag.SearchTerm = searchTerm;
-//            ViewBag.ModuleId = moduleId;
-//            ViewBag.Modules = modules;
-
-//            return View(tutors);
-//        }
-
-
-
-
-
-//    }
-//}
-
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using TutorConnect.WebApp.Models;
@@ -94,111 +16,201 @@ namespace TutorConnect.WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> BookSession()
+        public async Task<IActionResult> Dashboard()
         {
-            var tutors = await _apiService.GetTutorsAsync();
-            var modules = await _apiService.GetModulesAsync();
-
-            ViewBag.Tutors = tutors.Select(t => new SelectListItem
+            try
             {
-                Value = t.TutorId.ToString(),
-                Text = t.Name
-            }).ToList();
+                // Get logged-in student
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null)
+                {
+                    TempData["Error"] = "Please log in to access the dashboard.";
+                    return RedirectToAction("Login", "Account");
+                }
 
-            ViewBag.Modules = modules.Select(m => new SelectListItem
-            {
-                Value = m.ModuleId.ToString(),
-                Text = m.Name
-            }).ToList();
+                // Get student bookings with timeout
+                var bookings = await GetWithTimeout(_apiService.GetStudentBookingsAsync(student.StudentId), 5000);
 
-            // ✅ Get UserId from JWT claim (the one you put inside token)
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
+                // Get dashboard summary with timeout
+                var summary = await GetWithTimeout(_apiService.GetStudentDashboardSummaryAsync(), 5000);
+
+                // Get unread messages count
+                var unreadMessagesCount = 0;
+                try
+                {
+                    unreadMessagesCount = await _apiService.GetUnreadMessagesCountAsync(student.StudentId);
+                }
+                catch
+                {
+                    // Silently fail for messages count - it's not critical
+                    unreadMessagesCount = 0;
+                }
+
+                ViewBag.Student = student;
+                ViewBag.UpcomingSessions = bookings?.Where(b => b.StartTime >= DateTime.Today &&
+                                                              (b.Status == "Accepted" || b.Status == "Pending"))
+                                                   .OrderBy(b => b.StartTime)
+                                                   .ToList() ?? new List<BookingDTO>();
+
+                ViewBag.PendingCount = bookings?.Count(b => b.Status == "Pending") ?? 0;
+                ViewBag.CompletedCount = bookings?.Count(b => b.Status == "Completed") ?? 0;
+                ViewBag.TotalHours = summary?.TotalLearningHours ?? 0;
+                ViewBag.ActiveTutors = summary?.ActiveTutorsCount ?? 0;
+                ViewBag.UnreadMessagesCount = unreadMessagesCount;
+
+                return View(bookings ?? new List<BookingDTO>());
+            }
+            catch (TimeoutException)
             {
-                return Unauthorized("UserId claim missing. Please re-login.");
+                TempData["Error"] = "The request timed out. Please try again.";
+                return View(new List<BookingDTO>());
+            }
+            catch (Exception ex)
+            {
+                // Log the actual error
+                Console.WriteLine($"Dashboard error: {ex.Message}");
+                TempData["Error"] = "Error loading dashboard. Showing limited information.";
+                return View(new List<BookingDTO>());
+            }
+        }
+
+        private async Task<T> GetWithTimeout<T>(Task<T> task, int timeoutMilliseconds)
+        {
+            var timeoutTask = Task.Delay(timeoutMilliseconds);
+            var completedTask = await Task.WhenAny(task, timeoutTask);
+
+            if (completedTask == timeoutTask)
+            {
+                throw new TimeoutException("The operation has timed out.");
             }
 
-            int userId = int.Parse(userIdClaim.Value);
+            return await task;
+        }
 
-            // ✅ Ask API for the student record by UserId
-            var student = await _apiService.GetStudentByUserIdAsync();
-            if (student == null)
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(int studentId, string bio, IFormFile profileImage)
+        {
+            try
             {
-                return Unauthorized("No student profile found for this user.");
+                var result = await _apiService.UpdateStudentProfileAsync(studentId, bio, profileImage);
+
+                if (result.Success)
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        // AJAX request - return JSON
+                        return Json(new
+                        {
+                            success = true,
+                            message = result.Message,
+                            profileImageUrl = result.ProfileImageUrl,
+                            bio = bio
+                        });
+                    }
+                    else
+                    {
+                        // Regular form submission
+                        TempData["Message"] = result.Message;
+                        return RedirectToAction("Dashboard");
+                    }
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = result.Message });
+                    }
+                    else
+                    {
+                        TempData["Error"] = result.Message;
+                        return RedirectToAction("Dashboard");
+                    }
+                }
             }
-
-            var model = new BookingViewModel
+            catch (Exception ex)
             {
-                StudentId = student.StudentId
-            };
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Error updating profile." });
+                }
+                else
+                {
+                    TempData["Error"] = "Error updating profile.";
+                    return RedirectToAction("Dashboard");
+                }
+            }
+        }
 
-            return View(model);
+
+        [HttpGet]
+        public async Task<IActionResult> MySessions()
+        {
+            try
+            {
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return RedirectToAction("Login", "Account");
+
+                var bookings = await _apiService.GetStudentBookingsAsync(student.StudentId);
+                return View(bookings);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error loading sessions.";
+                return RedirectToAction("Dashboard");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> BookSession(BookingViewModel model)
+        public async Task<IActionResult> CancelBooking(int bookingId)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            var dto = new CreateBookingDTO
+            try
             {
-                TutorId = model.TutorId,
-                StudentId = model.StudentId,
-                ModuleId = model.ModuleId,
-                SessionDate = model.SessionDate,
-                Notes = model.Notes
-            };
-
-            var success = await _apiService.CreateBookingAsync(dto);
-
-            if (success)
-            {
-                ViewBag.Message = "Booking created successfully!";
-                return RedirectToAction("MyBookings");
+                var success = await _apiService.UpdateBookingStatusAsync(bookingId, "Declined");
+                if (success)
+                {
+                    TempData["Message"] = "Booking cancelled successfully.";
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to cancel booking.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ViewBag.Error = "Failed to create booking.";
-                return View(model);
+                TempData["Error"] = "Error cancelling booking.";
             }
+
+            return RedirectToAction("MySessions");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> MyBookings()
+        private int GetLoggedInStudentId()
         {
-            // 1️⃣ Get UserId from JWT claim
+            var studentIdClaim = User.FindFirst("StudentId")?.Value;
+            if (int.TryParse(studentIdClaim, out int studentId))
+            {
+                return studentId;
+            }
+
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            if (int.TryParse(userIdClaim, out int userId))
             {
-                TempData["ErrorMessage"] = "User information missing. Please log in again.";
-                return RedirectToAction("Login", "Auth");
+                // You might need to get student ID from user ID
+                return userId; // This is temporary
             }
 
-            // 2️⃣ Fetch the student profile for this user
-            var student = await _apiService.GetStudentByUserIdAsync();
-            if (student == null)
-            {
-                TempData["ErrorMessage"] = "Student profile not found. Please contact support.";
-                return RedirectToAction("Dashboard");
-            }
-
-            // 3️⃣ Fetch bookings using the correct StudentId
-            var bookings = await _apiService.GetStudentBookingsAsync(student.StudentId);
-
-            // 4️⃣ Pass the bookings to the view
-            return View(bookings);
+            throw new Exception("Student not authenticated");
         }
-
-        
 
         [HttpGet]
         public IActionResult Chat()
         {
             return View("~/Views/Shared/Chat.cshtml");
         }
-
     }
 }
+
+
+
 
 

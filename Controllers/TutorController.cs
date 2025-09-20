@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Text.Json;
 using TutorConnect.WebApp.Models;
@@ -177,6 +178,55 @@ namespace TutorConnect.WebApp.Controllers
         {
             TempData["ErrorMessage"] = errorMessage;
             return RedirectToAction("Login", "Auth");
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = "Tutor")]
+        public async Task<IActionResult> MySessions()
+        {
+            try
+            {
+                // Get the logged-in tutor's ID
+                var tutorId = await GetLoggedInTutorIdAsync();
+
+                // Get all bookings for this tutor
+                var bookings = await _apiService.GetTutorBookingsAsync(tutorId);
+
+                ViewBag.PendingCount = bookings.Count(b => b.Status == "Pending");
+                ViewBag.TutorId = tutorId;
+
+                return View(bookings);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error loading sessions. Please try again.";
+                return RedirectToAction("Dashboard");
+            }
+        }
+
+        private async Task<int> GetLoggedInTutorIdAsync()
+        {
+            // Implement logic to get the logged-in tutor's ID
+            // This might be from claims, session, or API call
+            var tutorIdClaim = User.FindFirst("TutorId")?.Value;
+            if (!string.IsNullOrEmpty(tutorIdClaim) && int.TryParse(tutorIdClaim, out int tutorId))
+            {
+                return tutorId;
+            }
+
+            // Fallback: Get tutor by user ID
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(userIdClaim) && int.TryParse(userIdClaim, out int userId))
+            {
+                var tutor = await _apiService.GetTutorByUserIdAsync(userId);
+                if (tutor != null)
+                {
+                    return tutor.TutorId;
+                }
+            }
+
+            throw new Exception("Tutor not found. Please ensure you're logged in as a tutor.");
         }
     }
 }

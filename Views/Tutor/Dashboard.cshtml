@@ -1,9 +1,19 @@
 ﻿@model List<TutorConnect.WebApp.Models.BookingDTO>
 @{
     ViewData["Title"] = "Tutor Dashboard";
+
     int unreadMessages = ViewBag.UnreadMessagesCount ?? 0;
     string tutorName = ViewBag.TutorName ?? "Tutor";
+
+    // FIX: Add status filter to only include Accepted and Pending sessions
+    var upcomingSessions = Model?.Where(b => b.StartTime >= DateTime.Today &&
+                                           (b.Status == "Accepted" || b.Status == "Pending"))
+                                .OrderBy(b => b.StartTime)
+                                .ToList() ?? new List<BookingDTO>();
+
+    var pendingBookings = Model?.Count(b => b.Status == "Pending") ?? 0;
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,36 +95,6 @@
             object-fit: cover;
         }
 
-        .image-upload {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto;
-        }
-
-            .image-upload input {
-                position: absolute;
-                opacity: 0;
-                width: 100%;
-                height: 100%;
-                cursor: pointer;
-            }
-
-        .upload-overlay {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: var(--secondary-color);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-        }
-
         .dashboard-header {
             background-color: white;
             border-radius: 10px;
@@ -122,12 +102,6 @@
             position: relative;
             padding: 20px;
             margin-bottom: 20px;
-        }
-
-        .profile-completion {
-            position: absolute;
-            right: 20px;
-            top: 20px;
         }
 
         .stats-card {
@@ -186,11 +160,6 @@
             padding: 15px;
         }
 
-        .progress {
-            height: 10px;
-            border-radius: 5px;
-        }
-
         .btn-orange {
             background-color: var(--orange-color);
             color: white;
@@ -204,15 +173,6 @@
                 background-color: #e86c29;
                 color: white;
             }
-
-        .btn-sm {
-            border-radius: 20px;
-            padding: 5px 15px;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-        }
     </style>
 </head>
 <body>
@@ -222,18 +182,22 @@
             <div class="col-lg-3 mb-4">
                 <div class="sidebar">
                     <div class="p-4 text-center">
-                        <div class="image-upload">
-                            <img src="@ViewBag.TutorProfileImageUrl" alt="Profile" class="profile-image">
-                            <input type="file" id="profileImageUpload">
-                            <div class="upload-overlay"><i class="fas fa-camera"></i></div>
-                        </div>
+                        <img src="@ViewBag.TutorProfileImageUrl" alt="Profile" class="profile-image">
                         <h5 class="mt-3 mb-1">@ViewBag.TutorName</h5>
                         <p class="text-muted mb-0">@ViewBag.TutorBio</p>
                     </div>
                     <ul class="sidebar-menu">
                         <li><a href="#" class="active"><span><i class="fas fa-tachometer-alt"></i> Dashboard</span></a></li>
                         <li><a href="/Tutor/MyProfile"><span><i class="fas fa-user"></i> My Profile</span></a></li>
-                        <li><a href="#"><span><i class="fas fa-calendar-alt"></i> Schedule</span></a></li>
+                        <li>
+                            <a href="/Tutor/MySessions">
+                                <span><i class="fas fa-calendar-check me-1"></i> My Sessions</span>
+                                @if (pendingBookings > 0)
+                                {
+                                    <span class="badge bg-danger rounded-pill">@pendingBookings</span>
+                                }
+                            </a>
+                        </li>
                         <li><a href="#"><span><i class="fas fa-users"></i> My Students</span></a></li>
                         <li>
                             <a href="/Tutor/Chat">
@@ -253,23 +217,9 @@
             <div class="col-lg-9">
                 <!-- Dashboard Header -->
                 <div class="dashboard-header">
-                    <div class="profile-completion">
-                        <div class="d-flex align-items-center">
-                            <div class="me-3">
-                                <small class="text-muted">Profile Completion</small>
-                                <div class="progress mt-1" style="width: 150px;">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 80%"></div>
-                                </div>
-                            </div>
-                            <h5 class="mb-0">80%</h5>
-                        </div>
-                        <small class="text-muted">Complete your profile to attract more students</small>
-                    </div>
-                    <div class="profile-header">
-                        <div class="profile-info">
-                            <h4>Welcome back, @tutorName!</h4>
-                            <p class="text-muted mb-0">Here's what's happening with your tutoring business today.</p>
-                        </div>
+                    <div class="profile-info">
+                        <h4>Welcome back, @tutorName!</h4>
+                        <p class="text-muted mb-0">Here's what's happening with your tutoring business today.</p>
                     </div>
                 </div>
 
@@ -278,39 +228,39 @@
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
                             <div class="stats-icon" style="background-color: #e3f2fd; color: #1976d2;"><i class="fas fa-book"></i></div>
-                            <h5 class="mb-0">@Model.Count(b => b.SessionDate >= DateTime.Today)</h5>
-                            <p class="text-muted mb-0">Active Sessions</p>
+                            <h5 class="mb-0" id="upcomingCount">@upcomingSessions.Count</h5>
+                            <p class="text-muted mb-0">Upcoming Sessions</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
                             <div class="stats-icon" style="background-color: #fff3e0; color: #ff9800;"><i class="fas fa-users"></i></div>
-                            <h5 class="mb-0">@Model.Select(b => b.StudentId).Distinct().Count()</h5>
+                            <h5 class="mb-0">@(Model?.Select(b => b.StudentId).Distinct().Count() ?? 0)</h5>
                             <p class="text-muted mb-0">Total Students</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
                             <div class="stats-icon" style="background-color: #f3e5f5; color: #9c27b0;"><i class="fas fa-hourglass-half"></i></div>
-                            <h5 class="mb-0">@Model.Count(b => b.Status == "Pending")</h5>
+                            <h5 class="mb-0" id="pendingCount">@pendingBookings</h5>
                             <p class="text-muted mb-0">Pending Bookings</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
                             <div class="stats-icon" style="background-color: #e8f5e9; color: #2e7d32;"><i class="fas fa-check-circle"></i></div>
-                            <h5 class="mb-0" id="completedCount">@Model.Count(b => b.Status == "Completed")</h5>
-
+                            <h5 class="mb-0" id="completedCount">@(Model?.Count(b => b.Status == "Completed") ?? 0)</h5>
                             <p class="text-muted mb-0">Completed Sessions</p>
                         </div>
                     </div>
                 </div>
 
+
                 <!-- Upcoming Sessions -->
                 <div class="dashboard-card">
                     <h5><i class="fas fa-calendar-check"></i> Upcoming Sessions</h5>
 
-                    @if (!Model.Any(b => b.SessionDate >= DateTime.Today))
+                    @if (!upcomingSessions.Any())
                     {
                         <div class="text-center py-4">
                             <i class="fas fa-calendar-times text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
@@ -319,52 +269,49 @@
                     }
                     else
                     {
-                        @foreach (var session in Model.Where(b => b.SessionDate >= DateTime.Today).OrderBy(b => b.SessionDate))
+                        @foreach (var session in upcomingSessions)
                         {
-                            <div class="upcoming-session">
+                            <div class="upcoming-session" id="session_@session.BookingId">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <h6 class="mb-1">@session.ModuleName</h6>
+                                        <h6>@session.ModuleName</h6>
                                         <p class="text-muted mb-0">With @session.StudentName</p>
+                                        <small class="text-muted">
+                                            @session.StartTime.ToString("MMM dd, yyyy") at @session.StartTime.ToString("h:mm tt") - @session.EndTime.ToString("h:mm tt")
+                                        </small>
                                     </div>
                                     <div class="text-end">
-                                        <span class="badge @(session.SessionDate.Date == DateTime.Today ? "bg-success" : "bg-secondary")">
-                                            @(session.SessionDate.Date == DateTime.Today ? "Today" : session.SessionDate.ToString("MMM dd"))
+                                        <span class="badge @(session.StartTime.Date == DateTime.Today ? "bg-success" : "bg-secondary")">
+                                            @(session.StartTime.Date == DateTime.Today ? "Today" : session.StartTime.ToString("MMM dd"))
                                         </span>
                                         <br />
-                                        <small class="text-muted">@session.SessionDate.ToString("HH:mm")</small>
-                                        <br />
-                                        <!-- Booking Status Badge -->
-                                        <span class="badge
-                                            @(session.Status == "Pending" ? "bg-warning text-dark" :
-                                                                                    session.Status == "Accepted" ? "bg-primary" :
-                                                                                    session.Status == "Declined" ? "bg-danger" :
-                                                                                    session.Status == "Completed" ? "bg-success" : "bg-secondary")">
+                                        <span class="badge session-status
+                            @(session.Status == "Pending" ? "bg-warning text-dark" :
+                                                                    session.Status == "Accepted" ? "bg-primary" :
+                                                                    session.Status == "Declined" ? "bg-danger" :
+                                                                    session.Status == "Completed" ? "bg-success" : "bg-secondary")">
                                     @session.Status
                                 </span>
                             </div>
                         </div>
-                        <div class="mt-3">
+
+                                <div class="mt-3">
                             @if (session.Status == "Pending")
                                     {
-                                        <form asp-action="UpdateBookingStatus" method="post" style="display:inline">
-                                            <input type="hidden" name="bookingId" value="@session.BookingId" />
-                                            <input type="hidden" name="status" value="Accepted" />
-                                            <button type="submit" class="btn btn-success btn-sm me-1">
+                                        <div class="pending-actions">
+                                            <button type="button" class="btn btn-success btn-sm me-1 update-status-btn"
+                                                    data-booking-id="@session.BookingId" data-status="Accepted">
                                                 <i class="fas fa-check me-1"></i> Accept
                                             </button>
-                                        </form>
-                                        <form asp-action="UpdateBookingStatus" method="post" style="display:inline">
-                                            <input type="hidden" name="bookingId" value="@session.BookingId" />
-                                            <input type="hidden" name="status" value="Declined" />
-                                            <button type="submit" class="btn btn-danger btn-sm me-1">
+                                            <button type="button" class="btn btn-danger btn-sm me-1 update-status-btn"
+                                                    data-booking-id="@session.BookingId" data-status="Declined">
                                                 <i class="fas fa-times me-1"></i> Decline
                                             </button>
-                                        </form>
+                                        </div>
                                     }
+
                                     else if (session.Status == "Accepted")
                                     {
-                                        <!-- Mark as Complete Checkbox -->
                                         <div class="form-check">
                                             <input class="form-check-input complete-session-checkbox"
                                                    type="checkbox"
@@ -375,52 +322,160 @@
                                             </label>
                                         </div>
                                     }
-                                    <a href="/Tutor/Chat" class="btn btn-outline-secondary btn-sm mt-2">
+                                    <a href="/Tutor/Chat?studentId=@session.StudentId" class="btn btn-outline-secondary btn-sm mt-2">
                                         <i class="fas fa-comment me-1"></i> Message
                                     </a>
                                 </div>
                             </div>
                         }
-                    }
 
-                    <div class="text-center mt-3">
-                        <a href="#" class="btn btn-sm btn-outline-primary">View All Sessions</a>
-                    </div>
+                    }
                 </div>
+
+                <!-- Pending Bookings Section -->
+                @if (pendingBookings > 0)
+                {
+                    <div class="dashboard-card">
+                        <h5><i class="fas fa-clock"></i> Pending Approval (@pendingBookings)</h5>
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            You have @pendingBookings booking(s) waiting for your approval.
+                        </div>
+                        <a href="#upcoming-sessions" class="btn btn-orange">
+                            <i class="fas fa-check-circle me-1"></i> Review Bookings
+                        </a>
+                    </div>
+                }
             </div>
         </div>
     </div>
-
-    <!-- AJAX Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            $(".complete-session-checkbox").change(function () {
-                const bookingId = $(this).data("booking-id");
-                const checkbox = $(this);
 
-                if (checkbox.is(":checked")) {
-                    $.ajax({
-                        url: '/Tutor/UpdateBookingStatus',
-                        type: 'POST',
-                        headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
-                        contentType: 'application/json',
-                        data: JSON.stringify({ bookingId: bookingId, status: "Completed" }),
-                                success: function () {
-            const sessionDiv = checkbox.closest(".upcoming-session");
-            const badge = sessionDiv.find(".badge").last(); // last badge is the status
-            badge.text("Completed").removeClass().addClass("badge bg-success");
-            checkbox.closest(".form-check").remove(); // remove checkbox after completion
-        },
+                    function updateStats(upcomingDelta, pendingDelta, completedDelta) {
+            // Update upcoming sessions count
+            let upcomingCount = parseInt($("#upcomingCount").text()) + upcomingDelta;
+            $("#upcomingCount").text(upcomingCount);
 
-                        error: function () {
-                            alert("Failed to update session status.");
-                            checkbox.prop("checked", false);
-                        }
-                    });
+            // Update pending bookings count
+            let pendingCount = parseInt($("#pendingCount").text()) + pendingDelta;
+            $("#pendingCount").text(pendingCount);
+
+            // Update completed sessions count
+            let completedCount = parseInt($("#completedCount").text()) + completedDelta;
+            $("#completedCount").text(completedCount);
+
+            // FIX: Also update the pending badge in the sidebar if needed
+            const sidebarPendingBadge = $(".sidebar-menu .badge.bg-danger");
+            if (sidebarPendingBadge.length > 0) {
+                const newPendingCount = parseInt(sidebarPendingBadge.text()) + pendingDelta;
+                if (newPendingCount > 0) {
+                    sidebarPendingBadge.text(newPendingCount);
+                } else {
+                    sidebarPendingBadge.remove();
+                }
+            }
+        }
+
+                    // Accept / Decline buttons
+        $(".update-status-btn").click(function () {
+            const button = $(this);
+            const bookingId = button.data("booking-id");
+            const status = button.data("status");
+
+            // Show confirmation for decline
+            if (status === "Declined") {
+                if (!confirm("Are you sure you want to decline this booking?")) {
+                    return;
+                }
+            }
+
+            $.ajax({
+                url: '/Booking/UpdateBookingStatus',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(),
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({
+                    bookingId: bookingId,
+                    status: status
+                }),
+                success: function (response) {
+                    const sessionDiv = $("#session_" + bookingId);
+                    const badge = sessionDiv.find(".session-status");
+                    const actionsDiv = sessionDiv.find(".pending-actions");
+
+                    // Update badge
+                    badge.text(status)
+                         .removeClass("bg-warning bg-primary bg-danger bg-success bg-secondary")
+                         .addClass("badge " +
+                            (status === "Pending" ? "bg-warning text-dark" :
+                             status === "Accepted" ? "bg-primary" :
+                             status === "Declined" ? "bg-danger" :
+                             status === "Completed" ? "bg-success" : "bg-secondary"));
+
+                    // Remove action buttons
+                    actionsDiv.remove();
+
+                    // Remove the entire session from upcoming if status is Declined or Completed
+                    if (status === "Declined" || status === "Completed") {
+                        sessionDiv.remove(); // Remove the session card completely
+                    }
+
+                    // Update stats
+                    const upcomingDelta = (status === "Declined" || status === "Completed") ? -1 : 0;
+                    const pendingDelta = (status === "Accepted" || status === "Declined") ? -1 : 0;
+                    const completedDelta = (status === "Completed") ? 1 : 0;
+
+                    updateStats(upcomingDelta, pendingDelta, completedDelta);
+
+                    // Show success message
+                    alert("Booking status updated successfully!");
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error updating status:", error);
+                    alert("Failed to update booking status. Please try again.");
                 }
             });
         });
+
+        // Mark Complete checkbox - FIXED
+        $(".complete-session-checkbox").change(function () {
+            const checkbox = $(this);
+            const bookingId = checkbox.data("booking-id");
+
+            if (checkbox.is(":checked")) {
+                $.ajax({
+                    url: '/Booking/UpdateBookingStatus',
+                    type: 'POST',
+                    headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                    contentType: 'application/json',
+                    data: JSON.stringify({ bookingId: bookingId, status: "Completed" }),
+                    success: function () {
+                        const sessionDiv = $("#session_" + bookingId);
+
+                        // Remove the entire session card
+                        sessionDiv.remove();
+
+                        // Update stats
+                        updateStats(-1, 0, 1);
+
+                        alert("Session marked as completed!");
+                    },
+                    error: function () {
+                        alert("Failed to update session status.");
+                        checkbox.prop("checked", false);
+                    }
+                });
+            }
+        });
+
+        });
     </script>
+
+
+    
 </body>
 </html>

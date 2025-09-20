@@ -1,0 +1,173 @@
+﻿@model IEnumerable<TutorConnect.WebApp.Models.BookingDTO>
+
+<div class="row">
+    @foreach (var booking in Model)
+    {
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm session-card session-card-@(booking.Status.ToLower())">
+                <div class="card-body">
+                    <!-- Status Badge -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge @GetStatusBadgeClass(booking.Status)">
+                            @booking.Status
+                        </span>
+                        <small class="text-muted">#@booking.BookingId</small>
+                    </div>
+
+                    <!-- Student Info -->
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                 style="width: 50px; height: 50px; background-color: #3BB2B8; color: white;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="mb-0" style="color: #0B2E3D;">@booking.StudentName</h6>
+                            <small class="text-muted">Student</small>
+                        </div>
+                    </div>
+
+                    <!-- Booking Details -->
+                    <div class="booking-details">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Module:</span>
+                            <strong style="color: #0B2E3D;">@booking.ModuleName</strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Date:</span>
+                            <strong>@booking.StartTime.ToString("MMM dd, yyyy")</strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Time:</span>
+                            <strong>@booking.StartTime.ToString("hh:mm tt") - @booking.EndTime.ToString("hh:mm tt")</strong>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(booking.Notes))
+                        {
+                            <div class="mt-3">
+                                <small class="text-muted">Student Notes:</small>
+                                <p class="mb-0 small">@booking.Notes</p>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-3 pt-3 border-top">
+                        @if (booking.Status == "Pending")
+                        {
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success btn-sm update-status-btn"
+                                        data-booking-id="@booking.BookingId" data-status="Accepted">
+                                    <i class="fas fa-check me-1"></i> Accept
+                                </button>
+                                <button class="btn btn-danger btn-sm update-status-btn"
+                                        data-booking-id="@booking.BookingId" data-status="Declined">
+                                    <i class="fas fa-times me-1"></i> Decline
+                                </button>
+                            </div>
+                        }
+                        else if (booking.Status == "Accepted")
+                        {
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success btn-sm mark-complete-btn"
+                                        data-booking-id="@booking.BookingId">
+                                    <i class="fas fa-check-circle me-1"></i> Mark Complete
+                                </button>
+                                <a href="/Tutor/Chat?studentId=@booking.StudentId"
+                                   class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-comment me-1"></i> Message
+                                </a>
+                            </div>
+                        }
+                        else if (booking.Status == "Completed")
+                        {
+                            <div class="text-center">
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check-circle me-1"></i> Completed
+                                </span>
+                                <small class="d-block text-muted mt-1">Session completed successfully</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (!Model.Any())
+{
+    <div class="text-center py-4">
+        <i class="fas fa-inbox" style="font-size: 3rem; color: #ccc;"></i>
+        <p class="text-muted mt-3">No sessions found in this category.</p>
+    </div>
+}
+
+@functions {
+    private string GetStatusBadgeClass(string status)
+    {
+        return status switch
+        {
+            "Pending" => "bg-warning text-dark",
+            "Accepted" => "bg-primary",
+            "Declined" => "bg-danger",
+            "Completed" => "bg-success",
+            _ => "bg-secondary"
+        };
+    }
+}
+@section Scripts {
+    <script>
+        // Update status buttons
+        $(".update-status-btn").click(function () {
+            const button = $(this);
+            const bookingId = button.data("booking-id");
+            const status = button.data("status");
+
+            if (status === "Declined" && !confirm("Are you sure you want to decline this booking?")) {
+                return;
+            }
+
+            $.ajax({
+                url: '/Booking/UpdateBookingStatus',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(),
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({ bookingId: bookingId, status: status }),
+                success: function () {
+                    location.reload(); // Reload to see updated status
+                },
+                error: function () {
+                    alert("Failed to update booking status.");
+                }
+            });
+        });
+
+        // Mark complete button
+        $(".mark-complete-btn").click(function () {
+            const button = $(this);
+            const bookingId = button.data("booking-id");
+
+            $.ajax({
+                url: '/Booking/UpdateBookingStatus',
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(),
+                    'Content-Type': 'application/json'
+                },
+                data: JSON.stringify({ bookingId: bookingId, status: "Completed" }),
+                success: function () {
+                    location.reload();
+                },
+                error: function () {
+                    alert("Failed to mark session as complete.");
+                }
+            });
+        });
+    </script>
+}
