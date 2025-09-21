@@ -211,12 +211,6 @@ This project is currently under **active development**.
 - Database schema established  
 - Mobile app in development  
 
-### Upcoming Features
-- Advanced analytics dashboard  
-- Enhanced notification system  
-- Deployment to Azure App Service  
-- Performance optimization  
-
 ---
 
 **Repository**: [WIL_Project](https://github.com/ST10262825/WIL_Project)  
