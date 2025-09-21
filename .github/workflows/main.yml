@@ -60,9 +60,8 @@ jobs:
           fi
         continue-on-error: true
         
-      # ADD: Upload build artifacts
       - name: Upload Web Application Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: success()
         with:
           name: web-application
@@ -71,7 +70,7 @@ jobs:
         continue-on-error: true
         
       - name: Upload API Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: success()
         with:
           name: api-application
@@ -79,9 +78,8 @@ jobs:
           retention-days: 30
         continue-on-error: true
         
-      # ADD: Upload general build outputs
       - name: Upload Build Outputs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: build-outputs
@@ -90,7 +88,6 @@ jobs:
             ./test-results.txt
           retention-days: 7
           
-      # ADD: Create deployment package info
       - name: Generate Deployment Info
         run: |
           echo "Build Information:" > deployment-info.txt
@@ -103,7 +100,7 @@ jobs:
           find . -name "*.csproj" -o -name "*.sln" >> deployment-info.txt
           
       - name: Upload Deployment Info
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deployment-info
           path: deployment-info.txt
