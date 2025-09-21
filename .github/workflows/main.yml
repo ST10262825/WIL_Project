@@ -9,20 +9,102 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
+        
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '9.0.x'   # 
-
+          dotnet-version: '9.0.x'
+          
       - name: Restore dependencies
         run: dotnet restore
-
+        
       - name: Build
         run: dotnet build --configuration Release --no-restore
-
+        
+      # Basic test 
+      - name: Run Tests
+        run: |
+          if find . -name "*.Tests.csproj" -o -name "*Test*.csproj" | grep -q .; then
+            echo "Running existing tests..."
+            dotnet test --configuration Release --no-build --verbosity normal
+          else
+            echo "No test projects found - creating placeholder test result for development phase"
+            echo "Tests: 0 passed, 0 failed, 0 skipped" > test-results.txt
+          fi
+        continue-on-error: true
+        
+      # Create build artifacts
+      - name: Publish Web Application
+        run: |
+          # Check if web project exists and publish it
+          if find . -name "*.csproj" -path "*/Web*" -o -name "*.csproj" -path "*MVC*" | grep -q .; then
+            echo "Publishing web application..."
+            dotnet publish --configuration Release --output ./publish/web --no-build
+          else
+            echo "No web project found for publishing"
+          fi
+        continue-on-error: true
+        
+      - name: Publish API Application
+        run: |
+          # Check if API project exists and publish it
+          if find . -name "*.csproj" -path "*API*" -o -name "*.csproj" -path "*Api*" | grep -q .; then
+            echo "Publishing API application..."
+            dotnet publish --configuration Release --output ./publish/api --no-build
+          else
+            echo "No API project found for publishing"
+          fi
+        continue-on-error: true
+        
+      # ADD: Upload build artifacts
+      - name: Upload Web Application Artifacts
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: web-application
+          path: ./publish/web/
+          retention-days: 30
+        continue-on-error: true
+        
+      - name: Upload API Artifacts
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: api-application
+          path: ./publish/api/
+          retention-days: 30
+        continue-on-error: true
+        
+      # ADD: Upload general build outputs
+      - name: Upload Build Outputs
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: build-outputs
+          path: |
+            ./**/bin/Release/
+            ./test-results.txt
+          retention-days: 7
+          
+      # ADD: Create deployment package info
+      - name: Generate Deployment Info
+        run: |
+          echo "Build Information:" > deployment-info.txt
+          echo "Build Date: $(date)" >> deployment-info.txt
+          echo "Commit SHA: ${{ github.sha }}" >> deployment-info.txt
+          echo "Branch: ${{ github.ref_name }}" >> deployment-info.txt
+          echo "Triggered by: ${{ github.event_name }}" >> deployment-info.txt
+          echo "" >> deployment-info.txt
+          echo "Project Structure:" >> deployment-info.txt
+          find . -name "*.csproj" -o -name "*.sln" >> deployment-info.txt
+          
+      - name: Upload Deployment Info
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-info
+          path: deployment-info.txt
      
