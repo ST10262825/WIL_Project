@@ -46,6 +46,9 @@ namespace TutorConnect.WebApp.Controllers
                     unreadMessagesCount = 0;
                 }
 
+                // Get pending reviews count
+                var pendingReviews = await _apiService.GetPendingReviewsAsync(student.StudentId);
+
                 ViewBag.Student = student;
                 ViewBag.UpcomingSessions = bookings?.Where(b => b.StartTime >= DateTime.Today &&
                                                               (b.Status == "Accepted" || b.Status == "Pending"))
@@ -57,6 +60,7 @@ namespace TutorConnect.WebApp.Controllers
                 ViewBag.TotalHours = summary?.TotalLearningHours ?? 0;
                 ViewBag.ActiveTutors = summary?.ActiveTutorsCount ?? 0;
                 ViewBag.UnreadMessagesCount = unreadMessagesCount;
+                ViewBag.PendingReviewsCount = pendingReviews.Count; // Add this line
 
                 return View(bookings ?? new List<BookingDTO>());
             }
@@ -143,23 +147,49 @@ namespace TutorConnect.WebApp.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> MySessions()
-        {
-            try
-            {
-                var student = await _apiService.GetStudentByUserIdAsync();
-                if (student == null) return RedirectToAction("Login", "Account");
+       [HttpGet]
+public async Task<IActionResult> MySessions()
+{
+    try
+    {
+        var student = await _apiService.GetStudentByUserIdAsync();
+        if (student == null) return RedirectToAction("Login", "Account");
 
-                var bookings = await _apiService.GetStudentBookingsAsync(student.StudentId);
-                return View(bookings);
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Error loading sessions.";
-                return RedirectToAction("Dashboard");
-            }
-        }
+        var bookings = await _apiService.GetStudentBookingsAsync(student.StudentId);
+        
+        // Create a list to store booking review status
+        var bookingsWithReviewStatus = new List<BookingDTO>();
+
+                foreach (var booking in bookings)
+                {
+                    bookingsWithReviewStatus.Add(new BookingDTO
+                    {
+                        BookingId = booking.BookingId,
+                        TutorId = booking.TutorId,
+                        TutorName = booking.TutorName,
+                        StudentId = booking.StudentId,
+                        StudentName = booking.StudentName,
+                        ModuleName = booking.ModuleName,
+                        StartTime = booking.StartTime,
+                        EndTime = booking.EndTime,
+                        Status = booking.Status,
+                        Notes = booking.Notes,
+                        HasBeenReviewed = booking.Status == "Completed" ?
+                            await _apiService.HasBookingBeenReviewedAsync(booking.BookingId) : false
+                    });
+                }
+
+
+                return View(bookingsWithReviewStatus);
+    }
+    catch (Exception ex)
+    {
+        TempData["Error"] = "Error loading sessions.";
+        return RedirectToAction("Dashboard");
+    }
+}
+
+
 
         [HttpPost]
         public async Task<IActionResult> CancelBooking(int bookingId)
@@ -207,6 +237,79 @@ namespace TutorConnect.WebApp.Controllers
         {
             return View("~/Views/Shared/Chat.cshtml");
         }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Reviews()
+        {
+            try
+            {
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return RedirectToAction("Login", "Account");
+
+                var pendingReviews = await _apiService.GetPendingReviewsAsync(student.StudentId);
+
+                // Store count for sidebar badge
+                ViewBag.PendingReviewsCount = pendingReviews.Count;
+
+                return View(pendingReviews);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error loading reviews.";
+                return RedirectToAction("Dashboard");
+            }
+        }
+
+        [HttpGet("Student/Reviews/{tutorId}")]
+        public async Task<IActionResult> ReviewTutor(int tutorId)
+        {
+            var student = await _apiService.GetStudentByUserIdAsync();
+            if (student == null) return RedirectToAction("Login", "Account");
+
+            // Fetch pending reviews for this student
+            var pendingReviews = await _apiService.GetPendingReviewsAsync(student.StudentId);
+
+            // Filter for this specific tutor
+            var review = pendingReviews.FirstOrDefault(r => r.TutorId == tutorId);
+            if (review == null)
+            {
+                TempData["Error"] = "No review pending for this tutor.";
+                return RedirectToAction("MySessions");
+            }
+
+            return View("TutorReview", review); // New view for single tutor review
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitReview([FromBody] CreateReviewDTO reviewDto)
+        {
+            try
+            {
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return Json(new { success = false, message = "Student not found" });
+
+                reviewDto.StudentId = student.StudentId;
+
+                var success = await _apiService.SubmitReviewAsync(reviewDto);
+
+                if (success)
+                {
+                    return Json(new { success = true, message = "Review submitted successfully!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Failed to submit review." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error submitting review." });
+            }
+        }
+
     }
 }
 

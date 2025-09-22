@@ -1,50 +1,194 @@
-﻿@model UpdateTutorDTO
+﻿@model TutorConnect.WebApp.Models.AdminUpdateTutorDTO
 @{
-    var modules = ViewBag.Modules as List<ModuleDTO>;
+    ViewData["Title"] = "Edit Tutor";
+    var modules = ViewBag.Modules as List<TutorConnect.WebApp.Models.ModuleDTO> ?? new List<TutorConnect.WebApp.Models.ModuleDTO>();
 }
 
-<h2>Edit Tutor</h2>
 
-<form asp-action="EditTutor" method="post">
-    <input type="hidden" asp-for="Id" />
 
-    <div class="mb-3">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
+
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Edit Tutor</h1>
+        <a asp-action="Tutors" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Tutors
+        </a>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="Surname"></label>
-        <input asp-for="Surname" class="form-control" />
-    </div>
+    <!-- Success/Error Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
-    <div class="mb-3">
-        <label asp-for="Phone"></label>
-        <input asp-for="Phone" class="form-control" />
-    </div>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
-    <div class="mb-3">
-        <label asp-for="Bio"></label>
-        <textarea asp-for="Bio" class="form-control"></textarea>
-    </div>
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
 
-    <div class="mb-3">
-        <label>Modules</label>
-        @foreach (var module in modules)
-        {
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox"
-                       name="ModuleIds" value="@module.ModuleId"
-                @(Model.ModuleIds.Contains(module.ModuleId) ? "checked" : "") />
-                <label class="form-check-label">@module.Code - @module.Name</label>
-            </div>
-        }
-    </div>
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Tutor Information</h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="EditTutor" method="post">
+                <input type="hidden" asp-for="Id" />
 
-    <div class="form-check mb-3">
-        <input class="form-check-input" asp-for="IsBlocked" />
-        <label class="form-check-label">Blocked</label>
-    </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="form-label">First Name *</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Surname" class="form-label">Last Name *</label>
+                            <input asp-for="Surname" class="form-control" />
+                            <span asp-validation-for="Surname" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
 
-    <button type="submit" class="btn btn-primary">Update</button>
-</form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Phone" class="form-label">Phone Number</label>
+                            <input asp-for="Phone" class="form-control" placeholder="+27 12 345 6789" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="form-label">Email Address *</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="tutor@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Bio" class="form-label">Bio/Description *</label>
+                    <textarea asp-for="Bio" class="form-control" rows="3" placeholder="Brief description about the tutor..."></textarea>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="AboutMe" class="form-label">About Me</label>
+                    <textarea asp-for="AboutMe" class="form-control" rows="4" placeholder="Detailed information about teaching style, experience, etc..."></textarea>
+                    <span asp-validation-for="AboutMe" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Expertise" class="form-label">Areas of Expertise</label>
+                            <input asp-for="Expertise" class="form-control" placeholder="Mathematics, Physics, Programming..." />
+                            <span asp-validation-for="Expertise" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Education" class="form-label">Education</label>
+                            <input asp-for="Education" class="form-control" placeholder="MSc Computer Science, University of..." />
+                            <span asp-validation-for="Education" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label class="form-label">Assigned Modules *</label>
+                    <div class="card">
+                        <div class="card-body" style="max-height: 200px; overflow-y: auto;">
+                            @if (modules.Any())
+                            {
+                                foreach (var module in modules)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="ModuleIds"
+                                               value="@module.ModuleId"
+                                               id="module-@module.ModuleId"
+                                               @(Model.ModuleIds != null && Model.ModuleIds.Contains(module.ModuleId) ? "checked" : "") />
+                                        <label class="form-check-label" for="module-@module.ModuleId">
+                                            @module.Code - @module.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <p class="text-muted">No modules available. Please create modules first.</p>
+                            }
+                        </div>
+                    </div>
+                    <span asp-validation-for="ModuleIds" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" asp-for="IsBlocked" />
+                        <label class="form-check-label" asp-for="IsBlocked">
+                            Block this tutor from the system
+                        </label>
+                    </div>
+                    <small class="form-text text-muted">Blocked tutors cannot receive new bookings or log in.</small>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="fas fa-save"></i> Update Tutor
+                    </button>
+                    <a asp-action="Tutors" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+
+            // Form validation enhancement
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const checkboxes = form.querySelectorAll('input[name="ModuleIds"]:checked');
+                if (checkboxes.length === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one module for the tutor.');
+                    return false;
+                }
+            });
+        });
+    </script>
+}

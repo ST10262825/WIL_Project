@@ -21,10 +21,11 @@
             <div class="sidebar">
                 <div class="p-4 text-center">
                     <div class="image-upload position-relative">
-                        <img src="@(student?.ProfileImage ?? "/images/default-profile.png")?v=@DateTime.Now.Ticks"
+                        <img src="@Url.Content(student?.ProfileImage ?? "~/images/default-profile.png")?v=@Guid.NewGuid().ToString("N")"
                              alt="Profile"
                              class="profile-image"
-                             id="profileImage">
+                             id="profileImage"
+                             onerror="this.src='@Url.Content("~/images/default-profile.png")'">
                         <div class="upload-overlay" data-bs-toggle="modal" data-bs-target="#profileModal">
                             <i class="fas fa-camera"></i>
                         </div>
@@ -42,7 +43,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="@Url.Action("Index", "Tutor")">
+                        <a href="@Url.Action("Browse", "Tutor")">
                             <i class="fas fa-search"></i> Find Tutors
                         </a>
                     </li>
@@ -92,11 +93,6 @@
                     <div class="profile-info">
                         <h4>Welcome back, @(student?.Name ?? "Student")! 👋</h4>
                         <p class="text-muted mb-0">Ready to continue your learning journey? Here's what's happening with your studies.</p>
-                    </div>
-                    <div class="d-flex gap-2">
-                        <a href="@Url.Action("Index", "Tutor")" class="btn btn-primary">
-                            <i class="fas fa-search me-1"></i>Find Tutors
-                        </a>
                     </div>
                 </div>
             </div>
@@ -156,7 +152,7 @@
                             <div class="text-center py-5">
                                 <i class="fas fa-calendar-times text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
                                 <p class="text-muted mt-3 mb-2">No upcoming sessions scheduled.</p>
-                                <a href="@Url.Action("Index", "Tutor")" class="btn btn-primary btn-sm">
+                                <a href="@Url.Action("Browse", "Tutor")" class="btn btn-primary btn-sm">
                                     <i class="fas fa-search me-1"></i>Find Tutors
                                 </a>
                             </div>
@@ -238,35 +234,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Recent Activity -->
-            <div class="dashboard-card">
-                <h5><i class="fas fa-bell me-2" style="color: #3BB2B8;"></i> Recent Activity</h5>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="activity-item d-flex align-items-center p-3 mb-3">
-                            <div class="activity-icon me-3">
-                                <i class="fas fa-calendar-plus text-success"></i>
-                            </div>
-                            <div>
-                                <p class="mb-1 fw-medium">New session booked</p>
-                                <small class="text-muted">JavaScript with Prof. Chen - Tomorrow at 3 PM</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="activity-item d-flex align-items-center p-3 mb-3">
-                            <div class="activity-icon me-3">
-                                <i class="fas fa-check-circle text-primary"></i>
-                            </div>
-                            <div>
-                                <p class="mb-1 fw-medium">Session completed</p>
-                                <small class="text-muted">Database Design with Dr. Rodriguez</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -284,11 +251,12 @@
 
                 <div class="text-center mb-4">
                     <div class="image-upload position-relative mx-auto" style="width: 120px;">
-                        <img src="@(student?.ProfileImage ?? "/images/default-profile.png")?v=@DateTime.Now.Ticks"
+                        <img src="@Url.Content(student?.ProfileImage ?? "~/images/default-profile.png")?v=@Guid.NewGuid().ToString("N")"
                              alt="Profile"
                              class="profile-image"
                              id="modalProfileImage"
-                             style="width: 120px; height: 120px;">
+                             style="width: 120px; height: 120px;"
+                             onerror="this.src='@Url.Content("~/images/default-profile.png")'">
                         <div class="upload-overlay" style="width: 30px; height: 30px;">
                             <i class="fas fa-camera"></i>
                         </div>
@@ -311,8 +279,8 @@
     </div>
 </div>
 
+
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
         function previewImage(input) {
             if (input.files && input.files[0]) {

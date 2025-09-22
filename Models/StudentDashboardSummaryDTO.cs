@@ -9,5 +9,6 @@
         public int ActiveTutorsCount { get; set; }
         public int PendingBookingsCount { get; set; }
         public int CoursesEnrolledCount { get; set; } = 5; // Default for now
+        public int PendingReviewsCount { get; set; } // Add this property
     }
 }

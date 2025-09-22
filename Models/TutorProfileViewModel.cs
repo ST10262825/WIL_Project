@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using System.ComponentModel.DataAnnotations;
 
 namespace TutorConnect.WebApp.Models
 {
@@ -41,6 +42,19 @@ namespace TutorConnect.WebApp.Models
 
         // New: structured education entries
         public List<EducationDTO> EducationList { get; set; } = new();
+
+        //Rating properties
+        public double AverageRating { get; set; }
+        public int TotalReviews { get; set; }
+        public int RatingCount1 { get; set; }
+        public int RatingCount2 { get; set; }
+        public int RatingCount3 { get; set; }
+        public int RatingCount4 { get; set; }
+        public int RatingCount5 { get; set; }
+        public List<ReviewDTO> Reviews { get; set; } = new List<ReviewDTO>();
+        // Availability properties
+        public List<TimeSlotDTO> Availability { get; set; } = new();
+
     }
 
     public class EducationDTO
@@ -54,4 +68,5 @@ namespace TutorConnect.WebApp.Models
         [Display(Name = "Graduation Year")]
         public string Year { get; set; } = string.Empty;
     }
+
 }

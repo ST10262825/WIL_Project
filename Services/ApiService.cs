@@ -72,19 +72,6 @@ namespace TutorConnect.WebApp.Services
             return response.IsSuccessStatusCode;
         }
 
-        // Get student bookings
-        //public async Task<List<BookingDTO>> GetStudentBookingsAsync(int studentId)
-        //{
-        //    var response = await _client.GetAsync($"api/bookings/student/{studentId}");
-        //    if (!response.IsSuccessStatusCode)
-        //        return new List<BookingDTO>();
-
-        //    var json = await response.Content.ReadAsStringAsync();
-        //    return System.Text.Json.JsonSerializer.Deserialize<List<BookingDTO>>(json, new JsonSerializerOptions
-        //    {
-        //        PropertyNameCaseInsensitive = true
-        //    }) ?? new List<BookingDTO>();
-        //}
 
         // Get tutor bookings
         public async Task<List<BookingDTO>> GetTutorBookingsAsync(int tutorId)
@@ -103,15 +90,35 @@ namespace TutorConnect.WebApp.Services
         // Get available slots for a tutor on a specific date
         public async Task<List<TimeSlotDTO>> GetTutorAvailabilityAsync(int tutorId, DateTime date)
         {
-            var response = await _client.GetAsync($"api/bookings/tutor/{tutorId}/availability?date={date:yyyy-MM-dd}");
-            if (!response.IsSuccessStatusCode)
-                return new List<TimeSlotDTO>();
+            var url = $"api/bookings/tutor/{tutorId}/availability?date={date:yyyy-MM-dd}";
+            Console.WriteLine($"Calling API: {url}");
 
-            var json = await response.Content.ReadAsStringAsync();
-            return System.Text.Json.JsonSerializer.Deserialize<List<TimeSlotDTO>>(json, new JsonSerializerOptions
+            var response = await _client.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
             {
-                PropertyNameCaseInsensitive = true
-            }) ?? new List<TimeSlotDTO>();
+                var content = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Response: {content}");
+
+                try
+                {
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+                    return System.Text.Json.JsonSerializer.Deserialize<List<TimeSlotDTO>>(content, options);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Deserialization error: {ex.Message}");
+                    return new List<TimeSlotDTO>();
+                }
+            }
+            else
+            {
+                Console.WriteLine($"API Error: {response.StatusCode}");
+                return new List<TimeSlotDTO>();
+            }
         }
 
         // Update booking status
@@ -304,31 +311,43 @@ namespace TutorConnect.WebApp.Services
             return response.IsSuccessStatusCode;
         }
 
-
-        // ✅ Get tutor bookings
-        //public async Task<List<BookingDTO>> GetTutorBookingsAsync(int tutorId)
-        //{
-        //    var response = await _client.GetAsync($"api/bookings/tutor/{tutorId}");
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        return await response.Content.ReadFromJsonAsync<List<BookingDTO>>();
-        //    }
-        //    return new List<BookingDTO>();
-        //}
-
-        // ✅ Update booking status
-        //public async Task<bool> UpdateBookingStatusAsync(int bookingId, string status)
-        //{
-        //    var response = await _client.PutAsync($"api/bookings/update-status/{bookingId}?status={status}", null);
-        //    return response.IsSuccessStatusCode;
-        //}
-
-
-        public async Task<bool> DeleteTutorAsync(int id)
+        public async Task<(bool Success, string Message, bool HasPendingBookings)> DeleteTutorAsync(int id)
         {
             AddAuthHeader();
-            var response = await _client.DeleteAsync($"api/admin/delete-tutor/{id}");
-            return response.IsSuccessStatusCode;
+            try
+            {
+                Console.WriteLine($"API Service: Deleting tutor {id}");
+                var response = await _client.DeleteAsync($"api/admin/delete-tutor/{id}");
+
+                Console.WriteLine($"API Response Status: {response.StatusCode}");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Response Content: {responseContent}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Delete successful");
+                    return (true, "Tutor deleted successfully.", false);
+                }
+
+                // Check for specific error conditions
+                bool hasPendingBookings = responseContent.Contains("pending bookings", StringComparison.OrdinalIgnoreCase);
+                bool hasActiveBookings = responseContent.Contains("active bookings", StringComparison.OrdinalIgnoreCase);
+
+                string errorMessage = hasPendingBookings ?
+                    "Cannot delete tutor with pending bookings. Please resolve pending bookings first." :
+                    hasActiveBookings ?
+                    "Cannot delete tutor with active upcoming sessions. Please resolve all bookings first." :
+                    $"Delete failed: {responseContent}";
+
+                Console.WriteLine($"Delete failed: {errorMessage}");
+                return (false, errorMessage, hasPendingBookings);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"API Service Exception: {ex.Message}");
+                return (false, $"An error occurred: {ex.Message}", false);
+            }
         }
 
         public async Task<TutorDTO> GetTutorProfileAsync(int tutorId)
@@ -361,15 +380,57 @@ namespace TutorConnect.WebApp.Services
 
         public async Task<string> LoginAsync(LoginDTO loginDto)
         {
-            var response = await _client.PostAsJsonAsync("api/auth/login", loginDto);
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                var error = await response.Content.ReadAsStringAsync();
-                throw new HttpRequestException($"Login failed: {error}");
-            }
+                var response = await _client.PostAsJsonAsync("api/auth/login", loginDto);
 
-            var json = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
-            return json["token"];
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+
+                    // Check for blocked account message
+                    if (errorContent.Contains("Account currently blocked", StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw new HttpRequestException("Account currently blocked. Please contact your Administrator.");
+                    }
+
+                    // Check for email not verified
+                    if (errorContent.Contains("Email not verified", StringComparison.OrdinalIgnoreCase))
+                    {
+                        throw new HttpRequestException("Email not verified");
+                    }
+
+                    throw new HttpRequestException($"Login failed: {errorContent}");
+                }
+
+                var json = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                return json["token"];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login error: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> IsUserBlockedAsync(int userId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/auth/user/{userId}/blocked-status");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<bool>(content);
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking blocked status: {ex.Message}");
+                return false;
+            }
         }
 
         public async Task<bool> RegisterStudentAsync(RegisterStudentDTO dto)
@@ -444,11 +505,6 @@ namespace TutorConnect.WebApp.Services
             }
         }
 
-
-
-
-
-
         public async Task<bool> UpdateSessionStatusAsync(int sessionId, string newStatus, string? reason = null)
         {
             var payload = new
@@ -470,6 +526,31 @@ namespace TutorConnect.WebApp.Services
             return await response.Content.ReadFromJsonAsync<TutorDTO>();
         }
 
+
+
+        public async Task<TutorDTO> GetAdminTutorByIdAsync(int tutorId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/admin/tutors/{tutorId}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Failed to get tutor: {response.StatusCode}");
+                    return null;
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                var tutor = JsonConvert.DeserializeObject<TutorDTO>(content);
+                return tutor;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting tutor by ID: {ex.Message}");
+                return null;
+            }
+        }
 
 
 
@@ -532,11 +613,11 @@ namespace TutorConnect.WebApp.Services
         }
 
         public async Task<List<ChatUserDTO>> GetChatContactsAsync()
-{
-    AddAuthHeader();
-    var response = await _client.GetAsync("api/chat/contacts");
-    return await HandleResponse<List<ChatUserDTO>>(response);
-}
+        {
+            AddAuthHeader();
+            var response = await _client.GetAsync("api/chat/contacts");
+            return await HandleResponse<List<ChatUserDTO>>(response);
+        }
 
 
 
@@ -584,12 +665,492 @@ namespace TutorConnect.WebApp.Services
         }
 
         public async Task<List<BrowseTutorDTO>> GetAllTutorsAsync()
-{
-    var response = await _client.GetAsync("api/tutor-dashboard/browse");
-    response.EnsureSuccessStatusCode();
-    var json = await response.Content.ReadAsStringAsync();
-    return JsonConvert.DeserializeObject<List<BrowseTutorDTO>>(json) ?? new List<BrowseTutorDTO>();
-}
+        {
+            var response = await _client.GetAsync("api/tutor-dashboard/browse");
+            response.EnsureSuccessStatusCode();
+            var json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<List<BrowseTutorDTO>>(json) ?? new List<BrowseTutorDTO>();
+        }
+
+
+        public async Task<List<TutorDTO>> GetAllAdminTutorsAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                // Use the correct admin endpoint
+                var response = await _client.GetAsync("api/admin/tutors");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"API Error: {response.StatusCode}");
+                    return new List<TutorDTO>();
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                var tutors = JsonConvert.DeserializeObject<List<TutorDTO>>(content) ?? new List<TutorDTO>();
+
+                // For now, set default values for missing properties
+                foreach (var tutor in tutors)
+                {
+                    tutor.TotalBookings = tutor.TotalBookings; // Will be 0 from API, but that's okay
+                    tutor.AverageRating = tutor.AverageRating; // Will be 0 from API
+                }
+
+                return tutors;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting tutors: {ex.Message}");
+                return new List<TutorDTO>();
+            }
+        }
+
+
+        public async Task<List<PendingReviewDTO>> GetPendingReviewsAsync(int studentId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/reviews/student/{studentId}/pending");
+                if (!response.IsSuccessStatusCode)
+                    return new List<PendingReviewDTO>();
+
+                return await response.Content.ReadFromJsonAsync<List<PendingReviewDTO>>() ?? new List<PendingReviewDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting pending reviews: {ex.Message}");
+                return new List<PendingReviewDTO>();
+            }
+        }
+
+        public async Task<bool> SubmitReviewAsync(CreateReviewDTO review)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/reviews", review);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error submitting review: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<List<ReviewDTO>> GetTutorReviewsAsync(int tutorId)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"api/reviews/tutor/{tutorId}");
+                if (!response.IsSuccessStatusCode)
+                    return new List<ReviewDTO>();
+
+                return await response.Content.ReadFromJsonAsync<List<ReviewDTO>>() ?? new List<ReviewDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting tutor reviews: {ex.Message}");
+                return new List<ReviewDTO>();
+            }
+        }
+
+        public async Task<TutorRatingDTO> GetTutorRatingsAsync(int tutorId)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"api/tutors/{tutorId}/ratings");
+                if (!response.IsSuccessStatusCode)
+                    return new TutorRatingDTO();
+
+                return await response.Content.ReadFromJsonAsync<TutorRatingDTO>() ?? new TutorRatingDTO();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting tutor ratings: {ex.Message}");
+                return new TutorRatingDTO();
+            }
+        }
+
+        // Create a small class to map the API response
+        public class ReviewedResponse
+        {
+            public bool HasBeenReviewed { get; set; }
+        }
+
+        // In your ApiService
+        public async Task<bool> HasBookingBeenReviewedAsync(int bookingId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/reviews/booking/{bookingId}/reviewed");
+                if (!response.IsSuccessStatusCode)
+                    return false;
+
+                var result = await response.Content.ReadFromJsonAsync<ReviewedResponse>();
+                return result?.HasBeenReviewed ?? false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error checking if booking has been reviewed: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
+
+
+        public async Task<T> PostAsync<T>(string endpoint, object data)
+        {
+            AddAuthHeader();
+            var response = await _client.PostAsJsonAsync(endpoint, data);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<T>();
+        }
+
+        public async Task DeleteAsync(string endpoint)
+        {
+            AddAuthHeader();
+            var response = await _client.DeleteAsync(endpoint);
+            response.EnsureSuccessStatusCode();
+        }
+
+
+
+
+
+
+
+        // Update tutor method
+        public async Task<bool> AdminUpdateTutorAsync(AdminUpdateTutorDTO dto)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PutAsJsonAsync($"api/admin/update-tutor/{dto.Id}", dto);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+                // Handle specific error cases
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Update failed: {errorContent}");
+                    throw new HttpRequestException($"Update failed: {errorContent}");
+                }
+
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"HTTP error updating tutor: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating tutor: {ex.Message}");
+                throw new HttpRequestException($"Error updating tutor: {ex.Message}", ex);
+            }
+        }
+
+
+
+        // In your ApiService.cs
+
+        public async Task<List<BookingDTO>> GetAllBookingsAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/admin/bookings");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Failed to get bookings: {response.StatusCode}");
+                    return new List<BookingDTO>();
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                var bookings = JsonConvert.DeserializeObject<List<BookingDTO>>(content);
+                return bookings ?? new List<BookingDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting bookings: {ex.Message}");
+                return new List<BookingDTO>();
+            }
+        }
+
+        public async Task<bool> DeleteBookingAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.DeleteAsync($"api/admin/delete-booking/{id}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    if (errorContent.Contains("pending", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return false;
+                    }
+                }
+
+                response.EnsureSuccessStatusCode();
+                return true;
+            }
+            catch (HttpRequestException ex) when (ex.Message.Contains("pending", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting booking: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<List<ModuleDTO>> GetAllModulesAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/admin/modules");
+                if (!response.IsSuccessStatusCode)
+                    return new List<ModuleDTO>();
+
+                var content = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<ModuleDTO>>(content) ?? new List<ModuleDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting modules: {ex.Message}");
+                return new List<ModuleDTO>();
+            }
+        }
+
+        public async Task<(bool Success, string Message)> CreateModuleAsync(CreateModuleRequest request)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/admin/create-module", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Module created successfully.");
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return (false, errorContent);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error creating module: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> UpdateModuleAsync(int id, UpdateModuleRequest request)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PutAsJsonAsync($"api/admin/update-module/{id}", request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Module updated successfully.");
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return (false, errorContent);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error updating module: {ex.Message}");
+            }
+        }
+
+        public async Task<(bool Success, string Message)> DeleteModuleAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.DeleteAsync($"api/admin/delete-module/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Module deleted successfully.");
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return (false, errorContent);
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error deleting module: {ex.Message}");
+            }
+        }
+
+
+
+        public async Task<List<StudentDTO>> GetAllStudentsAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var resp = await _client.GetAsync("api/admin/students");
+                if (!resp.IsSuccessStatusCode)
+                    return new List<StudentDTO>();
+
+                var content = await resp.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<List<StudentDTO>>(content)
+                       ?? new List<StudentDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"GetAllStudentsAsync error: {ex.Message}");
+                return new List<StudentDTO>();
+            }
+        }
+
+        // In your ApiService.cs
+
+        public async Task<bool> BlockStudentAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PutAsync($"api/admin/block-student/{id}", null);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error blocking student: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> UnblockStudentAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PutAsync($"api/admin/unblock-student/{id}", null);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error unblocking student: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<(bool Success, string Message)> DeleteStudentAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"Attempting to delete student with ID: {id}");
+
+                var response = await _client.DeleteAsync($"api/admin/delete-student/{id}");
+
+                Console.WriteLine($"Delete response status: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Student deleted successfully");
+                    return (true, "Student deleted successfully.");
+                }
+
+                // Handle specific error cases
+                var errorContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Delete error content: {errorContent}");
+
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    if (errorContent.Contains("bookings", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return (false, "Cannot delete student with existing bookings.");
+                    }
+                    return (false, errorContent);
+                }
+
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return (false, "Student not found.");
+                }
+
+                return (false, $"Failed to delete student: {errorContent}");
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"HTTP error deleting student: {ex.Message}");
+                return (false, $"Network error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting student: {ex.Message}");
+                return (false, $"Error deleting student: {ex.Message}");
+            }
+        }
+
+        // -- Tutors (convenience wrappers; you already have ToggleBlockTutorAsync) --
+        public async Task<bool> BlockTutorAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                var resp = await _client.PutAsync($"api/admin/block-tutor/{id}", null);
+                return resp.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"BlockTutorAsync error: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> UnblockTutorAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                var resp = await _client.PutAsync($"api/admin/unblock-tutor/{id}", null);
+                return resp.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UnblockTutorAsync error: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
+
+
+
+        public class CreateModuleRequest
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class UpdateModuleRequest
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+        }
 
     }
 }

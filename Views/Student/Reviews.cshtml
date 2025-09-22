@@ -1,0 +1,125 @@
+﻿@model TutorConnect.WebApp.Models.PendingReviewDTO
+
+@{
+    ViewData["Title"] = "Rate Tutor";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="card border-0 shadow-sm">
+                <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@(Model.TutorProfileImageUrl ?? "/images/tutor-default.jpg")"
+                             alt="@Model.TutorName"
+                             class="rounded-circle me-3"
+                             style="width: 70px; height: 70px; object-fit: cover;">
+                        <div>
+                            <h5 class="mb-0">@Model.TutorName</h5>
+                            <small class="text-muted">@Model.ModuleName</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <small class="text-muted">Session Date: @Model.SessionDate.ToString("MMM dd, yyyy")</small>
+                    </div>
+
+                    <div class="rating-section">
+                        <h6 class="mb-2">How would you rate this session?</h6>
+                        <div class="star-rating mb-3">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <i class="fas fa-star star-rating-icon"
+                                   data-rating="@i"
+                                   style="cursor: pointer; font-size: 1.5rem; color: #ddd;"></i>
+                            }
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Share your experience (optional)</label>
+                            <textarea class="form-control review-comment"
+                                      rows="3"
+                                      placeholder="What did you like about the session? Any suggestions for improvement?"
+                                      maxlength="500"></textarea>
+                            <small class="text-muted"><span class="char-count">0</span>/500 characters</small>
+                        </div>
+
+                        <button class="btn btn-primary w-100 submit-review-btn"
+                                data-booking-id="@Model.BookingId">
+                            <i class="fas fa-paper-plane me-1"></i>Submit Review
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Star rating functionality
+            $('.star-rating-icon').hover(function() {
+                const rating = $(this).data('rating');
+                $(this).parent().find('.star-rating-icon').each(function() {
+                    $(this).css('color', $(this).data('rating') <= rating ? '#FFD700' : '#ddd');
+                });
+            }, function() {
+                const selectedRating = $(this).closest('.card').data('selected-rating') || 0;
+                $(this).parent().find('.star-rating-icon').each(function() {
+                    $(this).css('color', $(this).data('rating') <= selectedRating ? '#FFD700' : '#ddd');
+                });
+            });
+
+            // Select rating
+            $('.star-rating-icon').click(function() {
+                const rating = $(this).data('rating');
+                const card = $(this).closest('.card');
+                card.data('selected-rating', rating);
+                $(this).parent().find('.star-rating-icon').each(function() {
+                    $(this).css('color', $(this).data('rating') <= rating ? '#FFD700' : '#ddd');
+                });
+            });
+
+            // Character count
+            $('.review-comment').on('input', function() {
+                $(this).closest('.mb-3').find('.char-count').text($(this).val().length);
+            });
+
+            // Submit review
+            $('.submit-review-btn').click(function() {
+                const button = $(this);
+                const card = button.closest('.card');
+                const bookingId = button.data('booking-id');
+                const rating = card.data('selected-rating');
+                const comment = card.find('.review-comment').val().trim();
+
+                if (!rating) { alert('Please select a rating.'); return; }
+
+                button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Submitting...');
+
+                $.ajax({
+                    url: '@Url.Action("SubmitReview", "Student")',
+                    type: 'POST',
+                    headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                    contentType: 'application/json',
+                    data: JSON.stringify({ bookingId: bookingId, rating: rating, comment: comment }),
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Review submitted successfully!');
+                            window.location.href = '@Url.Action("MySessions", "Student")';
+                        } else {
+                            alert(response.message);
+                            button.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i>Submit Review');
+                        }
+                    },
+                    error: function() {
+                        alert('Error submitting review.');
+                        button.prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i>Submit Review');
+                    }
+                });
+            });
+        });
+    </script>
+}

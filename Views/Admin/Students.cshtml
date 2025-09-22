@@ -1,19 +1,212 @@
-﻿@model List<StudentDTO>
-<h2>All Students</h2>
+﻿@model List<TutorConnect.WebApp.Models.StudentDTO>
+@{
+    ViewData["Title"] = "Manage Students";
+}
 
-<table class="table">
-    <thead>
-        <tr><th>Name</th><th>Email</th><th>Course</th><th>Assigned Tutor</th></tr>
-    </thead>
-    <tbody>
-        @foreach (var s in Model)
-        {
-                <tr>
-                    <td>@s.Name</td>
-                  @*   <td>@s.Email</td> *@
-                    <td>@s.Course</td>
-                   @*  <td>@s.AssignedTutor?.Name ?? "Unassigned"</td> *@
-                </tr>
-        }
-    </tbody>
-</table>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Manage Students</h1>
+        <span class="badge bg-primary">@Model.Count students</span>
+    </div>
+
+    <!-- Success/Error Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow">
+        <div class="card-body">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="text-center py-4">
+                    <i class="fas fa-user-graduate fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No students found.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Course</th>
+                                <th>Status</th>
+                                <th>Bio</th>
+                                <th>Profile</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(student.ProfileImage))
+                                            {
+                                                <img src="@student.ProfileImage" alt="@student.Name" class="rounded-circle me-2" style="width:40px;height:40px;object-fit:cover;" />
+                                            }
+                                            <div>
+                                                <div>@student.Name</div>
+                                                <small class="text-muted">ID: @student.StudentId</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@(string.IsNullOrEmpty(student.Course) ? "N/A" : student.Course)</td>
+                                    <td>
+                                        <span class="badge @(student.IsBlocked ? "bg-danger" : "bg-success")">
+                                            @(student.IsBlocked ? "Blocked" : "Active")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(student.Bio))
+                                        {
+                                            <span class="text-muted">N/A</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@student.Bio">
+                                                @(student.Bio.Length > 50 ? student.Bio.Substring(0, 50) + "..." : student.Bio)
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(student.ProfileImage))
+                                        {
+                                            <img src="@student.ProfileImage" alt="@student.Name" class="img-thumbnail" style="width:50px;height:50px;object-fit:cover;" />
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No image</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            @if (student.IsBlocked)
+                                            {
+                                                <form asp-action="UnblockStudent" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@student.StudentId" />
+                                                    <button type="submit" class="btn btn-sm btn-success" title="Unblock Student">
+                                                        <i class="fas fa-check-circle"></i> Unblock
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="BlockStudent" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@student.StudentId" />
+                                                    <button type="submit" class="btn btn-sm btn-warning" title="Block Student">
+                                                        <i class="fas fa-ban"></i> Block
+                                                    </button>
+                                                </form>
+                                            }
+
+                                            <button type="button" class="btn btn-sm btn-danger delete-student-btn"
+                                                    data-student-id="@student.StudentId"
+                                                    data-student-name="@student.Name"
+                                                    title="Delete Student">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteStudentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete student: <strong id="studentName"></strong>?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> Students with active or pending bookings cannot be deleted.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteStudentForm" asp-action="DeleteStudent" method="post">
+                    <input type="hidden" name="id" id="deleteStudentId" />
+                    <button type="submit" class="btn btn-danger">Delete Student</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-dismiss alerts
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+
+            // Delete student confirmation modal
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteStudentModal'));
+            const deleteForm = document.getElementById('deleteStudentForm');
+            const deleteStudentId = document.getElementById('deleteStudentId');
+            const studentName = document.getElementById('studentName');
+
+            // Handle delete button clicks
+            document.querySelectorAll('.delete-student-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const studentId = this.dataset.studentId;
+                    const name = this.dataset.studentName;
+
+                    deleteStudentId.value = studentId;
+                    studentName.textContent = name;
+                    deleteModal.show();
+                });
+            });
+
+            // Handle form submission - let it submit normally
+            deleteForm.addEventListener('submit', function() {
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+            });
+
+            // Confirm block/unblock actions
+            document.querySelectorAll('form[asp-action="BlockStudent"], form[asp-action="UnblockStudent"]').forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const action = this.getAttribute('asp-action');
+                    const studentName = this.closest('tr').querySelector('td:first-child div:first-child').textContent.trim();
+
+                    if (!confirm(`Are you sure you want to ${action.toLowerCase()} student ${studentName}?`)) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
+}

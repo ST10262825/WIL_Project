@@ -1,0 +1,113 @@
+﻿@{
+    var isHomePage = Context.Request.Path == "/" || Context.Request.Path == "/Home";
+    var showBackButton = !isHomePage;
+
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<div class="navigation-header d-flex align-items-center mb-3">
+    @if (showBackButton)
+    {
+        <button class="btn back-btn me-3" onclick="goBack()" title="Go back">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+    }
+
+    <!-- Breadcrumbs (non-clickable except back arrow) -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <i class="fas fa-home"></i> Home
+            </li>
+
+            @if (!isHomePage)
+            {
+                <li class="breadcrumb-item">
+                    @controller
+                </li>
+
+                @if (action != "Index")
+                {
+                    <li class="breadcrumb-item active" aria-current="page">
+                        @action
+                    </li>
+                }
+            }
+        </ol>
+    </nav>
+</div>
+
+<script>
+    function goBack() {
+        if (document.referrer && document.referrer.includes(window.location.host)) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+        return false;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentPage = window.location.href;
+        const history = JSON.parse(sessionStorage.getItem('pageHistory') || '[]');
+
+        if (history.length === 0 || history[history.length - 1] !== currentPage) {
+            history.push(currentPage);
+            if (history.length > 10) {
+                history.shift();
+            }
+            sessionStorage.setItem('pageHistory', JSON.stringify(history));
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.altKey && e.key === 'ArrowLeft') {
+            e.preventDefault();
+            goBack();
+        }
+    });
+</script>
+
+<style>
+    .navigation-header {
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .back-btn {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 8px 12px;
+        transition: all 0.3s ease;
+        color: #0B2E3D;
+    }
+
+        .back-btn:hover {
+            background: #e9ecef;
+            transform: translateX(-2px);
+            color: #0B2E3D;
+        }
+
+        .back-btn i {
+            color: #FF7E36;
+        }
+
+    .breadcrumb {
+        margin-bottom: 0;
+        background: transparent;
+    }
+
+    .breadcrumb-item {
+        color: #0B2E3D;
+    }
+
+        .breadcrumb-item i {
+            color: #FF7E36;
+        }
+
+        .breadcrumb-item.active {
+            font-weight: 600;
+        }
+</style>

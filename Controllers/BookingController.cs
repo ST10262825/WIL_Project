@@ -1,75 +1,4 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Mvc.Rendering;
-//using TutorConnect.WebApp.Models;
-//using TutorConnect.WebApp.Services;
-
-//namespace TutorConnect.WebApp.Controllers
-//{
-//    public class BookingController : Controller
-//    {
-//        private readonly ApiService _apiService;
-
-//        public BookingController(ApiService apiService)
-//        {
-//            _apiService = apiService;
-//        }
-
-//        // GET: Show booking form
-//        [HttpGet]
-//        public async Task<IActionResult> BookSession()
-//        {
-//            // Fetch tutors + modules for dropdowns
-//            var tutors = await _apiService.GetTutorsAsync();
-//            var modules = await _apiService.GetModulesAsync();
-
-//            ViewBag.Tutors = new SelectList(tutors, "Id", "Name");
-//            ViewBag.Modules = new SelectList(modules, "Id", "Name");
-
-//            return View(new BookingViewModel());
-//        }
-
-//        // POST: Save booking
-//        [HttpPost]
-//        public async Task<IActionResult> BookSession(BookingViewModel model)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                ViewBag.Error = "Invalid booking data.";
-//                return View(model);
-//            }
-
-//            var dto = new CreateBookingDTO
-//            {
-//                StudentId = model.StudentId,
-//                TutorId = model.TutorId,
-//                ModuleId = model.ModuleId,
-//                SessionDate = model.SessionDate,
-//                Notes = model.Notes
-//            };
-
-//            var success = await _apiService.CreateBookingAsync(dto);
-
-//            if (success)
-//            {
-//                TempData["Message"] = "Booking created successfully!";
-//                return RedirectToAction("MyBookings", new { studentId = model.StudentId });
-//            }
-
-//            ViewBag.Error = "Failed to create booking.";
-//            return View(model);
-//        }
-
-//        // GET: Student's bookings
-//        [HttpGet]
-//        public async Task<IActionResult> MyBookings(int studentId)
-//        {
-//            var bookings = await _apiService.GetStudentBookingsAsync(studentId);
-//            return View(bookings);
-//        }
-//    }
-//}
-
-
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
@@ -78,6 +7,7 @@ using TutorConnect.WebApp.Services;
 
 namespace TutorConnect.WebApp.Controllers
 {
+    [Authorize]
     public class BookingController : Controller
     {
         private readonly ApiService _apiService;
@@ -99,28 +29,65 @@ namespace TutorConnect.WebApp.Controllers
                     return RedirectToAction("Browse", "Tutor");
                 }
 
-                var modules = await _apiService.GetModulesAsync();
+                // Check if tutor is blocked
+                if (tutor.IsBlocked)
+                {
+                    TempData["Error"] = "This tutor is currently unavailable for bookings.";
+                    return RedirectToAction("Browse", "Tutor");
+                }
+
+                // Get ONLY the modules that this tutor teaches - ensure it's never null
+                var tutorModules = tutor.Modules ?? new List<ModuleDTO>();
+
+                // Check if tutor has any modules assigned
+                if (!tutorModules.Any())
+                {
+                    TempData["Error"] = "This tutor doesn't have any teaching modules assigned yet. Please contact the administrator.";
+                    return RedirectToAction("Browse", "Tutor");
+                }
 
                 ViewBag.Tutor = tutor;
-                ViewBag.Modules = new SelectList(modules, "ModuleId", "Name"); // Use correct property names
+
+                // Create SelectListItems manually to avoid null issues
+                var moduleItems = tutorModules.Select(m => new SelectListItem
+                {
+                    Value = m.ModuleId.ToString(),
+                    Text = m.Name
+                }).ToList();
+
+                ViewBag.Modules = new SelectList(moduleItems, "Value", "Text");
                 ViewBag.TutorId = tutorId;
 
-                // Get actual student ID - FIX THIS PART
                 var studentId = await GetActualStudentIdAsync();
+
+                // Check if student ID is valid
+                if (studentId <= 0)
+                {
+                    TempData["Error"] = "Please log in as a student to book a session.";
+                    return RedirectToAction("Login", "Account");
+                }
 
                 return View(new BookingViewModel
                 {
                     TutorId = tutorId,
-                    StudentId = studentId, // Use actual student ID
-                    SelectedDate = DateTime.Today
+                    StudentId = studentId,
+                    SelectedDate = DateTime.Today.AddDays(1) // Default to tomorrow
                 });
+            }
+            catch (UnauthorizedAccessException)
+            {
+                TempData["Error"] = "Please log in to book a session.";
+                return RedirectToAction("Login", "Account");
             }
             catch (Exception ex)
             {
+                // Log the actual error for debugging
+                Console.WriteLine($"Error loading booking page: {ex.Message}");
                 TempData["Error"] = "Error loading booking page. Please try again.";
                 return RedirectToAction("Browse", "Tutor");
             }
         }
+
 
         private async Task<int> GetActualStudentIdAsync()
         {

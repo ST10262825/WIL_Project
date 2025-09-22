@@ -12,19 +12,31 @@
         <div class="col-md-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-4">
-                    <form class="row g-3" method="get">
+                    <form class="row g-3" method="get" asp-action="Browse" asp-controller="Tutor">
+                        <div class="col-md-4">
+                            <label class="form-label">Tutor Name</label>
+                            <input type="text" class="form-control" name="searchString"
+                                   placeholder="Search by tutor name..." value="@Context.Request.Query["searchString"]">
+                        </div>
                         <div class="col-md-4">
                             <label class="form-label">Subject</label>
                             <select class="form-select" name="subject">
                                 <option value="">All Subjects</option>
-                                @foreach (var subj in ViewBag.Subjects as List<string>)
+                                @foreach (var subj in ViewBag.Subjects as List<string> ?? new List<string>())
                                 {
-                                    <option value="@subj">@subj</option>
+                                    <option value="@subj" selected="@(Context.Request.Query["subject"] == subj)">@subj</option>
                                 }
                             </select>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn w-100" style="background-color: #3BB2B8; color: white; border-radius: 30px;">Search</button>
+                            <button type="submit" class="btn w-100" style="background-color: #3BB2B8; color: white; border-radius: 30px;">
+                                <i class="fas fa-search me-1"></i> Search
+                            </button>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <a href="@Url.Action("Browse")" class="btn btn-outline-secondary w-100" style="border-radius: 30px;">
+                                <i class="fas fa-times me-1"></i> Clear
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -32,51 +44,126 @@
         </div>
     </div>
 
+    <!-- Results Count -->
+    @if (!string.IsNullOrEmpty(Context.Request.Query["searchString"]) || !string.IsNullOrEmpty(Context.Request.Query["subject"]))
+    {
+        <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-2"></i>
+            Found @Model.Count tutor@(Model.Count != 1 ? "s" : "")
+            @if (!string.IsNullOrEmpty(Context.Request.Query["searchString"]))
+            {
+                <span>matching "<strong>@Context.Request.Query["searchString"]</strong>"</span>
+            }
+            @if (!string.IsNullOrEmpty(Context.Request.Query["subject"]))
+            {
+                <span>teaching <strong>@Context.Request.Query["subject"]</strong></span>
+            }
+        </div>
+    }
+
     <!-- Tutor Cards -->
-    <div class="row">
-        @foreach (var tutor in Model)
-        {
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
-                    <div class="card-body">
-                        <div class="d-flex mb-3">
-                            <img src="@tutor.ProfileImageUrl" alt="Tutor" class="rounded-circle" style="width: 70px; height: 70px; object-fit: cover; border: 3px solid #42E695;">
-                            <div class="ms-3">
-                                <h5 style="color: #0B2E3D;">@tutor.FullName</h5>
-                                @foreach (var subject in tutor.Subjects)
-                                {
-                                    <p class="badge" style="background-color: #3BB2B8;">@subject</p>
-                                }
+    @if (Model.Any())
+    {
+        <div class="row">
+            @foreach (var tutor in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
+                        <div class="card-body">
+                            <div class="d-flex mb-3">
+                                <img src="@tutor.ProfileImageUrl" alt="Tutor" class="rounded-circle" style="width: 70px; height: 70px; object-fit: cover; border: 3px solid #42E695;">
+                                <div class="ms-3">
+                                    <h5 style="color: #0B2E3D;">@tutor.FullName</h5>
+                                    @foreach (var subject in tutor.Subjects.Take(3))
+                                    {
+                                        <span class="badge me-1" style="background-color: #3BB2B8;">@subject</span>
+                                    }
+                                    @if (tutor.Subjects.Count > 3)
+                                    {
+                                        <span class="badge bg-secondary">+@(tutor.Subjects.Count - 3) more</span>
+                                    }
                             </div>
                         </div>
 
                         <p class="small text-muted mb-3">
                             @(
-                                string.IsNullOrEmpty(tutor.AboutMe)
-                                ? ""
-                                : (tutor.AboutMe.Length > 100 ? tutor.AboutMe.Substring(0, 100) + "..." : tutor.AboutMe)
-                                )
+                                                    string.IsNullOrEmpty(tutor.AboutMe)
+                                                    ? ""
+                                                    : (tutor.AboutMe.Length > 100 ? tutor.AboutMe.Substring(0, 100) + "..." : tutor.AboutMe)
+                                                    )
                         </p>
 
-                       
+                            <!-- Ratings Display -->
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center justify-content-center mb-2">
+                                    <div class="display-4 fw-bold text-primary me-2">@tutor.AverageRating.ToString("0.0")</div>
+                                    <div>
+                                        <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="fas fa-star @(i <= Math.Round(tutor.AverageRating) ? "text-warning" : "text-muted")"></i>
+                                            }
+                                        </div>
+                                        <small class="text-muted">@tutor.TotalReviews review@(tutor.TotalReviews != 1 ? "s" : "")</small>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            @if (tutor.IsVerified)
-                            {
-                                <span class="badge rounded-pill" style="background-color: #42E695; color: #0B2E3D;">
-                                    <i class="fas fa-check-circle me-1"></i> Verified
-                                </span>
-                            }
-                        </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                @if (tutor.IsVerified)
+                                {
+                                    <span class="badge rounded-pill" style="background-color: #42E695; color: #0B2E3D;">
+                                        <i class="fas fa-check-circle me-1"></i> Verified
+                                    </span>
+                                }
+                            </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a href="/Tutor/Profile/@tutor.TutorId" class="btn btn-sm" style="background-color: #0B2E3D; color: white; border-radius: 30px;">View Profile</a>
-                            <a href="/Booking/Create/@tutor.TutorId" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">Book Session</a>
+                            <div class="d-flex justify-content-between">
+                                <a href="/Tutor/Profile/@tutor.TutorId" class="btn btn-sm" style="background-color: #0B2E3D; color: white; border-radius: 30px;">View Profile</a>
+                                <a href="/Booking/Create/@tutor.TutorId" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">Book Session</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(Context.Request.Query["searchString"]) || !string.IsNullOrEmpty(Context.Request.Query["subject"]))
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No tutors found</h4>
+            <p class="text-muted">Try adjusting your search criteria or <a href="@Url.Action("Browse")">browse all tutors</a>.</p>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-chalkboard-teacher fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No tutors available</h4>
+            <p class="text-muted">Check back later for available tutors.</p>
+        </div>
+    }
 </div>
+
+@section Styles {
+    <style>
+        .star-rating {
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.35em 0.65em;
+        }
+
+        .card {
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .card:hover {
+                transform: translateY(-2px);
+            }
+    </style>
+}

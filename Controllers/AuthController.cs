@@ -75,7 +75,7 @@ namespace TutorConnect.WebApp.Controllers
             new Claim(ClaimTypes.Name, loginDto.Email),
             new Claim(ClaimTypes.NameIdentifier, userId ?? ""),
             new Claim("Token", token),
-            new Claim("JWT_Expires", jwtToken.ValidTo.ToString("o")) // <-- added claim
+            new Claim("JWT_Expires", jwtToken.ValidTo.ToString("o"))
         };
 
                 if (!string.IsNullOrEmpty(role))
@@ -104,13 +104,21 @@ namespace TutorConnect.WebApp.Controllers
             }
             catch (HttpRequestException ex)
             {
-                if (ex.Message.Contains("Email not verified"))
+                // Handle blocked account message
+                if (ex.Message.Contains("Account currently blocked", StringComparison.OrdinalIgnoreCase))
+                {
+                    ViewBag.Error = "Account currently blocked. Please contact your Administrator.";
+                }
+                else if (ex.Message.Contains("Email not verified"))
                 {
                     TempData["UnverifiedEmail"] = loginDto.Email;
                     return RedirectToAction("Verify");
                 }
+                else
+                {
+                    ViewBag.Error = ex.Message;
+                }
 
-                ViewBag.Error = ex.Message;
                 return View(loginDto);
             }
         }

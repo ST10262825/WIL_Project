@@ -1,0 +1,202 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+    var stats = ViewBag.Stats as dynamic;
+}
+
+<div class="container-fluid">
+    <!-- Dashboard Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Admin Dashboard</h1>
+        <div>
+            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cleanupModal">
+                <i class="fas fa-broom"></i> Cleanup Old Data
+            </button>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Tutors</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.TotalTutors ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Students</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.TotalStudents ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Bookings</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.TotalBookings ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Bookings</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.PendingBookings ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
+            <div class="card border-left-secondary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Active Modules</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.ActiveModules ?? 0)</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
+                            <a asp-action="Tutors" class="btn btn-primary btn-circle btn-lg">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                            </a>
+                            <p class="mt-2">Manage Tutors</p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
+                            <a asp-action="Students" class="btn btn-success btn-circle btn-lg">
+                                <i class="fas fa-user-graduate"></i>
+                            </a>
+                            <p class="mt-2">Manage Students</p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
+                            <a asp-action="Bookings" class="btn btn-info btn-circle btn-lg">
+                                <i class="fas fa-calendar-check"></i>
+                            </a>
+                            <p class="mt-2">Manage Bookings</p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
+                            <a asp-action="Modules" class="btn btn-secondary btn-circle btn-lg">
+                                <i class="fas fa-book"></i>
+                            </a>
+                            <p class="mt-2">Manage Modules</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Bookings</h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <a asp-action="Bookings" class="btn btn-sm btn-primary">View All Bookings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">System Health</h6>
+                </div>
+                <div class="card-body">
+                    <div class="system-health">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Database</span>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>API Service</span>
+                            <span class="badge bg-success">Online</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Storage</span>
+                            <span class="badge bg-success">Normal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cleanup Modal -->
+<div class="modal fade" id="cleanupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cleanup Old Data</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>This will remove all completed bookings older than 6 months. This action cannot be undone.</p>
+                <p class="text-warning"><i class="fas fa-exclamation-triangle"></i> Please ensure you have backups before proceeding.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-action="CleanupOldBookings" method="post">
+                    <button type="submit" class="btn btn-danger">Proceed with Cleanup</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

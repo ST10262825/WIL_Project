@@ -3,72 +3,285 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TutorConnect.WebApp</title>
+    <title>@ViewData["Title"] - TutorConnect</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TutorConnect.WebApp.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <!-- FontAwesome -->
-
+  @*   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
     @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="~/TutorConnect.styles.css" asp-append-version="true" />
+    <script src="~/js/backNavigation.js" asp-append-version="true"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <style>
+        .navbar {
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #0B2E3D;
+            display: flex;
+            align-items: center;
+        }
+
+            .navbar-brand img {
+                margin-right: 10px;
+            }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 10px 15px !important;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+            display: flex;
+            align-items: center;
+        }
+
+            .nav-link:hover {
+                background-color: #f8f9fa;
+            }
+
+            .nav-link i {
+                color: #FF7E36;
+                margin-right: 8px;
+                font-size: 1.1rem;
+            }
+
+            .nav-link.active {
+                background-color: #f0f5ff;
+                color: #0B2E3D !important;
+            }
+
+        .auth-buttons .btn {
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-orange {
+            color: #FF7E36;
+            border-color: #FF7E36;
+        }
+
+            .btn-outline-orange:hover {
+                background-color: #FF7E36;
+                color: white;
+            }
+
+        .btn-orange {
+            background-color: #FF7E36;
+            color: white;
+            border: none;
+        }
+
+            .btn-orange:hover {
+                background-color: #e86c29;
+                color: white;
+            }
+
+        .navbar-toggler {
+            border: none;
+            padding: 0.5rem 0.75rem;
+        }
+
+            .navbar-toggler:focus {
+                box-shadow: none;
+            }
+
+        .back-btn {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 30px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+            .back-btn:hover {
+                background: #e9ecef;
+                transform: translateX(-2px);
+            }
+
+            .back-btn i {
+                color: #FF7E36;
+                margin-right: 5px;
+            }
+
+        .user-badge {
+            background: linear-gradient(135deg, #FF7E36, #e86c29);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+            .dropdown-item:hover {
+                background: linear-gradient(135deg, #FF7E36, #e86c29);
+                color: white !important;
+            }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @@media (max-width: 991.98px) {
+            .back-btn
+
+        {
+            margin-top: 15px;
+        }
+
+        .nav-link {
+            padding: 12px 15px !important;
+        }
+
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TutorConnect.WebApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            <div class="container">
+               
+
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="/images/klante.jpg" alt="TutorConnect Logo" height="40">
+                    TutorConnect
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Module" asp-action="Index">Modules</a>
-                        </li>
-                        <li><a asp-controller="Student" asp-action="BookSession">Book Session</a></li>
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Booking" asp-action="MyBookings">MyBookings</a>
-                        </li>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <!-- Mobile Back Button -->
+                    <button class="btn back-btn me-2 d-lg-none mb-2" onclick="history.back()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
 
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tutor" asp-action="Dashboard">Tutor</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i> Home
+                            </a>
                         </li>
 
+                        <!-- Student Navigation -->
+                        @if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Dashboard">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+
+                        }
+
+                        <!-- Tutor Navigation -->
+                        @if (User.IsInRole("Tutor"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tutor" asp-action="Dashboard">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Admin Navigation -->
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+
+                           
+                        }
+
+                        <!-- Public Navigation (visible to all) -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tutor" asp-action="Browse">Browse Tutors</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tutor" asp-action="Browse">
+                                <i class="fas fa-chalkboard-teacher"></i> Find Tutors
+                            </a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tutor" asp-action="Profile">Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Dashboard">Student</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">
+                                <i class="fas fa-info-circle"></i> About Us
+                            </a>
                         </li>
                     </ul>
 
-                    <ul class="navbar-nav">
+                    <!-- Right Navigation -->
+                    <div class="d-flex align-items-center auth-buttons">
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    <i class="fas fa-user-circle me-1"></i> @User.Identity.Name
+                           
+
+                            <!-- User Dropdown -->
+                            <div class="dropdown">
+                                <a class="nav-link text-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle"></i> @User.Identity.Name
+                                    <span class="user-badge">
+                                        @{
+                                            if (User.IsInRole("Admin"))
+                                            {
+                                                <text>Admin</text>
+                                            }
+                                            else if (User.IsInRole("Tutor"))
+                                            {
+                                                <text>Tutor</text>
+                                            }
+                                            else if (User.IsInRole("Student"))
+                                            {
+                                                <text>Student</text>
+                                            }
+                                        }
+                                    </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
-                                            <i class="fas fa-user me-2"></i> Profile
+                                   @*  <li>
+                                        <a class="dropdown-item" asp-controller="Profile" asp-action="Index">
+                                            <i class="fas fa-user me-2"></i>Profile
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" asp-controller="Account" asp-action="Settings">
-                                            <i class="fas fa-cog me-2"></i> Settings
+                                        <a class="dropdown-item" asp-controller="Auth" asp-action="ChangePassword">
+                                            <i class="fas fa-key me-2"></i>Change Password
                                         </a>
-                                    </li>
+                                    </li> *@
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
@@ -78,41 +291,28 @@
                                         </form>
                                     </li>
                                 </ul>
-                            </li>
+                            </div>
                         }
                         else
                         {
-                            <li class="nav-item me-2">
-                                <a class="btn btn-outline-primary" asp-controller="Auth" asp-action="Login">
-                                    <i class="fas fa-sign-in-alt me-1"></i> Login
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="btn btn-primary" asp-controller="Auth" asp-action="Register">
-                                    <i class="fas fa-user-plus me-1"></i> Register
-                                </a>
-                            </li>
+                            <!-- Auth Buttons -->
+                            <a class="btn btn-outline-orange me-2" asp-area="" asp-controller="Auth" asp-action="Login">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                            <a class="btn btn-orange" asp-area="" asp-controller="Auth" asp-action="Register">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
                         }
-
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                    Admin
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index">Dashboard</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="CreateTutor">Tutors</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Students">Students</a></li>
-                                  
-                                </ul>
-                            </li>
-                        }
-                    </ul>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
+
+    <div class="container">
+        <partial name="_NavigationHeader" />
+    </div>
+
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -120,15 +320,46 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-light py-4 mt-5">
         <div class="container">
-            &copy; 2025 - TutorConnect.WebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-md-6">
+                    &copy; 2025 - TutorConnect - All rights reserved
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> |
+                    <a asp-area="" asp-controller="Home" asp-action="Terms">Terms of Service</a> |
+                    <a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Enhanced back button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const backBtn = document.querySelector('.back-btn');
+
+            // Hide back button on home page
+            if (window.location.pathname === '/' || window.location.pathname === '/Home') {
+                backBtn.style.display = 'none';
+            }
+
+            // Better back navigation
+            backBtn.addEventListener('click', function(e) {
+                if (document.referrer && document.referrer.includes(window.location.host)) {
+                    window.history.back();
+                } else {
+                    window.location.href = '/';
+                }
+            });
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

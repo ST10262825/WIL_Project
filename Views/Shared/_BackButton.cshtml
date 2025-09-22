@@ -1,0 +1,58 @@
+﻿@{
+    // Determine if we should show the back button (hide on home page)
+    var isHomePage = Context.Request.Path == "/" || Context.Request.Path == "/Home";
+    var showBackButton = !isHomePage;
+}
+
+@if (showBackButton)
+{
+    <button class="btn back-btn me-2" onclick="goBack()" title="Go back">
+        <i class="fas fa-arrow-left me-1"></i> Back
+    </button>
+}
+
+<script>
+    function goBack() {
+        // Check if there's history and the previous page is from our site
+        if (document.referrer && document.referrer.includes(window.location.host)) {
+            window.history.back();
+        } else {
+            // If no history or coming from external site, go to home
+            window.location.href = '/';
+        }
+    }
+
+    // Add keyboard shortcut (Alt + Left Arrow)
+    document.addEventListener('keydown', function(e) {
+        if (e.altKey && e.key === 'ArrowLeft') {
+            e.preventDefault();
+            goBack();
+        }
+    });
+</script>
+
+<style>
+    .back-btn {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 30px;
+        padding: 8px 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        color: #0B2E3D;
+    }
+
+        .back-btn:hover {
+            background: #e9ecef;
+            transform: translateX(-2px);
+            color: #0B2E3D;
+            text-decoration: none;
+        }
+
+        .back-btn i {
+            color: #FF7E36;
+            margin-right: 5px;
+        }
+</style>

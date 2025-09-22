@@ -3,6 +3,8 @@
     ViewData["Title"] = "Tutor Profile";
 }
 
+
+
 <div class="container mt-5">
     <div class="row">
         <!-- Tutor Profile Card -->
@@ -19,6 +21,22 @@
                     <p class="badge mb-2" style="background-color: #3BB2B8;">
                         @(Model.ExpertiseList.Any() ? Model.ExpertiseList.First() : "General Tutor")
                     </p>
+
+                    <!-- Ratings Display -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <div class="display-4 fw-bold text-primary me-2">@Model.AverageRating.ToString("0.0")</div>
+                            <div>
+                                <div class="star-rating">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= Math.Round(Model.AverageRating) ? "text-warning" : "text-muted")"></i>
+                                    }
+                                </div>
+                                <small class="text-muted">@Model.TotalReviews review@(Model.TotalReviews != 1 ? "s" : "")</small>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="mb-3">
                         <span class="badge rounded-pill" style="background-color: #42E695; color: #0B2E3D;">
@@ -98,14 +116,673 @@
                 </div>
             </div>
 
+            <!-- Ratings & Reviews Section -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
+                <div class="card-body p-4">
+                    <h4 class="mb-4" style="color: #0B2E3D;">
+                        <i class="fas fa-star me-2" style="color: #FFD700;"></i>
+                        Tutor Ratings & Reviews
+                    </h4>
+
+                    <!-- Rating Summary -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 text-center">
+                            <div class="display-1 fw-bold text-primary">@Model.AverageRating.ToString("0.0")</div>
+                            <div class="star-rating mb-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="fas fa-star @(i <= Math.Round(Model.AverageRating) ? "text-warning" : "text-muted")"></i>
+                                }
+                            </div>
+                            <p class="text-muted">@Model.TotalReviews review@(Model.TotalReviews != 1 ? "s" : "")</p>
+                        </div>
+
+                        <div class="col-md-9">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                var count = i switch
+                                {
+                                    5 => Model.RatingCount5,
+                                    4 => Model.RatingCount4,
+                                    3 => Model.RatingCount3,
+                                    2 => Model.RatingCount2,
+                                    1 => Model.RatingCount1,
+                                    _ => 0
+                                };
+
+                                var percentage = Model.TotalReviews > 0 ? (count * 100) / Model.TotalReviews : 0;
+
+                                <div class="rating-bar mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2" style="width: 30px;">@i <i class="fas fa-star text-warning"></i></span>
+                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                            <div class="progress-bar bg-warning" role="progressbar"
+                                                 style="width: @percentage%;" aria-valuenow="@percentage"
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <span class="ms-2 text-muted" style="width: 40px;">@count</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Reviews List -->
+                    <h5 class="mb-3" style="color: #0B2E3D;">
+                        <i class="fas fa-comments me-2" style="color: #3BB2B8;"></i>
+                        Recent Reviews
+                    </h5>
+
+                    @if (Model.Reviews != null && Model.Reviews.Any())
+                    {
+                        foreach (var review in Model.Reviews.Take(5))
+                        {
+                            <div class="review-item mb-4 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+                                             style="width: 40px; height: 40px; font-weight: bold;">
+                                            @review.StudentName.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">@review.StudentName</h6>
+                                            <small class="text-muted">Student</small>
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">@review.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+
+                                <div class="star-rating mb-2">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <i class="fas fa-star @(i <= review.Rating ? "text-warning" : "text-muted")"></i>
+                                    }
+                                    <span class="ms-2 text-muted">@review.Rating.0/5.0</span>
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(review.Comment))
+                                {
+                                    <p class="mb-0 text-dark">@review.Comment</p>
+                                }
+
+                                @if (review.IsVerified)
+                                {
+                                    <small class="text-success">
+                                        <i class="fas fa-check-circle me-1"></i> Verified Review
+                                    </small>
+                                }
+                            </div>
+                        }
+
+                        @if (Model.Reviews.Count > 5)
+                        {
+                            <div class="text-center mt-3">
+                                <a href="#" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-list me-1"></i> View All Reviews (@Model.Reviews.Count)
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-comment-slash text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
+                            <p class="text-muted mt-3 mb-0">No reviews yet. Be the first to review this tutor!</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
             <!-- Booking Section -->
+            <!-- Availability Calendar Section -->
             <div class="card border-0 shadow-sm mb-4" id="book-session">
                 <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
                 <div class="card-body p-4">
-                    <h4 class="mb-4" style="color: #0B2E3D;">Book a Session</h4>
-                    <p class="text-muted">Booking integration goes here.</p>
+                    <h4 class="mb-4" style="color: #0B2E3D;">
+                        <i class="fas fa-calendar-alt me-2" style="color: #3BB2B8;"></i>
+                        Weekly Availability
+                    </h4>
+
+                    <div class="availability-calendar">
+                        <!-- Week Navigation -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <button class="btn btn-sm btn-outline-primary prev-week">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h5 class="mb-0 current-week" style="color: #0B2E3D;">
+                                @DateTime.Today.ToString("MMM dd") - @DateTime.Today.AddDays(6).ToString("MMM dd, yyyy")
+                            </h5>
+                            <button class="btn btn-sm btn-outline-primary next-week">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Days of Week - Bootstrap Version -->
+                        <div class="row mb-3">
+                            <!-- Spacer for time labels -->
+                            <div class="col-1"></div>
+
+                            @{
+                                var daysOfWeek = new[] { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+                                var currentDate = DateTime.Today;
+                            }
+                            @for (int i = 0; i < 7; i++)
+                            {
+                                var dayDate = currentDate.AddDays(i);
+                                <div class="col text-center px-0 mx-1">
+                                    <!-- Added px-0 mx-1 for spacing -->
+                                    <div class="day-header @(dayDate.Date == DateTime.Today.Date ? "today" : "")">
+                                        <div class="fw-bold">@daysOfWeek[(int)dayDate.DayOfWeek]</div>
+                                        <div class="small">@dayDate.ToString("MMM dd")</div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Time Slots Grid -->
+                        <div class="time-slots-grid">
+                            @for (int hour = 9; hour < 17; hour++)
+                            {
+                                <div class="time-row">
+                                    <div class="time-label">
+                                        @(hour > 12 ? hour - 12 : hour):00 @(hour >= 12 ? "PM" : "AM")
+                                    </div>
+
+                                    @for (int day = 0; day < 7; day++)
+                                    {
+                                        <div class="time-slot unavailable"
+                                             data-date=""
+                                             data-start=""
+                                             data-end=""
+                                             data-hour="@hour">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                        
+
+                        <!-- Legend -->
+                        <div class="availability-legend mt-4">
+                            <div class="d-flex justify-content-center gap-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="availability-dot available me-2"></div>
+                                    <small>Available</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="availability-dot unavailable me-2"></div>
+                                    <small>Unavailable</small>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="availability-dot booked me-2"></div>
+                                    <small>Booked</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Booking CTA -->
+                        <div class="text-center mt-4">
+                            <a href="@Url.Action("Create", "Booking", new { tutorId = Model.TutorId })"
+                               class="btn btn-primary">
+                                <i class="fas fa-calendar-plus me-2"></i>Book Available Slot
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Styles {
+    <style>
+        .star-rating {
+            display: flex;
+            gap: 2px;
+        }
+
+            .star-rating i {
+                font-size: 0.9rem;
+            }
+
+        .rating-bar {
+            margin-bottom: 8px;
+        }
+
+        .progress {
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+
+        .review-item {
+            transition: all 0.3s ease;
+        }
+
+            .review-item:hover {
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                padding: 15px;
+                margin: -15px;
+            }
+
+        .display-4 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            line-height: 1.2;
+        }
+
+        .bg-warning {
+            background-color: #FFD700 !important;
+        }
+
+        .text-warning {
+            color: #FFD700 !important;
+        }
+
+        /* Add to your existing CSS */
+        .time-slot {
+            transition: all 0.3s ease;
+        }
+
+            .time-slot.available:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+                cursor: pointer;
+            }
+
+            .time-slot.loading {
+                opacity: 0.7;
+            }
+
+        .fa-spinner {
+            color: #6c757d;
+        }
+
+        /* Availability Calendar Styles */
+        .availability-calendar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .day-header {
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+
+            .day-header.today {
+                background-color: #e3f2fd;
+                border: 2px solid #2196f3;
+            }
+
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .time-row {
+            display: contents;
+        }
+
+        .time-label {
+            padding: 10px;
+            text-align: right;
+            font-size: 0.8rem;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .time-slot {
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+        }
+
+            .time-slot.available {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+
+                .time-slot.available:hover {
+                    background-color: #c3e6cb;
+                    transform: scale(1.05);
+                }
+
+            .time-slot.unavailable {
+                background-color: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+                cursor: not-allowed;
+            }
+
+            .time-slot.booked {
+                background-color: #fff3cd;
+                color: #856404;
+                border: 1px solid #ffeaa7;
+                cursor: not-allowed;
+            }
+
+        .availability-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+            .availability-dot.available {
+                background-color: #28a745;
+            }
+
+            .availability-dot.unavailable {
+                background-color: #dc3545;
+            }
+
+            .availability-dot.booked {
+                background-color: #ffc107;
+            }
+
+        .week-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .current-week {
+            font-weight: 600;
+            color: #0B2E3D;
+        }
+
+    </style>
+ }
+
+ @section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentWeekStart = new Date();
+            // Adjust to start of week (Sunday) and normalize time
+            currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay());
+            currentWeekStart.setHours(0, 0, 0, 0);
+
+            // Function to update calendar
+            function updateCalendar() {
+                const weekStart = new Date(currentWeekStart);
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekEnd.getDate() + 6);
+
+                // Update week display
+                const weekDisplay = document.querySelector('.current-week');
+                if (weekDisplay) {
+                    weekDisplay.textContent = `${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+                }
+
+                // Update day headers with correct dates
+                const dayHeaders = document.querySelectorAll('.day-header');
+                dayHeaders.forEach((header, index) => {
+                    const dayDate = new Date(weekStart);
+                    dayDate.setDate(dayDate.getDate() + index);
+
+                    const isToday = isSameDay(dayDate, new Date());
+                    header.classList.toggle('today', isToday);
+
+                    // Update data attributes with correct dates
+                    header.setAttribute('data-date', formatDateYYYYMMDD(dayDate));
+
+                    // Update date display
+                    const weekdayElem = header.querySelector('.fw-bold');
+                    const dateElem = header.querySelector('.small');
+
+                    if (weekdayElem) {
+                        weekdayElem.textContent = dayDate.toLocaleDateString('en-US', { weekday: 'short' });
+                    }
+                    if (dateElem) {
+                        dateElem.textContent = dayDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                    }
+                });
+
+                // Update time slots with correct dates
+                updateTimeSlotDates(weekStart);
+
+                // Fetch availability for the new week
+                fetchAvailability(weekStart);
+            }
+
+            // Update time slot dates for the current week
+            function updateTimeSlotDates(weekStart) {
+                const timeRows = document.querySelectorAll('.time-row');
+                const now = new Date(); // Current date and time
+
+                timeRows.forEach((timeRow, hourIndex) => {
+                    const hour = 9 + hourIndex; // 9 AM to 5 PM
+                    const timeLabel = timeRow.querySelector('.time-label');
+
+                    if (timeLabel) {
+                        timeLabel.textContent = formatTime(hour);
+                    }
+
+                    const timeSlots = timeRow.querySelectorAll('.time-slot');
+                    timeSlots.forEach((slot, dayIndex) => {
+                        const dayDate = new Date(weekStart);
+                        dayDate.setDate(dayDate.getDate() + dayIndex);
+
+                        const slotStart = new Date(dayDate);
+                        slotStart.setHours(hour, 0, 0, 0);
+
+                        const slotEnd = new Date(slotStart);
+                        slotEnd.setHours(hour + 1, 0, 0, 0);
+
+                        // Check if this time slot is in the past
+                        const isPast = slotStart < now;
+
+                        // Use UTC dates to avoid timezone issues
+                        slot.setAttribute('data-date', formatDateYYYYMMDD(dayDate));
+                        slot.setAttribute('data-start', slotStart.toISOString());
+                        slot.setAttribute('data-end', slotEnd.toISOString());
+                        slot.setAttribute('data-hour', hour);
+                        slot.setAttribute('data-past', isPast.toString());
+
+                        // Immediately mark past time slots as unavailable
+                        if (isPast) {
+                            slot.classList.remove('available', 'unavailable', 'booked');
+                            slot.classList.add('unavailable');
+                            slot.innerHTML = '<i class="fas fa-times-circle"></i>';
+                        }
+                    });
+                });
+            }
+
+            // Fetch availability from API
+            function fetchAvailability(weekStart) {
+                const tutorId = @Model.TutorId;
+                const dateStr = formatDateYYYYMMDD(weekStart);
+
+                console.log("Fetching availability for week starting:", dateStr);
+
+                // Show loading state only for future time slots
+                const timeSlots = document.querySelectorAll('.time-slot');
+                timeSlots.forEach(slot => {
+                    const isPast = slot.getAttribute('data-past') === 'true';
+                    if (!isPast) {
+                        slot.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    }
+                });
+
+                fetch(`/Tutor/Availability/${tutorId}?date=${dateStr}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(availability => {
+                        console.log("Received availability:", availability);
+                        updateTimeSlots(availability);
+                    })
+                    .catch(error => {
+                        console.error('Failed to fetch availability:', error);
+                        const timeSlots = document.querySelectorAll('.time-slot');
+                        timeSlots.forEach(slot => {
+                            const isPast = slot.getAttribute('data-past') === 'true';
+                            if (!isPast) {
+                                slot.classList.remove('available', 'unavailable', 'booked');
+                                slot.classList.add('unavailable');
+                                slot.innerHTML = '<i class="fas fa-times-circle"></i>';
+                            }
+                        });
+                    });
+            }
+
+            // Update time slots based on availability (timezone-safe comparison)
+            function updateTimeSlots(availability) {
+                const timeSlots = document.querySelectorAll('.time-slot');
+                const now = new Date(); // Current date and time
+
+                timeSlots.forEach(slot => {
+                    const slotStartStr = slot.getAttribute('data-start');
+                    const slotStart = new Date(slotStartStr);
+                    const isPast = slot.getAttribute('data-past') === 'true';
+
+                    // Always mark past time slots as unavailable
+                    if (isPast) {
+                        slot.classList.remove('available', 'unavailable', 'booked');
+                        slot.classList.add('unavailable');
+                        slot.innerHTML = '<i class="fas fa-times-circle"></i>';
+                        return; // Skip further processing for past slots
+                    }
+
+                    let isAvailable = false;
+
+                    if (availability && availability.length > 0) {
+                        for (const apiSlot of availability) {
+                            let apiStartTime;
+
+                            // Handle different possible formats from API
+                            if (typeof apiSlot.Start === 'string') {
+                                apiStartTime = new Date(apiSlot.Start);
+                            } else if (apiSlot.Start instanceof Date) {
+                                apiStartTime = apiSlot.Start;
+                            } else if (apiSlot.start) {
+                                apiStartTime = new Date(apiSlot.start);
+                            }
+
+                            if (apiStartTime) {
+                                // Compare dates using ISO string (timezone-safe)
+                                const apiStartISO = apiStartTime.toISOString();
+                                const slotStartISO = slotStart.toISOString();
+
+                                if (apiStartISO === slotStartISO) {
+                                    isAvailable = apiSlot.Available || apiSlot.available;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    slot.classList.remove('available', 'unavailable', 'booked');
+                    slot.classList.add(isAvailable ? 'available' : 'unavailable');
+
+                    slot.innerHTML = isAvailable ?
+                        '<i class="fas fa-check-circle"></i>' :
+                        '<i class="fas fa-times-circle"></i>';
+                });
+            }
+
+            // Helper functions
+            function formatDate(date) {
+                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            }
+
+            function formatDateYYYYMMDD(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            function formatTime(hour) {
+                const displayHour = hour > 12 ? hour - 12 : hour;
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                return `${displayHour}:00 ${ampm}`;
+            }
+
+            function isSameDay(date1, date2) {
+                return date1.getFullYear() === date2.getFullYear() &&
+                       date1.getMonth() === date2.getMonth() &&
+                       date1.getDate() === date2.getDate();
+            }
+
+            // Week navigation with past week restriction
+            const prevWeekBtn = document.querySelector('.prev-week');
+            const nextWeekBtn = document.querySelector('.next-week');
+
+            if (prevWeekBtn) {
+                prevWeekBtn.addEventListener('click', function() {
+                    const newWeekStart = new Date(currentWeekStart);
+                    newWeekStart.setDate(newWeekStart.getDate() - 7);
+
+                    // Don't allow navigating to weeks that are completely in the past
+                    const weekEnd = new Date(newWeekStart);
+                    weekEnd.setDate(weekEnd.getDate() + 6);
+
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (weekEnd < today) {
+                        // This week is completely in the past, don't navigate
+                        alert("Cannot view weeks that are completely in the past.");
+                        return;
+                    }
+
+                    currentWeekStart = newWeekStart;
+                    updateCalendar();
+                });
+            }
+
+            if (nextWeekBtn) {
+                nextWeekBtn.addEventListener('click', function() {
+                    currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+                    updateCalendar();
+                });
+            }
+
+            // Click handler for available slots (only future slots)
+            document.addEventListener('click', function(e) {
+                const slot = e.target.closest('.time-slot.available');
+                if (slot) {
+                    const isPast = slot.getAttribute('data-past') === 'true';
+                    if (isPast) {
+                        alert("Cannot book time slots in the past.");
+                        return;
+                    }
+
+                    const startTime = new Date(slot.getAttribute('data-start'));
+                    const endTime = new Date(slot.getAttribute('data-end'));
+
+                    // Redirect to booking with pre-filled time
+                    const url = `@Url.Action("Create", "Booking", new { tutorId = Model.TutorId })}?startTime=${encodeURIComponent(startTime.toISOString())}&endTime=${encodeURIComponent(endTime.toISOString())}`;
+                    window.location.href = url;
+                }
+            });
+
+            // Initialize calendar
+            updateCalendar();
+        });
+    </script>
+}

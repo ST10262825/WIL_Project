@@ -107,7 +107,14 @@ namespace TutorConnect.WebApp.Controllers
             var tutor = await _apiService.GetTutorByIdAsync(tutorId);
             if (tutor == null) return NotFound();
 
-            var model = MapTutorToProfileViewModel(tutor);
+            // Get tutor reviews
+            var reviews = await _apiService.GetTutorReviewsAsync(tutorId);
+
+            // Get tutor availability for the current week
+            var availability = await _apiService.GetTutorAvailabilityAsync(tutorId, DateTime.Today);
+
+
+            var model = MapTutorToProfileViewModel(tutor, reviews,availability);
             return View(model);
         }
 
@@ -122,23 +129,65 @@ namespace TutorConnect.WebApp.Controllers
 
 
         // -------------------------
-        // Browse Tutors
+        // Browse Tutors with Filtering
         // -------------------------
         [HttpGet]
-        public async Task<IActionResult> Browse()
+        public async Task<IActionResult> Browse(string searchString = "", string subject = "")
         {
-            var tutors = await _apiService.GetAllTutorsAsync();
-            ViewBag.Subjects = tutors.SelectMany(t => t.Subjects).Distinct().OrderBy(s => s).ToList();
-            return View(tutors);
+            try
+            {
+                var tutors = await _apiService.GetAllTutorsAsync();
+
+                // Apply filters
+                var filteredTutors = tutors.AsQueryable();
+
+                // Filter by search string (tutor name)
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    searchString = searchString.Trim().ToLower();
+                    filteredTutors = filteredTutors.Where(t =>
+                        (t.FullName).ToLower().Contains(searchString) ||
+                        t.FullName.ToLower().Contains(searchString));
+                }
+
+                // Filter by subject
+                if (!string.IsNullOrEmpty(subject))
+                {
+                    filteredTutors = filteredTutors.Where(t =>
+                        t.Subjects != null && t.Subjects.Any(s =>
+                            s.Equals(subject, StringComparison.OrdinalIgnoreCase)));
+                }
+
+                // Get unique subjects for the filter dropdown
+                var allSubjects = tutors
+                    .Where(t => t.Subjects != null)
+                    .SelectMany(t => t.Subjects)
+                    .Distinct()
+                    .OrderBy(s => s)
+                    .ToList();
+
+                ViewBag.Subjects = allSubjects;
+
+                // Pass search parameters to view for persistence
+                ViewBag.SearchString = searchString;
+                ViewBag.SelectedSubject = subject;
+
+                return View(filteredTutors.ToList());
+            }
+            catch (Exception ex)
+            {
+                // Handle error
+                Console.WriteLine($"Error in Browse: {ex.Message}");
+                TempData["ErrorMessage"] = "Error loading tutors. Please try again.";
+                return View(new List<TutorDTO>());
+            }
         }
 
         // -------------------------
         // Helper: Map TutorDTO to TutorProfileViewModel
         // -------------------------
-        private TutorProfileViewModel MapTutorToProfileViewModel(TutorDTO tutor)
+        private TutorProfileViewModel MapTutorToProfileViewModel(TutorDTO tutor, List<ReviewDTO> reviews = null, List<TimeSlotDTO> availability = null)
         {
-            // Convert Expertise CSV to list
-            // In MapTutorToProfileViewModel
             var expertiseList = !string.IsNullOrEmpty(tutor.Expertise)
                 ? tutor.Expertise.Split(',', StringSplitOptions.RemoveEmptyEntries)
                                  .Select(e => e.Trim())
@@ -157,9 +206,25 @@ namespace TutorConnect.WebApp.Controllers
                 ExpertiseList = expertiseList,
                 EducationList = !string.IsNullOrEmpty(tutor.Education)
                     ? JsonSerializer.Deserialize<List<EducationDTO>>(tutor.Education) ?? new List<EducationDTO>()
-                    : new List<EducationDTO>()
+                    : new List<EducationDTO>(),
+
+                // Rating properties
+            AverageRating = tutor.AverageRating,
+            TotalReviews = tutor.TotalReviews,
+            RatingCount1 = tutor.RatingCount1,
+            RatingCount2 = tutor.RatingCount2,
+            RatingCount3 = tutor.RatingCount3,
+            RatingCount4 = tutor.RatingCount4,
+            RatingCount5 = tutor.RatingCount5,
+                Reviews = reviews ?? new List<ReviewDTO>(),
+                 Availability = availability
+
+
+
+
             };
         }
+
 
 
         // -------------------------
@@ -227,6 +292,31 @@ namespace TutorConnect.WebApp.Controllers
             }
 
             throw new Exception("Tutor not found. Please ensure you're logged in as a tutor.");
+        }
+
+        // In your TutorController
+        [HttpGet("Tutor/Availability/{tutorId}")]
+        public async Task<IActionResult> GetTutorAvailabilityWeb(int tutorId, [FromQuery] string date)
+        {
+            Console.WriteLine($"WebApp Availability Called: tutorId={tutorId}, date={date}");
+
+            if (!DateTime.TryParse(date, out var startDate))
+            {
+                startDate = DateTime.Today;
+            }
+
+            // Get availability for the entire week
+            var availability = new List<TimeSlotDTO>();
+
+            for (int i = 0; i < 7; i++)
+            {
+                var currentDate = startDate.AddDays(i);
+                var dayAvailability = await _apiService.GetTutorAvailabilityAsync(tutorId, currentDate);
+                availability.AddRange(dayAvailability);
+            }
+
+            Console.WriteLine($"Returning {availability.Count} time slots for week starting {startDate:yyyy-MM-dd}");
+            return Ok(availability);
         }
     }
 }

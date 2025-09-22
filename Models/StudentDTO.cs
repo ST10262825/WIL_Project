@@ -7,7 +7,8 @@
         public string Name { get; set; }
         public string Course { get; set; }
         public string? Bio { get; set; }
-         public string? ProfileImage { get; set; }
+        public bool IsBlocked { get; set; }
+        public string? ProfileImage { get; set; }
  
         //public User User { get; set; }
     }

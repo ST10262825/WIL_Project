@@ -1,0 +1,207 @@
+﻿@model List<TutorConnect.WebApp.Models.TutorDTO>
+@{
+    ViewData["Title"] = "Manage Tutors";
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+
+
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Manage Tutors</h1>
+        <a asp-action="CreateTutor" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Tutor
+        </a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            @if (Model == null || !Model.Any())
+            {
+                <div class="text-center py-4">
+                    <i class="fas fa-chalkboard-teacher fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No tutors found.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Modules</th>
+                                <th>Bookings</th>
+                                <th>Rating</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tutor in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(tutor.ProfileImageUrl))
+                                            {
+                                                <img src="@tutor.ProfileImageUrl" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="@tutor.Name">
+                                            }
+                                            <div>
+                                                <div>@($"{tutor.Name} {tutor.Surname}")</div>
+                                                <small class="text-muted">ID: @tutor.TutorId</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>@(string.IsNullOrEmpty(tutor.Phone) ? "N/A" : tutor.Phone)</td>
+                                    <td>
+                                        @if (tutor.Modules != null && tutor.Modules.Any())
+                                        {
+                                            <span class="badge bg-primary" title="@string.Join(", ", tutor.Modules.Select(m => m.Name))">
+                                                @tutor.Modules.Count module@(tutor.Modules.Count != 1 ? "s" : "")
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">No modules</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">@tutor.TotalBookings</span>
+                                    </td>
+                                    <td>
+                                        @if (tutor.TotalReviews > 0)
+                                        {
+                                            <div class="star-rating small">
+                                                @for (int i = 1; i <= 5; i++)
+                                                {
+                                                    <i class="fas fa-star @(i <= Math.Round(tutor.AverageRating) ? "text-warning" : "text-muted")"></i>
+                                                }
+                                                <small>(@tutor.AverageRating.ToString("0.0"))</small>
+                                                <br>
+                                                <small class="text-muted">@tutor.TotalReviews review@(tutor.TotalReviews != 1 ? "s" : "")</small>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No ratings</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="badge @(tutor.IsBlocked ? "bg-danger" : "bg-success")">
+                                            @(tutor.IsBlocked ? "Blocked" : "Active")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <a asp-action="EditTutor" asp-route-id="@tutor.TutorId" class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            @if (tutor.IsBlocked)
+                                            {
+                                                <form asp-action="UnblockTutor" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@tutor.TutorId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success" title="Unblock">
+                                                        <i class="fas fa-check-circle"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <form asp-action="BlockTutor" method="post" class="d-inline">
+                                                    <input type="hidden" name="id" value="@tutor.TutorId" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-warning" title="Block">
+                                                        <i class="fas fa-ban"></i>
+                                                    </button>
+                                                </form>
+                                            }
+                                            <form class="d-inline delete-tutor-form" data-tutor-id="@tutor.TutorId" data-tutor-name="@($"{tutor.Name} {tutor.Surname}")">
+                                                <button type="button" class="btn btn-sm btn-outline-danger delete-tutor-btn" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteTutorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="tutorName"></strong>?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Note:</strong> Tutors with pending bookings cannot be deleted.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteTutorForm" asp-action="DeleteTutor" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="deleteTutorId" />
+                    <button type="submit" class="btn btn-danger">Delete Tutor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteTutorModal'));
+            const deleteTutorId = document.getElementById('deleteTutorId');
+            const tutorNameElement = document.getElementById('tutorName');
+
+            document.querySelectorAll('.delete-tutor-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const form = this.closest('.delete-tutor-form');
+                    const tutorId = form.dataset.tutorId;
+                    const tutorName = form.dataset.tutorName;
+
+                    deleteTutorId.value = tutorId;
+                    tutorNameElement.textContent = tutorName;
+                    deleteModal.show();
+                });
+            });
+
+            // Auto-dismiss alerts after 5 seconds
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 5000);
+        });
+    </script>
+}
