@@ -2,9 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 using TutorConnectAPI.Data;
-using TutorConnectAPI.Services;
 using TutorConnectAPI.Hubs;
+using TutorConnectAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -114,6 +115,14 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 });
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+
 
 // ---------------------
 // Build app

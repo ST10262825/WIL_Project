@@ -127,20 +127,26 @@ namespace TutorConnectAPI.Controllers
         {
             string normalizedEmail = dto.Email.Trim().ToLower();
 
-            // 1. Find user
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
+            // 1. Find user with related entities
+            var user = await _context.Users
+                .Include(u => u.Student)
+                .Include(u => u.Tutor)
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
 
             if (user == null)
                 return Unauthorized("No account found with this email address.");
 
-            // 2. Check password
+            // 2. Check if user is blocked using the helper property
+            if (user.IsBlocked)
+                return Unauthorized("Account currently blocked. Please contact your Administrator.");
+
+            // 3. Check password
             if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 return Unauthorized("Incorrect password.");
 
-            // 3. Check email verification
+            // 4. Check email verification
             if (!user.IsEmailVerified)
                 return Unauthorized(new { error = "Email not verified", email = user.Email });
-
 
             var token = _tokenService.CreateToken(user);
             return Ok(new { token });

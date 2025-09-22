@@ -2,9 +2,12 @@
 {
     public class ModuleDTO
     {
-        public int Id { get; set; }
+        public int ModuleId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
+
+        public int BookingCount { get; set; }
+        public int TutorCount { get; set; }
     }
 
 }
