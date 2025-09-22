@@ -11,6 +11,7 @@
         public ICollection<Enrollment> Enrollments { get; set; }
         public ICollection<Session> Sessions { get; set; }
         public ICollection<Booking> Bookings { get; set; }
+        public bool IsBlocked { get; set; } = false;
         public User User { get; set; }
     }
 }

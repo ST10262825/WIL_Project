@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TutorConnectAPI.Data;
 
@@ -11,9 +12,11 @@ using TutorConnectAPI.Data;
 namespace TutorConnectAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250920122959_Reviews")]
+    partial class Reviews
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +42,6 @@ namespace TutorConnectAPI.Migrations
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("ReviewId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -207,8 +207,7 @@ namespace TutorConnectAPI.Migrations
 
                     b.HasKey("ReviewId");
 
-                    b.HasIndex("BookingId")
-                        .IsUnique();
+                    b.HasIndex("BookingId");
 
                     b.HasIndex("StudentId");
 
@@ -270,9 +269,6 @@ namespace TutorConnectAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsBlocked")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -285,8 +281,7 @@ namespace TutorConnectAPI.Migrations
 
                     b.HasKey("StudentId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Students");
                 });
@@ -356,8 +351,7 @@ namespace TutorConnectAPI.Migrations
 
                     b.HasKey("TutorId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Tutors");
                 });
@@ -479,8 +473,8 @@ namespace TutorConnectAPI.Migrations
             modelBuilder.Entity("TutorConnectAPI.Models.Review", b =>
                 {
                     b.HasOne("TutorConnectAPI.Models.Booking", "Booking")
-                        .WithOne("Review")
-                        .HasForeignKey("TutorConnectAPI.Models.Review", "BookingId")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -533,8 +527,8 @@ namespace TutorConnectAPI.Migrations
             modelBuilder.Entity("TutorConnectAPI.Models.Student", b =>
                 {
                     b.HasOne("TutorConnectAPI.Models.User", "User")
-                        .WithOne("Student")
-                        .HasForeignKey("TutorConnectAPI.Models.Student", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -544,8 +538,8 @@ namespace TutorConnectAPI.Migrations
             modelBuilder.Entity("TutorConnectAPI.Models.Tutor", b =>
                 {
                     b.HasOne("TutorConnectAPI.Models.User", "User")
-                        .WithOne("Tutor")
-                        .HasForeignKey("TutorConnectAPI.Models.Tutor", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -569,11 +563,6 @@ namespace TutorConnectAPI.Migrations
                     b.Navigation("Module");
 
                     b.Navigation("Tutor");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.Booking", b =>
-                {
-                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("TutorConnectAPI.Models.Course", b =>
@@ -608,13 +597,6 @@ namespace TutorConnectAPI.Migrations
                     b.Navigation("Sessions");
 
                     b.Navigation("TutorModules");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.User", b =>
-                {
-                    b.Navigation("Student");
-
-                    b.Navigation("Tutor");
                 });
 #pragma warning restore 612, 618
         }

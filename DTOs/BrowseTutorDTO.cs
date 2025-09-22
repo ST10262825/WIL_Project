@@ -9,6 +9,8 @@
         public string Expertise { get; set; } = string.Empty;
         public string Education { get; set; } = string.Empty;
 
+        public double AverageRating { get; set; }
+        public int TotalReviews { get; set; }
         public List<string> Subjects { get; set; } = new();
         public bool IsVerified { get; set; } = true; // optional, for badge
     }

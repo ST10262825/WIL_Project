@@ -10,5 +10,25 @@
 
         public bool IsEmailVerified { get; set; } = false;
         public string? VerificationToken { get; set; }
+
+
+        // Navigation properties
+        public Student? Student { get; set; }
+        public Tutor? Tutor { get; set; }
+
+        // Helper property to check if user is blocked
+        public bool IsBlocked
+        {
+            get
+            {
+                return Role switch
+                {
+                    "Student" => Student?.IsBlocked ?? false,
+                    "Tutor" => Tutor?.IsBlocked ?? false,
+                    "Admin" => false,
+                    _ => false
+                };
+            }
+        }
     }
 }

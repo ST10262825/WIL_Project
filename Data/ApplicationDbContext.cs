@@ -127,6 +127,7 @@ namespace TutorConnectAPI.Data
         public DbSet<Session> Sessions { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -142,11 +143,23 @@ namespace TutorConnectAPI.Data
                 .HasForeignKey(tm => tm.TutorId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<TutorModule>()
-                .HasOne(tm => tm.Module)
-                .WithMany(m => m.TutorModules)
-                .HasForeignKey(tm => tm.ModuleId)
-                .OnDelete(DeleteBehavior.NoAction);
+            // Configure TutorModule entity
+            modelBuilder.Entity<TutorModule>(entity =>
+            {
+                entity.HasKey(tm => new { tm.TutorId, tm.ModuleId });
+
+                entity.HasOne(tm => tm.Tutor)
+                    .WithMany(t => t.TutorModules)
+                    .HasForeignKey(tm => tm.TutorId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(tm => tm.Module)
+                    .WithMany(m => m.TutorModules)
+                    .HasForeignKey(tm => tm.ModuleId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+
+            });
 
             // ----- Session relationships -----
             modelBuilder.Entity<Session>()
@@ -198,6 +211,12 @@ namespace TutorConnectAPI.Data
                 .WithMany(m => m.Bookings)
                 .HasForeignKey(b => b.ModuleId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Review>()
+        .HasOne(r => r.Booking)
+        .WithOne(b => b.Review)
+        .HasForeignKey<Review>(r => r.BookingId)
+        .OnDelete(DeleteBehavior.Cascade); 
 
             // ----- Optional: enforce DeleteBehavior.NoAction globally -----
             foreach (var fk in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

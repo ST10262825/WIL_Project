@@ -20,6 +20,11 @@ namespace TutorConnectAPI.Models
         public int ModuleId { get; set; }
         public Module Module { get; set; }
 
+        [ForeignKey("Review")]
+        public int? ReviewId { get; set; }  // nullable
+        public Review? Review { get; set; }
+
+
         [Required]
         public DateTime StartTime { get; set; }  // e.g., 2025-09-20 10:00
 

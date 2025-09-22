@@ -19,5 +19,16 @@
         public ICollection<TutorModule> TutorModules { get; set; }
       
         public User User { get; set; }
+
+    //Review and Rating Properties
+        public double AverageRating { get; set; } = 0;
+        public int TotalReviews { get; set; } = 0;
+        public int RatingCount1 { get; set; } = 0;
+        public int RatingCount2 { get; set; } = 0;
+        public int RatingCount3 { get; set; } = 0;
+        public int RatingCount4 { get; set; } = 0;
+        public int RatingCount5 { get; set; } = 0;
+
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 }

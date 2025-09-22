@@ -46,9 +46,19 @@ namespace TutorConnectAPI.Controllers
                 Education = tutor.Education,
                 IsBlocked = tutor.IsBlocked,
                 ProfileImageUrl = tutor.ProfileImageUrl,
+
+                // ✅ ADD THESE RATING PROPERTIES
+                AverageRating = tutor.AverageRating,
+                TotalReviews = tutor.TotalReviews,
+                RatingCount1 = tutor.RatingCount1,
+                RatingCount2 = tutor.RatingCount2,
+                RatingCount3 = tutor.RatingCount3,
+                RatingCount4 = tutor.RatingCount4,
+                RatingCount5 = tutor.RatingCount5,
+
                 Modules = tutor.TutorModules.Select(tm => new ModuleDTO
                 {
-                    Id = tm.Module.ModuleId,
+                    ModuleId = tm.ModuleId,
                     Code = tm.Module.Code,
                     Name = tm.Module.Name
                 }).ToList()
@@ -107,85 +117,6 @@ namespace TutorConnectAPI.Controllers
         }
 
 
-
-
-
-
-
-
-        // ✅ Get all bookings for this tutor
-        //[HttpGet("sessions/{tutorId}")]
-        //public async Task<IActionResult> GetTutorBookings(int tutorId)
-        //{
-        //    var bookings = await _context.Bookings
-        //        .Include(b => b.Student)
-        //            .ThenInclude(s => s.User)
-        //        .Include(b => b.Module)
-        //        .Where(b => b.TutorId == tutorId)
-        //        .Select(b => new BookingDTO
-        //        {
-        //            BookingId = b.BookingId,
-        //            TutorId = b.TutorId,
-        //            TutorName = b.Tutor.Name + " " + b.Tutor.Surname,
-        //            StudentId = b.StudentId,
-        //            StudentName = b.Student.Name,
-        //            ModuleName = b.Module.Name,
-        //            SessionDate = b.SessionDate,
-        //            Status = b.Status,
-        //            Notes = b.Notes
-        //        })
-        //        .ToListAsync();
-
-        //    return Ok(bookings);
-        //}
-
-        //// ✅ Update booking/session status
-        //[HttpPut("sessions/{sessionId}/status")]
-        //public async Task<IActionResult> UpdateSessionStatus(int sessionId, [FromBody] UpdateSessionStatusDTO dto)
-        //{
-        //    var booking = await _context.Bookings.FindAsync(sessionId);
-        //    if (booking == null)
-        //        return NotFound("Booking not found.");
-
-        //    booking.Status = dto.Status;
-        //    booking.Notes = dto.RejectionReason; // optional
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok("Booking status updated.");
-        //}
-
-        //[HttpGet("stats/{tutorId}")]
-        //public async Task<IActionResult> GetDashboardStats(int tutorId)
-        //{
-        //    var tutor = await _context.Tutors.FindAsync(tutorId);
-        //    if (tutor == null) return NotFound("Tutor not found.");
-
-        //    var today = DateTime.Today;
-
-        //    var stats = new
-        //    {
-        //        ActiveSessionsCount = await _context.Bookings.CountAsync(b => b.TutorId == tutorId && b.SessionDate >= today),
-        //        TotalStudentsCount = await _context.Bookings.Where(b => b.TutorId == tutorId).Select(b => b.StudentId).Distinct().CountAsync(),
-        //        PendingBookingsCount = await _context.Bookings.CountAsync(b => b.TutorId == tutorId && b.Status == "Pending"),
-        //        CompletedSessionsCount = await _context.Bookings.CountAsync(b => b.TutorId == tutorId && b.Status == "Completed"),
-        //        UpcomingSessions = await _context.Bookings
-        //            .Where(b => b.TutorId == tutorId && b.SessionDate >= today)
-        //            .OrderBy(b => b.SessionDate)
-        //            .Select(b => new
-        //            {
-        //                b.BookingId,
-        //                b.StudentId,
-        //                StudentName = b.Student.Name,
-        //                ModuleName = b.Module.Name,
-        //                b.SessionDate,
-        //                b.Status
-        //            }).ToListAsync(),
-        //        //UnreadMessagesCount = await _context.ChatMessages.CountAsync(m => m.ReceiverId == tutor.UserId && !m.IsRead)
-        //    };
-
-        //    return Ok(stats);
-        //}
-
         [HttpGet("browse")]
         public async Task<IActionResult> BrowseTutors()
         {
@@ -203,11 +134,16 @@ namespace TutorConnectAPI.Controllers
                 Expertise = t.Expertise,
                 Education = t.Education,
                 Subjects = t.TutorModules.Select(tm => tm.Module.Name).ToList(),
-                IsVerified = true // or implement logic
+                IsVerified = true,
+
+                // ✅ ADD RATING PROPERTIES FOR BROWSE VIEW TOO
+                AverageRating = t.AverageRating,
+                TotalReviews = t.TotalReviews
             }).ToList();
 
             return Ok(dtoList);
         }
+
 
         [HttpGet("by-id/{tutorId}")]
         public async Task<IActionResult> GetTutorById(int tutorId)
@@ -233,9 +169,20 @@ namespace TutorConnectAPI.Controllers
                 Education = tutor.Education,
                 IsBlocked = tutor.IsBlocked,
                 ProfileImageUrl = string.IsNullOrEmpty(tutor.ProfileImageUrl) ? "/images/default-profile.png" : tutor.ProfileImageUrl,
+
+                // ✅ ADD THESE RATING PROPERTIES
+                AverageRating = tutor.AverageRating,
+                TotalReviews = tutor.TotalReviews,
+                RatingCount1 = tutor.RatingCount1,
+                RatingCount2 = tutor.RatingCount2,
+                RatingCount3 = tutor.RatingCount3,
+                RatingCount4 = tutor.RatingCount4,
+                RatingCount5 = tutor.RatingCount5,
+
+
                 Modules = tutor.TutorModules.Select(tm => new ModuleDTO
                 {
-                    Id = tm.Module.ModuleId,
+                    ModuleId = tm.ModuleId,
                     Code = tm.Module.Code,
                     Name = tm.Module.Name
                 }).ToList()

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TutorConnectAPI.Data;
 
@@ -11,9 +12,11 @@ using TutorConnectAPI.Data;
 namespace TutorConnectAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250922034206_Booking_rating")]
+    partial class Booking_rating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,6 +63,8 @@ namespace TutorConnectAPI.Migrations
                     b.HasKey("BookingId");
 
                     b.HasIndex("ModuleId");
+
+                    b.HasIndex("ReviewId");
 
                     b.HasIndex("StudentId");
 
@@ -207,8 +212,7 @@ namespace TutorConnectAPI.Migrations
 
                     b.HasKey("ReviewId");
 
-                    b.HasIndex("BookingId")
-                        .IsUnique();
+                    b.HasIndex("BookingId");
 
                     b.HasIndex("StudentId");
 
@@ -419,6 +423,11 @@ namespace TutorConnectAPI.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("TutorConnectAPI.Models.Review", "Review")
+                        .WithMany()
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("TutorConnectAPI.Models.Student", "Student")
                         .WithMany("Bookings")
                         .HasForeignKey("StudentId")
@@ -432,6 +441,8 @@ namespace TutorConnectAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Module");
+
+                    b.Navigation("Review");
 
                     b.Navigation("Student");
 
@@ -479,8 +490,8 @@ namespace TutorConnectAPI.Migrations
             modelBuilder.Entity("TutorConnectAPI.Models.Review", b =>
                 {
                     b.HasOne("TutorConnectAPI.Models.Booking", "Booking")
-                        .WithOne("Review")
-                        .HasForeignKey("TutorConnectAPI.Models.Review", "BookingId")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -569,11 +580,6 @@ namespace TutorConnectAPI.Migrations
                     b.Navigation("Module");
 
                     b.Navigation("Tutor");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.Booking", b =>
-                {
-                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("TutorConnectAPI.Models.Course", b =>
