@@ -158,7 +158,7 @@ namespace TutorConnectAPI.Controllers
                     // Delete old profile image if exists
                     if (!string.IsNullOrEmpty(student.ProfileImage))
                     {
-                        var oldFilePath = Path.Combine(_environment.WebRootPath, student.ProfileImage.TrimStart('/'));
+                        var oldFilePath = Path.Combine(_environment.WebRootPath, student.ProfileImage.TrimStart('/').Replace("~/", ""));
                         if (System.IO.File.Exists(oldFilePath))
                         {
                             System.IO.File.Delete(oldFilePath);
@@ -174,8 +174,8 @@ namespace TutorConnectAPI.Controllers
                         await dto.ProfileImage.CopyToAsync(stream);
                     }
 
-                    // Update profile image URL
-                    newImageUrl = $"/images/{fileName}";
+                    // FIX: Use ~/ format for consistency with Url.Content()
+                    newImageUrl = $"~/images/{fileName}";
                     student.ProfileImage = newImageUrl;
                 }
 
@@ -186,7 +186,7 @@ namespace TutorConnectAPI.Controllers
                 {
                     success = true,
                     message = "Profile updated successfully",
-                    profileImageUrl = newImageUrl,
+                    profileImageUrl = newImageUrl,  // This will now be "~/images/filename.jpg"
                     bio = student.Bio
                 });
             }
@@ -195,6 +195,48 @@ namespace TutorConnectAPI.Controllers
                 return StatusCode(500, new { success = false, message = "An error occurred while updating profile" });
             }
         }
+
+
+        // GET: api/student/{studentId}/profile-image
+        [HttpGet("{studentId}/profile-image")]
+        public IActionResult GetProfileImage(int studentId)
+        {
+            try
+            {
+                var student = _context.Students.Find(studentId);
+                if (student == null || string.IsNullOrEmpty(student.ProfileImage))
+                {
+                    // Return default image
+                    var defaultImagePath = Path.Combine(_environment.WebRootPath, "images", "default-profile.png");
+                    return PhysicalFile(defaultImagePath, "image/png");
+                }
+
+                var fileName = student.ProfileImage.Replace("~/images/", "").Replace("/images/", "");
+                var filePath = Path.Combine(_environment.WebRootPath, "images", fileName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    var contentType = "image/jpeg";
+                    if (fileName.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                        contentType = "image/png";
+                    else if (fileName.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
+                        contentType = "image/gif";
+
+                    return PhysicalFile(filePath, contentType);
+                }
+                else
+                {
+                    var defaultImagePath = Path.Combine(_environment.WebRootPath, "images", "default-profile.png");
+                    return PhysicalFile(defaultImagePath, "image/png");
+                }
+            }
+            catch (Exception ex)
+            {
+                var defaultImagePath = Path.Combine(_environment.WebRootPath, "images", "default-profile.png");
+                return PhysicalFile(defaultImagePath, "image/png");
+            }
+        }
+
 
         // GET: api/student/{studentId}/progress
         [HttpGet("{studentId}/progress")]

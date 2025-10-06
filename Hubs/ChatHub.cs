@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TutorConnectAPI.Data;
 using TutorConnectAPI.Models;
@@ -13,6 +14,7 @@ namespace TutorConnectAPI.Hubs
     public class ChatHub : Hub
     {
         private readonly ApplicationDbContext _context;
+        private static readonly Dictionary<int, string> _onlineUsers = new Dictionary<int, string>();
 
         public ChatHub(ApplicationDbContext context)
         {
@@ -90,14 +92,20 @@ namespace TutorConnectAPI.Hubs
         // ----------------------------
         // Handle user connections
         // ----------------------------
+        // Add to ChatHub class
+        
+
         public override async Task OnConnectedAsync()
         {
-            var userId = Context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userId = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            if (!string.IsNullOrEmpty(userId))
+            if (userId > 0)
             {
-                // Put user into a private group = their UserId
-                await Groups.AddToGroupAsync(Context.ConnectionId, userId);
+                _onlineUsers[userId] = Context.ConnectionId;
+                await Groups.AddToGroupAsync(Context.ConnectionId, userId.ToString());
+
+                // Notify other users that this user came online
+                await Clients.All.SendAsync("UserOnline", userId);
             }
 
             await base.OnConnectedAsync();
@@ -105,14 +113,23 @@ namespace TutorConnectAPI.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var userId = Context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userId = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-            if (!string.IsNullOrEmpty(userId))
+            if (userId > 0)
             {
-                await Groups.RemoveFromGroupAsync(Context.ConnectionId, userId);
+                _onlineUsers.Remove(userId);
+
+                // Notify other users that this user went offline
+                await Clients.All.SendAsync("UserOffline", userId);
             }
 
             await base.OnDisconnectedAsync(exception);
+        }
+
+        // Method to get online status
+        public async Task<bool> IsUserOnline(int userId)
+        {
+            return _onlineUsers.ContainsKey(userId);
         }
     }
 }

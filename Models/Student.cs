@@ -1,4 +1,6 @@
-﻿namespace TutorConnectAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TutorConnectAPI.Models
 {
     public class Student
     {
@@ -12,6 +14,9 @@
         public ICollection<Session> Sessions { get; set; }
         public ICollection<Booking> Bookings { get; set; }
         public bool IsBlocked { get; set; } = false;
+        [ForeignKey("Review")]
+        public int? ReviewId { get; set; }  // nullable
+        public Review? Review { get; set; }
         public User User { get; set; }
     }
 }

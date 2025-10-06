@@ -172,7 +172,7 @@ namespace TutorConnectAPI.Data
                 .HasOne(s => s.Student)
                 .WithMany(st => st.Sessions)
                 .HasForeignKey(s => s.StudentId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Session>()
                 .HasOne(s => s.Module)

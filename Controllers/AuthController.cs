@@ -28,9 +28,9 @@ namespace TutorConnectAPI.Controllers
         {
             string normalizedEmail = dto.Email.Trim().ToLower();
 
-            //// 1. Validate email domain
-            //if (!normalizedEmail.EndsWith("@vcconnect.edu.za"))
-            //    return BadRequest("Only @vcconnect.edu.za email addresses are allowed.");
+            // 1. Validate email domain
+            if (!normalizedEmail.EndsWith("@vcconnect.edu.za"))
+                return BadRequest("Only @vcconnect.edu.za email addresses are allowed.");
 
             // 2. Check if user exists
             var existingUser = await _context.Users
@@ -147,6 +147,13 @@ namespace TutorConnectAPI.Controllers
             // 4. Check email verification
             if (!user.IsEmailVerified)
                 return Unauthorized(new { error = "Email not verified", email = user.Email });
+
+            // 5. NEW: Check if user has the appropriate profile for their role
+            if (user.Role == "Student" && user.Student == null)
+                return Unauthorized("Student profile no longer exists.");
+
+            if (user.Role == "Tutor" && user.Tutor == null)
+                return Unauthorized("Tutor profile no longer exists.");
 
             var token = _tokenService.CreateToken(user);
             return Ok(new { token });
