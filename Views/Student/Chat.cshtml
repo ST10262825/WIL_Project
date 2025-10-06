@@ -1,4 +1,4 @@
-﻿@{
+﻿@* @{
     var authToken = User.FindFirst("Token")?.Value ?? "";
     var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "0";
 }
@@ -628,4 +628,4 @@
         // Initialize send button state
         document.getElementById("sendBtn").disabled = true;
     </script>
-}
+} *@

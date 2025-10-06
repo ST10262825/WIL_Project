@@ -172,24 +172,101 @@ namespace TutorConnect.WebApp.Controllers
 
 
 
-        // Dashboard
+        // Dashboard with comprehensive stats
         public async Task<IActionResult> Index()
         {
-            var tutors = await _api.GetAllAdminTutorsAsync();
-            var students = await _api.GetAllStudentsAsync();
-            var bookings = await _api.GetAllBookingsAsync();
-            var modules = await _api.GetAllModulesAsync();
-
-            ViewBag.Stats = new
+            try
             {
-                TotalTutors = tutors?.Count ?? 0,
-                TotalStudents = students?.Count ?? 0,
-                TotalBookings = bookings?.Count ?? 0,
-                PendingBookings = bookings?.Count(b => b.Status == "Pending") ?? 0,
-                ActiveModules = modules?.Count ?? 0
-            };
+                var tutors = await _api.GetAllAdminTutorsAsync();
+                var students = await _api.GetAllStudentsAsync();
+                var bookings = await _api.GetAllBookingsAsync();
+                var modules = await _api.GetAllModulesAsync();
 
-            return View(); // Admin Dashboard view you already have
+                // Calculate comprehensive statistics
+
+                var activeTutors = tutors?.Count(t => !t.IsBlocked) ?? 0;
+                var blockedTutors = tutors?.Count(t => t.IsBlocked) ?? 0;
+                var activeStudents = students?.Count(s => !s.IsBlocked) ?? 0;
+                var blockedStudents = students?.Count(s => s.IsBlocked) ?? 0;
+
+                // Recent activity (last 7 days)
+                var lastWeek = DateTime.UtcNow.AddDays(-7);
+                var recentBookings = bookings?.Count(b => b.StartTime >= lastWeek) ?? 0;
+                var completedThisWeek = bookings?.Count(b => b.Status == "Completed" && b.StartTime >= lastWeek) ?? 0;
+
+                // Calculate booking completion rate
+                var bookingCompletionRate = bookings?.Any() == true ?
+                    (decimal)bookings.Count(b => b.Status == "Completed") / bookings.Count * 100 : 0;
+
+                // Calculate average tutor rating
+                var averageTutorRating = tutors?.Where(t => t.AverageRating > 0).Average(t => t.AverageRating) ?? 0;
+
+                var viewModel = new AdminDashboardViewModel
+                {
+                    // Basic counts
+                    TotalTutors = tutors?.Count ?? 0,
+                    TotalStudents = students?.Count ?? 0,
+                    TotalBookings = bookings?.Count ?? 0,
+                    TotalModules = modules?.Count ?? 0,
+
+                    // Status breakdowns
+                    ActiveTutors = activeTutors,
+                    BlockedTutors = blockedTutors,
+                    ActiveStudents = activeStudents,
+                    BlockedStudents = blockedStudents,
+
+                    // Booking statuses
+                    PendingBookings = bookings?.Count(b => b.Status == "Pending") ?? 0,
+                    ConfirmedBookings = bookings?.Count(b => b.Status == "Confirmed") ?? 0,
+                    CompletedBookings = bookings?.Count(b => b.Status == "Completed") ?? 0,
+                    CancelledBookings = bookings?.Count(b => b.Status == "Cancelled") ?? 0,
+
+
+                    // Recent activity
+                    RecentBookings = recentBookings,
+                    CompletedThisWeek = completedThisWeek,
+
+                    // Performance metrics
+                    AverageTutorRating = averageTutorRating,
+                    BookingCompletionRate = bookingCompletionRate,
+
+                    // Lists
+                    PopularModules = modules?
+                        .OrderByDescending(m => m.BookingCount)
+                        .Take(5)
+                        .ToList() ?? new List<ModuleDTO>(),
+                    TopRatedTutors = tutors?
+                        .Where(t => t.AverageRating > 0)
+                        .OrderByDescending(t => t.AverageRating)
+                        .Take(5)
+                        .ToList() ?? new List<TutorDTO>(),
+                    Students = students?.ToList() ?? new List<StudentDTO>(),
+                    Bookings = bookings?.ToList() ?? new List<BookingDTO>(),
+                    Modules = modules?.ToList() ?? new List<ModuleDTO>(),
+
+                    // System health (mock data for now)
+                    SystemHealth = new SystemHealthDTO
+                    {
+                        DatabaseStatus = "Online",
+                        Uptime = 86400, // 24 hours in seconds
+                        MemoryUsage = 512, // MB
+                        ActiveConnections = 42
+                    }
+                };
+
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine($"Error loading dashboard: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                TempData["Error"] = $"Error loading dashboard: {ex.Message}";
+
+                // Return empty view model instead of crashing
+                return View(new AdminDashboardViewModel());
+            }
         }
 
         // ------------------ Tutors ------------------
@@ -478,7 +555,206 @@ namespace TutorConnect.WebApp.Controllers
         }
 
 
+        public async Task<IActionResult> Reports()
+        {
+            try
+            {
+                var options = await _api.GetReportOptionsAsync();
+                ViewBag.ReportOptions = options;
 
+                // Default filters
+                var defaultFilters = new ReportFilterDTO
+                {
+                    DateRange = "last7days",
+                    ReportType = "Booking"
+                };
+
+                ViewBag.DefaultFilters = defaultFilters;
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error loading report options: {ex.Message}";
+                return View();
+            }
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> GenerateReport([FromForm] ReportFilterViewModel model)
+        {
+            // Add the [FromForm] attribute
+            try
+            {
+                Console.WriteLine("=== WEBAPP CONTROLLER - FORM BINDING ===");
+                Console.WriteLine($"Model is null: {model == null}");
+
+                if (model != null)
+                {
+                    Console.WriteLine($"ReportType: '{model.ReportType}'");
+                    Console.WriteLine($"DateRange: '{model.DateRange}'");
+                    Console.WriteLine($"ExportFormat: '{model.ExportFormat}'");
+                    Console.WriteLine($"UserType: '{model.UserType}'");
+                    Console.WriteLine($"UserId: {model.UserId}");
+                }
+                else
+                {
+                    Console.WriteLine("MODEL IS NULL - CHECK FORM BINDING");
+                }
+
+                // Validate required fields
+                if (string.IsNullOrEmpty(model?.ReportType))
+                {
+                    Console.WriteLine("ERROR: ReportType is null or empty");
+                    return BadRequest("Please select a report type.");
+                }
+
+                Console.WriteLine("=== CREATING FILTERS DTO ===");
+
+                // Convert ViewModel to DTO
+                var filters = new ReportFilterDTO
+                {
+                    ReportType = model.ReportType,
+                    DateRange = model.DateRange,
+                    ExportFormat = model.ExportFormat,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
+                    UserType = model.UserType,
+                    UserId = model.UserId,
+                    Statuses = new List<string>(),
+                    ModuleIds = new List<int>()
+                };
+
+                Console.WriteLine("Initial filters created:");
+                Console.WriteLine($"- ReportType: '{filters.ReportType}'");
+                Console.WriteLine($"- UserType: '{filters.UserType}'");
+                Console.WriteLine($"- UserId: {filters.UserId}");
+                Console.WriteLine($"- Statuses count: {filters.Statuses.Count}");
+                Console.WriteLine($"- ModuleIds count: {filters.ModuleIds.Count}");
+
+                // SPECIAL HANDLING FOR "EVERYTHING" REPORT
+                if (model.ReportType == "Everything")
+                {
+                    Console.WriteLine("Processing as 'Everything' report - clearing filters");
+                    filters.UserType = null;
+                    filters.UserId = null;
+                    filters.Statuses = new List<string>(); // Ensure empty list
+                    filters.ModuleIds = new List<int>();   // Ensure empty list
+
+                    Console.WriteLine("After Everything report processing:");
+                    Console.WriteLine($"- UserType: '{filters.UserType}'");
+                    Console.WriteLine($"- UserId: {filters.UserId}");
+                    Console.WriteLine($"- Statuses: [{string.Join(", ", filters.Statuses)}]");
+                    Console.WriteLine($"- ModuleIds: [{string.Join(", ", filters.ModuleIds)}]");
+                }
+                else
+                {
+                    Console.WriteLine($"Processing as '{model.ReportType}' report");
+                    // Add statuses from checkboxes
+                    if (model.ReportType == "Booking")
+                    {
+                        if (model.StatusPending) filters.Statuses.Add("Pending");
+                        if (model.StatusConfirmed) filters.Statuses.Add("Confirmed");
+                        if (model.StatusCompleted) filters.Statuses.Add("Completed");
+                        if (model.StatusCancelled) filters.Statuses.Add("Cancelled");
+                    }
+                    else if (model.ReportType == "Student" || model.ReportType == "Tutor")
+                    {
+                        if (model.StatusActive) filters.Statuses.Add("Active");
+                        if (model.StatusInactive) filters.Statuses.Add("Inactive");
+                    }
+
+                    // Add module IDs
+                    if (model.ModuleIds != null && model.ModuleIds.Any())
+                    {
+                        filters.ModuleIds = model.ModuleIds;
+                    }
+                }
+
+                Console.WriteLine("=== FINAL FILTERS BEFORE API CALL ===");
+                Console.WriteLine($"ReportType: '{filters.ReportType}'");
+                Console.WriteLine($"DateRange: '{filters.DateRange}'");
+                Console.WriteLine($"ExportFormat: '{filters.ExportFormat}'");
+                Console.WriteLine($"UserType: '{filters.UserType}'");
+                Console.WriteLine($"UserId: {filters.UserId}");
+                Console.WriteLine($"StartDate: {filters.StartDate}");
+                Console.WriteLine($"EndDate: {filters.EndDate}");
+                Console.WriteLine($"Statuses: [{string.Join(", ", filters.Statuses)}] (Count: {filters.Statuses.Count})");
+                Console.WriteLine($"ModuleIds: [{string.Join(", ", filters.ModuleIds)}] (Count: {filters.ModuleIds.Count})");
+                Console.WriteLine("=== END WEBAPP DEBUG ===");
+
+                // Check if this is a file export request
+                if (!string.IsNullOrEmpty(filters.ExportFormat))
+                {
+                    Console.WriteLine($"Making FILE EXPORT API call for {filters.ExportFormat}");
+                    try
+                    {
+                        var fileResult = await _api.GenerateReportFileAsync(filters);
+                        Console.WriteLine("File export API call SUCCESS");
+                        return File(fileResult.Content, fileResult.ContentType, fileResult.FileName);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        Console.WriteLine($"FILE EXPORT API ERROR: {ex.Message}");
+                        return BadRequest(new { error = ex.Message });
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Making BROWSER VIEW API call");
+                    try
+                    {
+                        var reportResult = await _api.GenerateReportAsync(filters);
+                        Console.WriteLine("Browser view API call SUCCESS");
+                        return PartialView("_ReportResults", reportResult);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        Console.WriteLine($"BROWSER VIEW API ERROR: {ex.Message}");
+                        return BadRequest(ex.Message);
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.WriteLine($"HTTPREQUESTEXCEPTION CAUGHT: {ex.Message}");
+                var errorMessage = ex.Message;
+
+                if (!string.IsNullOrEmpty(model?.ExportFormat))
+                {
+                    return BadRequest(new { error = errorMessage });
+                }
+                return BadRequest(errorMessage);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"UNEXPECTED ERROR: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                var userFriendlyMessage = "An unexpected error occurred while generating the report. Please try again later.";
+
+                if (!string.IsNullOrEmpty(model?.ExportFormat))
+                {
+                    return BadRequest(new { error = userFriendlyMessage });
+                }
+                return BadRequest(userFriendlyMessage);
+            }
+        }
+
+
+
+        private string GetContentType(string exportFormat)
+        {
+            return exportFormat?.ToLower() switch
+            {
+                "pdf" => "application/pdf",
+                "excel" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "csv" => "text/csv",
+                _ => "application/octet-stream"
+            };
+        }
 
     }
 }

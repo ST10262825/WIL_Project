@@ -434,6 +434,103 @@
             border-color: #00a884;
             background: white;
         }
+
+    /* Role badge */
+    /* Role badge styling */
+    .role-badge {
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-left: 8px;
+    }
+
+        .role-badge.tutor {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .role-badge.student {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: white;
+        }
+
+        .role-badge.admin {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+        }
+
+    /* User header layout */
+    .user-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #111b21;
+        margin-bottom: 0;
+    }
+
+    /* Chat header role styling */
+    .chat-header-role {
+        font-size: 12px;
+        color: #667781;
+        margin-top: 2px;
+    }
+
+    .last-message {
+        font-size: 13px;
+        color: #667781;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+    }
+
+    .user-item.has-unread .user-name {
+        font-weight: 700;
+        color: #000;
+    }
+
+    .user-item.has-unread .last-message {
+        font-weight: 600;
+        color: #111b21;
+    }
+
+    /* Message time in conversation list */
+    .user-info .message-time {
+        font-size: 11px;
+        color: #667781;
+        margin-top: 2px;
+    }
+
+    /* Chat header role badge */
+    .chat-header-info h3 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Empty state styling */
+    .user-item .btn {
+        padding: 4px 12px;
+        font-size: 12px;
+        border-radius: 15px;
+    }
+
+    .user-item .btn-primary {
+        background: #00a884;
+        border-color: #00a884;
+    }
+
+        .user-item .btn-primary:hover {
+            background: #008f72;
+            border-color: #008f72;
+        }
+
 </style>
 
 <div class="chat-container">
@@ -500,45 +597,344 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
     <script>
+        console.log('Chat script starting...');
+
         const currentUserId = parseInt('@currentUserId');
         const authToken = '@authToken';
+
+        console.log('Current User ID:', currentUserId);
+        console.log('Auth Token present:', !!authToken);
+
         let selectedReceiverId = null;
         let selectedUserName = '';
-        let typingTimer;
+        let connection = null;
 
-        // SignalR connection
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:44374/chatHub", {
-                accessTokenFactory: () => authToken
-            })
-            .withAutomaticReconnect()
-            .build();
+        // Initialize SignalR connection
+        async function initializeSignalR() {
+            try {
+                connection = new signalR.HubConnectionBuilder()
+                    .withUrl("https://localhost:44374/chatHub", {
+                        accessTokenFactory: () => authToken
+                    })
+                    .withAutomaticReconnect()
+                    .build();
 
-        // SignalR event handlers
-        connection.on("ReceiveMessage", (chatMessage) => {
-            appendMessage(chatMessage.senderId, chatMessage.message, chatMessage.sentAt);
-            hideTypingIndicator();
+                // Setup SignalR event handlers
+                connection.on("ReceiveMessage", (chatMessage) => {
+                    console.log('New message received:', chatMessage);
+                    appendMessage(chatMessage.senderId, chatMessage.message, chatMessage.sentAt);
 
-            // Update unread badge if not in current conversation
-            if (parseInt(selectedReceiverId) !== chatMessage.senderId) {
-                updateUnreadBadge(chatMessage.senderId, true);
+                    // Update sidebar for the conversation
+                    updateSidebarConversation(chatMessage.senderId, chatMessage.message, chatMessage.sentAt, true);
+                });
+
+                connection.on("LoadChatHistory", (messages) => {
+                    console.log('Chat history loaded:', messages);
+                    displayChatHistory(messages);
+                });
+
+                connection.on("UpdateUnreadCount", (unreadCount, senderId) => {
+                    console.log('Unread count update:', unreadCount, 'from', senderId);
+                    updateUnreadBadge(senderId, unreadCount);
+                });
+
+                await connection.start();
+                console.log('SignalR connected successfully');
+
+            } catch (err) {
+                console.error('SignalR connection failed:', err);
             }
-        });
+        }
 
-        connection.on("LoadChatHistory", (messages) => {
+        // Update sidebar conversation when new message is sent/received
+        function updateSidebarConversation(userId, message, timestamp, isIncoming = false) {
+            const userItem = document.querySelector(`[data-user-id="${userId}"]`);
+
+            if (userItem) {
+                // Update last message preview
+                const lastMessageEl = userItem.querySelector('.last-message');
+                if (lastMessageEl) {
+                    lastMessageEl.textContent = message.length > 30 ? message.substring(0, 30) + '...' : message;
+                }
+
+                // Update timestamp
+                const timeEl = userItem.querySelector('.message-time');
+                if (timeEl) {
+                    timeEl.textContent = formatLastMessageTime(timestamp);
+                }
+
+                // Move conversation to top of list (most recent first)
+                const userList = document.getElementById("userList");
+                if (userItem.parentNode === userList && userList.firstChild !== userItem) {
+                    userList.insertBefore(userItem, userList.firstChild);
+                }
+
+                // Update unread badge for incoming messages if not in current conversation
+                if (isIncoming && parseInt(selectedReceiverId) !== userId) {
+                    updateUnreadBadge(userId, true);
+                }
+            }
+        }
+
+        // Enhanced user item creation with timestamp
+               // Enhanced user item creation with role badges
+        function createUserItem(user) {
+            const userItem = document.createElement("div");
+            userItem.className = "user-item";
+            userItem.dataset.userId = user.userId;
+
+            // Get role badge HTML
+            const roleBadge = getRoleBadge(user.role);
+
+            userItem.innerHTML = `
+                <div class="user-avatar-container">
+                    <div class="user-avatar" style="background: ${getAvatarColor(user.userId)}">
+                        ${user.name ? user.name.substring(0, 2).toUpperCase() : 'UU'}
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-header">
+                        <div class="user-name">${user.name || 'Unknown User'}</div>
+                        ${roleBadge}
+                    </div>
+                    <div class="last-message">${user.lastMessagePreview || 'No messages yet'}</div>
+                    <div class="message-time">${formatLastMessageTime(user.lastMessageTime)}</div>
+                </div>
+                ${user.unreadCount > 0 ? `
+                    <div class="unread-badge">${user.unreadCount}</div>
+                ` : ''}
+            `;
+
+            userItem.addEventListener('click', function() {
+                selectUser(user.userId, user.name, user.role);
+            });
+
+            return userItem;
+        }
+
+        // Function to generate role badge HTML
+        function getRoleBadge(role) {
+            const roleLower = (role || '').toLowerCase();
+            let badgeClass = 'role-badge';
+
+            if (roleLower.includes('tutor')) {
+                badgeClass += ' tutor';
+            } else if (roleLower.includes('student')) {
+                badgeClass += ' student';
+            } else if (roleLower.includes('admin')) {
+                badgeClass += ' admin';
+            }
+
+            return `<span class="${badgeClass}">${role || 'User'}</span>`;
+        }
+
+        // Function to get consistent avatar colors based on user ID
+        function getAvatarColor(userId) {
+            const colors = [
+                'linear-gradient(135deg, #667eea, #764ba2)', // Purple
+                'linear-gradient(135deg, #f093fb, #f5576c)', // Pink
+                'linear-gradient(135deg, #4facfe, #00f2fe)', // Blue
+                'linear-gradient(135deg, #43e97b, #38f9d7)', // Green
+                'linear-gradient(135deg, #fa709a, #fee140)', // Yellow
+                'linear-gradient(135deg, #a8edea, #fed6e3)', // Light
+                'linear-gradient(135deg, #d299c2, #fef9d7)', // Lavender
+                'linear-gradient(135deg, #89f7fe, #66a6ff)'  // Sky blue
+            ];
+            return colors[userId % colors.length];
+        }
+
+        // Load and display users
+               // Load and display users
+        async function loadAndDisplayUsers() {
+            console.log('Starting to load users...');
+
+            try {
+                const response = await fetch('/Chat/Inbox');
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const users = await response.json();
+                console.log('Users received:', users);
+
+                const userList = document.getElementById("userList");
+
+                if (!users || users.length === 0) {
+                    userList.innerHTML = `
+                        <div class="user-item">
+                            <div class="user-info">
+                                <div class="user-name">No conversations yet</div>
+                                <div class="last-message">Book a session with a tutor to start chatting</div>
+                                <div class="message-time">
+                                    <a href="/Tutor/Browse" class="btn btn-sm btn-primary mt-2">Find Tutors</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    console.log('No users found - showing empty state');
+                    return;
+                }
+
+                userList.innerHTML = '';
+
+                // Sort users by last message time (newest first)
+                users.sort((a, b) => {
+                    const timeA = a.lastMessageTime ? new Date(a.lastMessageTime) : new Date(0);
+                    const timeB = b.lastMessageTime ? new Date(b.lastMessageTime) : new Date(0);
+                    return timeB - timeA;
+                });
+
+                users.forEach(user => {
+                    userList.appendChild(createUserItem(user));
+                });
+
+                console.log('Users displayed successfully');
+
+            } catch (error) {
+                console.error('Error loading users:', error);
+                const userList = document.getElementById("userList");
+                userList.innerHTML = `
+                    <div class="user-item">
+                        <div class="user-info">
+                            <div class="user-name">Error loading conversations</div>
+                            <div class="last-message">${error.message}</div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+                // Select user and load chat
+        async function selectUser(userId, userName, userRole) {
+            console.log('Selecting user:', userId, userName);
+
+            // Update UI
+            document.querySelectorAll('.user-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            const clickedUser = document.querySelector(`[data-user-id="${userId}"]`);
+            if (clickedUser) {
+                clickedUser.classList.add('active');
+            }
+
+            selectedReceiverId = userId;
+            selectedUserName = userName;
+
+            // Show chat interface
+            document.getElementById('chatHeader').style.display = 'flex';
+            document.getElementById('chatInputContainer').style.display = 'flex';
+
+            // Create header with role
+            const headerName = document.getElementById('headerName');
+            headerName.innerHTML = `
+                ${userName}
+                ${getRoleBadge(userRole)}
+            `;
+
+            document.getElementById('headerAvatar').textContent = userName.substring(0, 2).toUpperCase();
+            document.getElementById('headerAvatar').style.background = getAvatarColor(userId);
+
+            // Show loading state
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.innerHTML = `
+                <div class="empty-chat">
+                    <div class="empty-chat-icon">⏳</div>
+                    <h3>Loading messages...</h3>
+                </div>
+            `;
+
+            // Mark messages as read
+            try {
+                await fetch(`/Chat/MarkAsRead?senderId=${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || '',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log('Messages marked as read');
+
+                // Remove unread badge
+                updateUnreadBadge(userId, false);
+            } catch (err) {
+                console.error("Failed to mark messages as read:", err);
+            }
+
+            // Load chat history via SignalR
+            if (connection && connection.state === signalR.HubConnectionState.Connected) {
+                try {
+                    await connection.invoke("LoadConversation", currentUserId, parseInt(userId));
+                    // Update sidebar to show this conversation as active
+                    updateSidebarConversation(userId, "Loading...", new Date(), false);
+                } catch (err) {
+                    console.error("Error loading conversation:", err);
+                    showErrorState();
+                }
+            } else {
+                console.error("SignalR not connected, cannot load messages");
+                showErrorState();
+            }
+
+            // Mobile sidebar
+            if (window.innerWidth <= 768) {
+                document.getElementById('chatSidebar').classList.remove('active');
+            }
+        }
+
+        // Send message with sidebar update
+        async function sendMessage() {
+            if (!selectedReceiverId) {
+                alert('Please select a user to chat with');
+                return;
+            }
+
+            const messageInput = document.getElementById("chatMessage");
+            const message = messageInput.value.trim();
+
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+
+            console.log('Sending message to', selectedReceiverId, ':', message);
+
+            if (connection && connection.state === signalR.HubConnectionState.Connected) {
+                try {
+                    await connection.invoke("SendMessage", currentUserId, parseInt(selectedReceiverId), message);
+
+                    // Update sidebar immediately for sent message
+                    updateSidebarConversation(parseInt(selectedReceiverId), message, new Date(), false);
+
+                    messageInput.value = "";
+                    updateSendButtonState();
+                } catch (err) {
+                    console.error("Error sending message:", err);
+                    alert("Failed to send message. Please try again.");
+                }
+            } else {
+                alert("Connection lost. Please refresh the page.");
+            }
+        }
+
+        // Display chat history
+        function displayChatHistory(messages) {
             const chatWindow = document.getElementById("chatWindow");
             chatWindow.innerHTML = "";
 
-            if (messages.length === 0) {
+            if (!messages || messages.length === 0) {
                 chatWindow.innerHTML = `
                     <div class="empty-chat">
                         <div class="empty-chat-icon">💬</div>
                         <h3>No messages yet</h3>
-                        <p>Start the conversation!</p>
+                        <p>Start the conversation by sending a message!</p>
                     </div>
                 `;
                 return;
             }
+
+            console.log('Displaying', messages.length, 'messages');
 
             let currentDate = null;
             messages.forEach(m => {
@@ -553,54 +949,9 @@
                 appendMessage(m.senderId, m.message, m.sentAt, false);
             });
             scrollToBottom();
-        });
-
-        connection.on("UserTyping", (userId) => {
-            if (parseInt(selectedReceiverId) === userId) {
-                showTypingIndicator();
-                clearTimeout(typingTimer);
-                typingTimer = setTimeout(hideTypingIndicator, 3000);
-            }
-        });
-
-        connection.on("UserStoppedTyping", (userId) => {
-            if (parseInt(selectedReceiverId) === userId) {
-                hideTypingIndicator();
-            }
-        });
-
-        // Utility functions
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
 
-        function getUserInitials(name) {
-            return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-        }
-
-        function getAvatarColor(userId) {
-            const colors = ['#667eea', '#f093fb', '#4facfe', '#43e97b', '#fa709a', '#ffecd2', '#a8edea', '#d299c2'];
-            return colors[userId % colors.length];
-        }
-
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-
-            if (date.toDateString() === today.toDateString()) {
-                return 'Today';
-            } else if (date.toDateString() === yesterday.toDateString()) {
-                return 'Yesterday';
-            } else {
-                return date.toLocaleDateString();
-            }
-        }
-
-        // Message functions
+        // Append a single message
         function appendMessage(senderId, message, sentAt, isNew = true) {
             const chatWindow = document.getElementById("chatWindow");
             const emptyChat = chatWindow.querySelector('.empty-chat');
@@ -625,186 +976,112 @@
 
             messageDiv.appendChild(bubble);
             chatWindow.appendChild(messageDiv);
+            scrollToBottom();
+        }
 
-            const isNearBottom = chatWindow.scrollHeight - chatWindow.scrollTop - chatWindow.clientHeight < 100;
-            if (isNearBottom) {
-                scrollToBottom();
+        // Utility functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const today = new Date();
+
+            if (date.toDateString() === today.toDateString()) {
+                return 'Today';
             }
+
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === yesterday.toDateString()) {
+                return 'Yesterday';
+            }
+
+            return date.toLocaleDateString();
+        }
+
+        function formatLastMessageTime(dateString) {
+            if (!dateString) return 'Never';
+
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return date.toLocaleDateString();
         }
 
         function scrollToBottom() {
             const chatWindow = document.getElementById("chatWindow");
             setTimeout(() => {
-                chatWindow.scrollTo({
-                    top: chatWindow.scrollHeight,
-                    behavior: 'smooth'
-                });
-            }, 50);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }, 100);
         }
 
-        // Unread badge functions
         function updateUnreadBadge(userId, increment = true) {
-            let badge = document.querySelector(`[data-user-id="${userId}"] .unread-badge`);
+            const userItem = document.querySelector(`[data-user-id="${userId}"]`);
+            if (userItem) {
+                let badge = userItem.querySelector('.unread-badge');
+                let currentCount = 0;
 
-            if (badge) {
-                let count = parseInt(badge.textContent);
-                count = increment ? count + 1 : 0;
-                badge.textContent = count > 99 ? '99+' : count;
-                badge.style.display = count > 0 ? 'flex' : 'none';
-            } else if (increment) {
-                const userItem = document.querySelector(`[data-user-id="${userId}"]`);
-                if (userItem) {
-                    badge = document.createElement('div');
-                    badge.className = 'unread-badge';
-                    badge.dataset.userId = userId;
-                    badge.textContent = '1';
-                    userItem.appendChild(badge);
+                if (badge) {
+                    currentCount = parseInt(badge.textContent) || 0;
+                }
+
+                if (increment === true) {
+                    // Increment count
+                    currentCount++;
+                    if (!badge) {
+                        badge = document.createElement('div');
+                        badge.className = 'unread-badge';
+                        userItem.appendChild(badge);
+                    }
+                    badge.textContent = currentCount > 99 ? '99+' : currentCount;
+                } else if (increment === false) {
+                    // Clear badge
+                    if (badge) {
+                        badge.remove();
+                    }
+                } else if (typeof increment === 'number') {
+                    // Set specific count
+                    if (increment > 0) {
+                        if (!badge) {
+                            badge = document.createElement('div');
+                            badge.className = 'unread-badge';
+                            userItem.appendChild(badge);
+                        }
+                        badge.textContent = increment > 99 ? '99+' : increment;
+                    } else if (badge) {
+                        badge.remove();
+                    }
                 }
             }
         }
 
-        // User functions
-        function createUserItem(user, unreadCount = 0) {
-            const userItem = document.createElement("div");
-            userItem.className = "user-item";
-            userItem.dataset.userId = user.userId;
-
-            const avatarColor = getAvatarColor(user.userId);
-            const initials = getUserInitials(user.name || user.email || 'Unknown');
-
-            userItem.innerHTML = `
-                <div class="user-avatar-container">
-                    <div class="user-avatar" style="background: ${avatarColor}">
-                        ${initials}
-                    </div>
-                    <div class="online-indicator"></div>
+        function showErrorState() {
+            const chatWindow = document.getElementById("chatWindow");
+            chatWindow.innerHTML = `
+                <div class="empty-chat">
+                    <div class="empty-chat-icon">❌</div>
+                    <h3>Failed to load messages</h3>
+                    <p>Please try selecting the user again</p>
                 </div>
-                <div class="user-info">
-                    <div class="user-name">${escapeHtml(user.name || user.email || 'Unknown User')}</div>
-                    <div class="user-status">Click to start chatting</div>
-                </div>
-                ${unreadCount > 0 ? `
-                    <div class="unread-badge" data-user-id="${user.userId}">
-                        ${unreadCount > 99 ? '99+' : unreadCount}
-                    </div>
-                ` : ''}
             `;
-
-            userItem.addEventListener("click", () => selectUser(user.userId, user.name || user.email || 'Unknown User'));
-            return userItem;
         }
 
-        async function selectUser(userId, userName) {
-            document.querySelectorAll('.user-item').forEach(item => item.classList.remove('active'));
-            document.querySelector(`[data-user-id="${userId}"]`).classList.add('active');
-
-            selectedReceiverId = userId;
-            selectedUserName = userName;
-
-            // Update header
-            const header = document.getElementById("chatHeader");
-            const headerAvatar = document.getElementById("headerAvatar");
-            const headerName = document.getElementById("headerName");
-            const avatarColor = getAvatarColor(userId);
-            const initials = getUserInitials(userName);
-
-            headerAvatar.textContent = initials;
-            headerAvatar.style.background = avatarColor;
-            headerName.textContent = userName;
-            header.style.display = "flex";
-            document.getElementById("chatInputContainer").style.display = "flex";
-
-            // Mark messages as read
-            try {
-                await fetch(`/api/chat/mark-read/${userId}`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `Bearer ${authToken}` }
-                });
-                updateUnreadBadge(userId, false);
-            } catch (err) {
-                console.error("Failed to mark messages as read:", err);
-            }
-
-            // Load conversation
-            try {
-                await connection.invoke("LoadConversation", currentUserId, parseInt(userId));
-            } catch (err) {
-                console.error("Error loading conversation:", err);
-            }
-
-            if (window.innerWidth <= 768) hideSidebar();
-        }
-
-        async function loadUsers() {
-            try {
-                const response = await fetch(`/Chat/Inbox`);
-                if (!response.ok) throw new Error("Failed to fetch users");
-
-                const users = await response.json();
-                const userList = document.getElementById("userList");
-
-                const usersWithUnread = await Promise.all(users.map(async (user) => {
-                    if (user.userId !== currentUserId) {
-                        try {
-                            const unreadResponse = await fetch(`/api/chat/unread-count/${user.userId}`, {
-                                headers: { 'Authorization': `Bearer ${authToken}` }
-                            });
-                            user.unreadCount = unreadResponse.ok ? await unreadResponse.json() : 0;
-                        } catch {
-                            user.unreadCount = 0;
-                        }
-                    }
-                    return user;
-                }));
-
-                usersWithUnread.forEach(user => {
-                    if (user.userId !== currentUserId) {
-                        userList.appendChild(createUserItem(user, user.unreadCount));
-                    }
-                });
-
-                // Search functionality
-                document.getElementById("userSearch").addEventListener("input", (e) => {
-                    const query = e.target.value.toLowerCase();
-                    document.querySelectorAll('.user-item').forEach(item => {
-                        const userName = item.querySelector('.user-name').textContent.toLowerCase();
-                        item.style.display = userName.includes(query) ? 'flex' : 'none';
-                    });
-                });
-
-            } catch (error) {
-                console.error("Error loading users:", error);
-            }
-        }
-
-        // Message sending
-        async function sendMessage() {
-            if (!selectedReceiverId) return;
-
+        function updateSendButtonState() {
             const messageInput = document.getElementById("chatMessage");
-            const message = messageInput.value.trim();
-            if (!message) return;
-
-            showTypingIndicator();
-            try {
-                await connection.invoke("SendMessage", currentUserId, parseInt(selectedReceiverId), message);
-                messageInput.value = "";
-            } catch (err) {
-                console.error("Error sending message:", err);
-                alert("Failed to send message. Please try again.");
-            } finally {
-                hideTypingIndicator();
-            }
-        }
-
-        // Typing indicators
-        function showTypingIndicator() {
-            document.getElementById("typingIndicator").style.display = "flex";
-            scrollToBottom();
-        }
-
-        function hideTypingIndicator() {
-            document.getElementById("typingIndicator").style.display = "none";
+            const sendBtn = document.getElementById("sendBtn");
+            sendBtn.disabled = messageInput.value.trim() === "";
         }
 
         // Mobile functions
@@ -820,37 +1097,40 @@
             document.getElementById("chatSidebar").classList.toggle('active');
         }
 
-        // Event listeners
-        document.getElementById("sendBtn").addEventListener("click", sendMessage);
-        document.getElementById("chatMessage").addEventListener("keypress", (e) => {
-            if (e.key === "Enter") sendMessage();
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('DOM loaded - initializing chat system');
+
+            // Initialize SignalR first
+            await initializeSignalR();
+
+            // Then load users
+            await loadAndDisplayUsers();
+
+            // Setup event listeners
+            document.getElementById("sendBtn").addEventListener("click", sendMessage);
+
+            document.getElementById("chatMessage").addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            document.getElementById("chatMessage").addEventListener("input", updateSendButtonState);
+
+            // Initial button state
+            updateSendButtonState();
+
+            console.log('Chat system initialized successfully');
         });
 
-        document.getElementById("chatMessage").addEventListener("input", function() {
-            document.getElementById("sendBtn").disabled = this.value.trim() === "";
-            if (selectedReceiverId) {
-                connection.invoke("SendTypingIndicator", currentUserId, parseInt(selectedReceiverId));
-            }
-        });
-
-        document.getElementById("chatMessage").addEventListener("blur", function() {
-            if (selectedReceiverId) {
-                connection.invoke("SendStopTypingIndicator", currentUserId, parseInt(selectedReceiverId));
-            }
-        });
-
-        // Initialize
-        connection.start()
-            .then(() => {
-                console.log("SignalR connected");
-                loadUsers();
-            })
-            .catch(err => console.error("SignalR failed:", err));
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) hideSidebar();
-        });
-
-        document.getElementById("sendBtn").disabled = true;
+        // Fallback if DOM is already loaded
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            console.log('DOM already ready - initializing now');
+            document.addEventListener('DOMContentLoaded', async function() {
+                await initializeSignalR();
+                await loadAndDisplayUsers();
+            });
+        }
     </script>
 }

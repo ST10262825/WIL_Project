@@ -26,28 +26,43 @@ namespace TutorConnect.WebApp.Controllers
         }
 
         // Returns all users except current user
-       
+
 
         [HttpGet]
         public async Task<IActionResult> Inbox()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int currentUserId))
-                return Unauthorized();
-
-            var users = await _apiService.GetChatUsersAsync();
-
-            // Remove current user
-            users = users.Where(u => u.UserId != currentUserId).ToList();
-
-            // Return as JSON for the view
-            var jsonUsers = users.Select(u => new
+            try
             {
-                userId = u.UserId,
-                name = string.IsNullOrEmpty(u.Name) ? u.UserId.ToString() : u.Name
-            }).ToList();
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int currentUserId))
+                {
+                    Console.WriteLine("Unauthorized: No user ID claim found");
+                    return Unauthorized();
+                }
 
-            return Json(jsonUsers);
+                Console.WriteLine($"Loading chat users for user ID: {currentUserId}");
+
+                var users = await _apiService.GetChatUsersAsync();
+                Console.WriteLine($"Retrieved {users?.Count ?? 0} users from API");
+
+                if (users == null || users.Count == 0)
+                {
+                    Console.WriteLine("No users returned from API - user has no bookings yet");
+                    return Json(new List<object>());
+                }
+
+                // Users are already sorted by the API, just return them
+                Console.WriteLine($"Returning {users.Count} users");
+                return Json(users);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Inbox Error: {ex.Message}");
+                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
+                // Return empty list on error
+                return Json(new List<object>());
+            }
         }
 
 
@@ -74,7 +89,24 @@ namespace TutorConnect.WebApp.Controllers
             return Json(jsonMessages);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> MarkAsRead(int senderId)
+        {
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int currentUserId))
+                    return Unauthorized();
 
+                await _apiService.MarkMessagesAsReadAsync(senderId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"MarkAsRead Error: {ex.Message}");
+                return StatusCode(500);
+            }
+        }
 
 
     }

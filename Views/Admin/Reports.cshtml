@@ -1,0 +1,789 @@
+﻿@model TutorConnect.WebApp.Models.ReportFilterViewModel
+@{
+    ViewData["Title"] = "Generate Reports";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Generate Reports</h1>
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary" id="saveTemplateBtn">
+                <i class="fas fa-save"></i> Save Template
+            </button>
+            <button type="button" class="btn btn-outline-secondary" id="loadTemplateBtn">
+                <i class="fas fa-folder-open"></i> Load Template
+            </button>
+        </div>
+    </div>
+
+    <!-- Report Filters -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Report Filters</h6>
+        </div>
+        <div class="card-body">
+            <form id="reportForm" asp-action="GenerateReport" method="post">
+
+                <div class="row">
+                    <!-- Report Type -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Report Type</label>
+                        <select class="form-select" asp-for="ReportType" id="reportType">
+                            <option value="Student">Student Report</option>
+                            <option value="Tutor">Tutor Report</option>
+                            <option value="Booking">Booking Report</option>
+                            <option value="Everything">Everything Report</option>
+                           @*  <option value="ModuleDemand">Module Demand Report</option> *@
+                        </select>
+                    </div>
+
+                    <!-- Date Range -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Date Range</label>
+                        <select class="form-select" asp-for="DateRange" id="dateRange">
+                            <option value="last7days">Last 7 Days</option>
+                            <option value="thismonth">This Month</option>
+                            <option value="lastmonth">Last Month</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Custom Date Range (hidden by default) -->
+                <div class="row" id="customDateRange" style="display: none;">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control" asp-for="StartDate" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control" asp-for="EndDate" />
+                    </div>
+                </div>
+
+                <!-- User Filter -->
+                <div class="row" id="userFilterSection">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Filter by User</label>
+                        <select class="form-select" asp-for="UserType" id="userType">
+                            <option value="">All Users</option>
+                            <option value="Tutor">Specific Tutor</option>
+                            <option value="Student">Specific Student</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3" id="userSelection" style="display: none;">
+                        <label class="form-label">Select User</label>
+                        <select class="form-select" asp-for="UserId" id="userId">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="row mb-3" id="statusFilterSection">
+                    <div class="col-12">
+                        <label class="form-label">Status Filter</label>
+                        <div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input status-checkbox" type="checkbox" asp-for="StatusPending">
+                                <label class="form-check-label" asp-for="StatusPending">Pending</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input status-checkbox" type="checkbox" asp-for="StatusConfirmed">
+                                <label class="form-check-label" asp-for="StatusConfirmed">Confirmed</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input status-checkbox" type="checkbox" asp-for="StatusCompleted">
+                                <label class="form-check-label" asp-for="StatusCompleted">Completed</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input status-checkbox" type="checkbox" asp-for="StatusCancelled">
+                                <label class="form-check-label" asp-for="StatusCancelled">Cancelled</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input status-checkbox" type="checkbox" asp-for="StatusActive">
+                                <label class="form-check-label" asp-for="StatusActive">Active</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input status-checkbox" type="checkbox" asp-for="StatusInactive">
+                                <label class="form-check-label" asp-for="StatusInactive">Inactive</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Module Filter -->
+                <div class="row mb-3" id="moduleFilterSection">
+                    <div class="col-12">
+                        <label class="form-label">Module Filter</label>
+                        <div id="moduleCheckboxes">
+                            <input type="hidden" name="ModuleIds" value="" />
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Options -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Export Format</label>
+                        <select class="form-select" asp-for="ExportFormat">
+                            <option value="">View in Browser</option>
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-chart-bar"></i> Generate Report
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" id="resetFilters">
+                            <i class="fas fa-redo"></i> Reset Filters
+                        </button>
+                        <button type="button" class="btn btn-outline-info" id="previewBtn" style="display: none;">
+                            <i class="fas fa-eye"></i> Preview
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Hidden form for file exports -->
+            <form id="fileExportForm" asp-action="GenerateReport" method="post" style="display: none;">
+                <input type="hidden" name="ReportType" id="fileReportType" />
+                <input type="hidden" name="DateRange" id="fileDateRange" />
+                <input type="hidden" name="UserType" id="fileUserType" />
+                <input type="hidden" name="ExportFormat" id="fileExportFormat" />
+                <input type="hidden" name="UserId" id="fileUserId" />
+                <input type="hidden" name="StartDate" id="fileStartDate" />
+                <input type="hidden" name="EndDate" id="fileEndDate" />
+                <!-- Statuses and ModuleIds will be handled differently -->
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="reportLoading" class="text-center" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Generating report...</span>
+        </div>
+        <p>Generating report...</p>
+    </div>
+
+
+    <!-- Report Results -->
+    <div id="reportResults">
+        <!-- Results will be loaded here via AJAX -->
+        <div class="text-center text-muted py-5">
+            <i class="fas fa-chart-bar fa-3x mb-3"></i>
+            <p>Configure your report filters and click "Generate Report" to see results</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Report configuration
+        const reportOptions = @Html.Raw(Json.Serialize(ViewBag.ReportOptions));
+
+        $(document).ready(function() {
+            initializeReportForm();
+            setupEventHandlers();
+            loadDynamicOptions();
+        });
+
+        function initializeReportForm() {
+            // Set default values
+            $('#reportType').val('@(ViewBag.DefaultFilters?.ReportType ?? "Booking")');
+            $('#dateRange').val('@(ViewBag.DefaultFilters?.DateRange ?? "last7days")');
+
+            toggleCustomDateRange();
+            updateFilterVisibility();
+            updateStatusFilterVisibility();
+        }
+
+                function setupEventHandlers() {
+            $('#dateRange').change(toggleCustomDateRange);
+            $('#reportType').change(function() {
+                updateFilterVisibility();
+                updateStatusFilterVisibility();
+                clearIrrelevantFilters();
+            });
+            $('#userType').change(toggleUserSelection);
+            $('#resetFilters').click(resetFilters);
+
+            // Handle form submission
+            $('#reportForm').submit(function(e) {
+                e.preventDefault();
+                console.log("Form submitted, generating report...");
+                generateReport();
+            });
+        }
+
+               function generateReport() {
+            const exportFormat = $('#ExportFormat').val();
+            const isFileExport = exportFormat && exportFormat !== '';
+
+            console.log("=== GENERATE REPORT DEBUG ===");
+            console.log("Export Format:", exportFormat);
+            console.log("Is File Export:", isFileExport);
+            console.log("=== END DEBUG ===");
+
+            if (isFileExport) {
+                prepareFileExportForm();
+            } else {
+                submitReportViaAjax();
+            }
+        }
+
+                          function prepareFileExportForm() {
+            console.log("=== CLIENT SIDE DEBUG ===");
+            const reportType = $('#reportType').val();
+            const dateRange = $('#dateRange').val();
+            const exportFormat = $('#ExportFormat').val();
+
+            console.log("ReportType:", reportType);
+            console.log("DateRange:", dateRange);
+            console.log("ExportFormat:", exportFormat);
+            console.log("=== END CLIENT DEBUG ===");
+
+            // Show loading
+            $('#reportLoading').show();
+
+            // For Everything report, ensure user fields are cleared
+            if (reportType === 'Everything') {
+                $('#userType').val('');
+                $('#userId').val('');
+                // Uncheck all status checkboxes
+                $('.status-checkbox').prop('checked', false);
+                // Uncheck all module checkboxes
+                $('input[name="ModuleIds"]').prop('checked', false);
+            }
+
+            // Create a NEW form with proper encoding
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '@Url.Action("GenerateReport", "Admin")';
+            form.style.display = 'none';
+            form.enctype = 'application/x-www-form-urlencoded';
+
+            // Add ALL required fields individually
+            function addField(name, value) {
+                if (value !== null && value !== undefined) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = name;
+                    input.value = value;
+                    form.appendChild(input);
+                    console.log(`Added field: ${name}=${value}`);
+                }
+            }
+
+            // Add basic required fields
+            addField('ReportType', reportType);
+            addField('DateRange', dateRange);
+            addField('ExportFormat', exportFormat);
+
+            // For Everything report, explicitly set empty values
+            if (reportType === 'Everything') {
+                addField('UserType', '');
+                addField('UserId', '');
+                // Don't add any status or module fields for Everything report
+            } else {
+                // For other reports, include their specific fields
+                addField('UserType', $('#userType').val());
+                addField('UserId', $('#userId').val());
+
+                // Add status fields as individual booleans
+                if (reportType === 'Booking') {
+                    addField('StatusPending', $('#StatusPending').is(':checked'));
+                    addField('StatusConfirmed', $('#StatusConfirmed').is(':checked'));
+                    addField('StatusCompleted', $('#StatusCompleted').is(':checked'));
+                    addField('StatusCancelled', $('#StatusCancelled').is(':checked'));
+                } else if (reportType === 'Student' || reportType === 'Tutor') {
+                    addField('StatusActive', $('#StatusActive').is(':checked'));
+                    addField('StatusInactive', $('#StatusInactive').is(':checked'));
+                }
+
+                // Add module IDs as individual fields
+                $('input[name="ModuleIds"]:checked').each(function() {
+                    addField('ModuleIds', $(this).val());
+                });
+            }
+
+            // Add dates
+            addField('StartDate', $('#StartDate').val());
+            addField('EndDate', $('#EndDate').val());
+
+            // Add the form to the page and submit
+            document.body.appendChild(form);
+            console.log("Submitting form with", form.elements.length, "fields");
+            form.submit();
+
+            // Clean up after a delay
+            setTimeout(() => {
+                document.body.removeChild(form);
+                $('#reportLoading').hide();
+            }, 2000);
+        }
+
+                   function submitReportViaAjax() {
+            // Collect all form data as JSON object
+            const formData = {
+                ReportType: $('#reportType').val(),
+                DateRange: $('#dateRange').val(),
+                UserType: $('#userType').val() || null,
+                ExportFormat: '', // Empty for browser view
+                UserId: $('#userId').val() ? parseInt($('#userId').val()) : null,
+                StartDate: $('#StartDate').val() || null,
+                EndDate: $('#EndDate').val() || null,
+                Statuses: [],
+                ModuleIds: []
+            };
+
+            console.log("=== AJAX REQUEST DEBUG ===");
+            console.log("Raw form data:", formData);
+
+            // Add statuses - only include relevant ones based on report type
+            const reportType = formData.ReportType;
+
+            if (reportType === 'Booking') {
+                if ($('#StatusPending').is(':checked')) formData.Statuses.push('Pending');
+                if ($('#StatusConfirmed').is(':checked')) formData.Statuses.push('Confirmed');
+                if ($('#StatusCompleted').is(':checked')) formData.Statuses.push('Completed');
+                if ($('#StatusCancelled').is(':checked')) formData.Statuses.push('Cancelled');
+            } else if (reportType === 'Student' || reportType === 'Tutor') {
+                if ($('#StatusActive').is(':checked')) formData.Statuses.push('Active');
+                if ($('#StatusInactive').is(':checked')) formData.Statuses.push('Inactive');
+            }
+            // For "Everything" report, don't add any statuses
+
+            // Add module IDs - only for relevant reports
+            if (reportType === 'Booking' || reportType === 'ModuleDemand') {
+                $('input[name="ModuleIds"]:checked').each(function() {
+                    formData.ModuleIds.push(parseInt($(this).val()));
+                });
+            }
+            // For "Everything" report, don't add any module IDs
+
+            // Special handling for "Everything" report - CLEAR ALL FILTERS
+            if (reportType === 'Everything') {
+                formData.UserType = null;
+                formData.UserId = null;
+                formData.Statuses = []; // Empty array
+                formData.ModuleIds = []; // Empty array
+
+                // Only keep date range
+                formData.StartDate = formData.StartDate || null;
+                formData.EndDate = formData.EndDate || null;
+            }
+
+            console.log("Final form data to send:", formData);
+            console.log("=== END AJAX DEBUG ===");
+
+            // Validate required fields
+            if (!formData.ReportType) {
+                showError('Please select a report type to generate the report.');
+                return;
+            }
+
+            // Show loading and submit
+            $('#reportLoading').show();
+            $('#reportResults').html('<div class="text-center py-3"><div class="spinner-border"></div><p>Generating report...</p></div>');
+
+            $.ajax({
+                url: '@Url.Action("GenerateReport", "Admin")',
+                type: 'POST',
+                data: JSON.stringify(formData),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#reportResults').html(data);
+                },
+                error: function(xhr, status, error) {
+                    handleAjaxError(xhr, status, error);
+                },
+                complete: function() {
+                    $('#reportLoading').hide();
+                }
+            });
+        }
+
+        function prepareFileExportForm() {
+            // Show loading for file exports
+            $('#reportLoading').show();
+
+            const reportType = $('#reportType').val();
+            const dateRange = $('#dateRange').val();
+            const exportFormat = $('#ExportFormat').val();
+
+            console.log("=== FILE EXPORT DEBUG ===");
+            console.log("ReportType:", reportType);
+            console.log("DateRange:", dateRange);
+            console.log("ExportFormat:", exportFormat);
+            console.log("=== END FILE DEBUG ===");
+
+            // For file exports, we'll use a different approach
+            // Create a completely new form with only the necessary data
+            const tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = '@Url.Action("GenerateReport", "Admin")';
+            tempForm.style.display = 'none';
+
+            // Add basic required fields
+            addHiddenField(tempForm, 'ReportType', reportType);
+            addHiddenField(tempForm, 'DateRange', dateRange);
+            addHiddenField(tempForm, 'ExportFormat', exportFormat);
+
+            // For Everything report, only include date range if custom
+            if (reportType === 'Everything') {
+                // Only include dates if custom range is selected
+                if (dateRange === 'custom') {
+                    const startDate = $('#StartDate').val();
+                    const endDate = $('#EndDate').val();
+                    if (startDate) addHiddenField(tempForm, 'StartDate', startDate);
+                    if (endDate) addHiddenField(tempForm, 'EndDate', endDate);
+                }
+                // Explicitly add empty arrays for Everything report
+                addHiddenField(tempForm, 'Statuses', '');
+                addHiddenField(tempForm, 'ModuleIds', '');
+                addHiddenField(tempForm, 'UserType', '');
+                addHiddenField(tempForm, 'UserId', '');
+            } else {
+                // For other reports, include their specific filters
+                const userType = $('#userType').val();
+                const userId = $('#userId').val();
+                const startDate = $('#StartDate').val();
+                const endDate = $('#EndDate').val();
+
+                if (userType) addHiddenField(tempForm, 'UserType', userType);
+                if (userId) addHiddenField(tempForm, 'UserId', userId);
+                if (startDate) addHiddenField(tempForm, 'StartDate', startDate);
+                if (endDate) addHiddenField(tempForm, 'EndDate', endDate);
+
+                // Add statuses and modules based on report type
+                addStatusFieldsToForm(tempForm, reportType);
+                addModuleFieldsToForm(tempForm, reportType);
+            }
+
+            // Add the form to the page and submit it
+            document.body.appendChild(tempForm);
+            tempForm.submit();
+
+            // Remove the form after submission
+            setTimeout(() => {
+                document.body.removeChild(tempForm);
+                $('#reportLoading').hide();
+            }, 1000);
+        }
+
+        // Helper function to add hidden fields
+        function addHiddenField(form, name, value) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+            console.log(`Added field: ${name} = ${value}`);
+        }
+
+        // Helper function to add status fields
+        function addStatusFieldsToForm(form, reportType) {
+            if (reportType === 'Booking') {
+                if ($('#StatusPending').is(':checked')) addHiddenField(form, 'Statuses', 'Pending');
+                if ($('#StatusConfirmed').is(':checked')) addHiddenField(form, 'Statuses', 'Confirmed');
+                if ($('#StatusCompleted').is(':checked')) addHiddenField(form, 'Statuses', 'Completed');
+                if ($('#StatusCancelled').is(':checked')) addHiddenField(form, 'Statuses', 'Cancelled');
+            } else if (reportType === 'Student' || reportType === 'Tutor') {
+                if ($('#StatusActive').is(':checked')) addHiddenField(form, 'Statuses', 'Active');
+                if ($('#StatusInactive').is(':checked')) addHiddenField(form, 'Statuses', 'Inactive');
+            }
+        }
+
+        // Helper function to add module fields
+        function addModuleFieldsToForm(form, reportType) {
+            if (reportType === 'Booking' || reportType === 'ModuleDemand') {
+                $('input[name="ModuleIds"]:checked').each(function() {
+                    addHiddenField(form, 'ModuleIds', $(this).val());
+                });
+            }
+        }
+
+        // Error handling function
+        function handleAjaxError(xhr, status, error) {
+            let errorMessage = 'We encountered an issue while generating your report. Please check your filters and try again.';
+
+            if (xhr.responseText) {
+                try {
+                    const errorResponse = JSON.parse(xhr.responseText);
+                    errorMessage = errorResponse.error || errorResponse.message || errorResponse;
+                } catch (e) {
+                    if (xhr.responseText.length < 100 && !xhr.responseText.includes('<!DOCTYPE')) {
+                        errorMessage = xhr.responseText;
+                    }
+                }
+            }
+
+            errorMessage = errorMessage.replace(/Response status code does not indicate success: \d+ \(.*?\)\.?/g, '');
+            errorMessage = errorMessage.replace(/Error generating report: /g, '');
+            errorMessage = errorMessage.trim();
+
+            if (!errorMessage || errorMessage.includes('<!DOCTYPE') || errorMessage.includes('<html')) {
+                errorMessage = 'We encountered an issue while generating your report. Please check your filters and try again.';
+            }
+
+            showError(errorMessage);
+        }
+
+        // Show error message
+        function showError(message) {
+            $('#reportResults').html(`
+                <div class="alert alert-danger">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-exclamation-triangle fa-2x me-3 text-danger"></i>
+                        <div>
+                            <h5 class="alert-heading mb-2">Unable to Generate Report</h5>
+                            <p class="mb-3">${message}</p>
+                            <div class="mt-2">
+                                <button class="btn btn-primary me-2" onclick="generateReport()">
+                                    <i class="fas fa-redo me-1"></i> Try Again
+                                </button>
+                                <button class="btn btn-outline-secondary" onclick="resetFilters()">
+                                    <i class="fas fa-filter me-1"></i> Reset Filters
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function toggleCustomDateRange() {
+            const isCustom = $('#dateRange').val() === 'custom';
+            $('#customDateRange').toggle(isCustom);
+        }
+
+        function toggleUserSelection() {
+            const userType = $('#userType').val();
+            const hasSelection = userType === 'Tutor' || userType === 'Student';
+            $('#userSelection').toggle(hasSelection);
+
+            if (hasSelection) {
+                loadUsers(userType);
+            } else {
+                $('#userId').val('');
+            }
+        }
+
+        function updateFilterVisibility() {
+            const reportType = $('#reportType').val();
+
+            // Show/hide sections based on report type with better logic
+            const showUserFilter = ['Student', 'Tutor', 'Booking'].includes(reportType);
+            const showStatusFilter = ['Student', 'Tutor', 'Booking'].includes(reportType);
+            const showModuleFilter = ['Booking', 'ModuleDemand'].includes(reportType);
+
+            $('#userFilterSection').toggle(showUserFilter);
+            $('#statusFilterSection').toggle(showStatusFilter);
+            $('#moduleFilterSection').toggle(showModuleFilter);
+
+            // Update user type options based on report type
+            updateUserTypeOptions(reportType);
+        }
+
+                function updateStatusFilterVisibility() {
+            const reportType = $('#reportType').val();
+
+            // Hide all status checkboxes first
+            $('.status-checkbox').closest('.form-check').hide();
+
+            if (reportType === 'Booking') {
+                // Show only booking-related statuses
+                $('#StatusPending, #StatusConfirmed, #StatusCompleted, #StatusCancelled')
+                    .closest('.form-check').show();
+                $('#StatusActive, #StatusInactive')
+                    .closest('.form-check').hide();
+            } else if (reportType === 'Student' || reportType === 'Tutor') {
+                // Show only active/inactive statuses
+                $('#StatusActive, #StatusInactive')
+                    .closest('.form-check').show();
+                $('#StatusPending, #StatusConfirmed, #StatusCompleted, #StatusCancelled')
+                    .closest('.form-check').hide();
+            } else if (reportType === 'Everything') {
+                // Show ALL statuses for Everything report
+                $('.status-checkbox').closest('.form-check').show();
+            } else {
+                // Hide all statuses for other report types
+                $('.status-checkbox').closest('.form-check').hide();
+            }
+        }
+
+        function updateUserTypeOptions(reportType) {
+            const userTypeSelect = $('#userType');
+            const currentValue = userTypeSelect.val();
+
+            userTypeSelect.empty();
+
+            if (reportType === 'Student') {
+                userTypeSelect.append('<option value="Student">Select Student</option>');
+            } else if (reportType === 'Tutor') {
+                userTypeSelect.append('<option value="Tutor">Select Tutor</option>');
+            } else if (reportType === 'Booking') {
+                userTypeSelect.append('<option value="Student">Select Student</option>');
+                userTypeSelect.append('<option value="Tutor">Select Tutor</option>');
+            }
+
+            // Set default selection
+            if (userTypeSelect.find('option').length > 0) {
+                userTypeSelect.val(userTypeSelect.find('option:first').val());
+            }
+
+            toggleUserSelection();
+        }
+
+        function clearIrrelevantFilters() {
+            const reportType = $('#reportType').val();
+
+            // Clear module filters if not relevant
+            if (!['Booking', 'ModuleDemand'].includes(reportType)) {
+                $('input[name="ModuleIds"]').prop('checked', false);
+            }
+
+            // Clear user filters if not relevant
+            if (!['Student', 'Tutor', 'Booking'].includes(reportType)) {
+                $('#userType').val('');
+                $('#userId').val('');
+                $('#userSelection').hide();
+            }
+
+            // Clear status filters
+            $('input[name^="Status"]').prop('checked', false);
+        }
+
+        function loadDynamicOptions() {
+            // Load modules
+            if (reportOptions?.modules) {
+                const moduleContainer = $('#moduleCheckboxes');
+                moduleContainer.empty();
+
+                reportOptions.modules.forEach(module => {
+                    moduleContainer.append(`
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="ModuleIds" value="${module.moduleId}" id="module${module.moduleId}">
+                            <label class="form-check-label" for="module${module.moduleId}">${module.name} (${module.code})</label>
+                        </div>
+                    `);
+                });
+            }
+        }
+
+        function loadUsers(userType) {
+            const users = userType === 'Tutor' ? reportOptions?.tutors : reportOptions?.students;
+            const select = $('#userId');
+            select.empty().append('<option value="">Select ' + userType + '</option>');
+
+            if (users) {
+                users.forEach(user => {
+                    const key = userType.toLowerCase() + 'Id';
+                    select.append(`<option value="${user[key]}">${user.name}</option>`);
+                });
+            }
+        }
+
+                function resetFilters() {
+            $('#reportForm')[0].reset();
+
+            // Manually clear any hidden fields or arrays
+            $('#userType').val('');
+            $('#userId').val('');
+            $('#userSelection').hide();
+
+            // Uncheck all status checkboxes
+            $('.status-checkbox').prop('checked', false);
+
+            // Uncheck all module checkboxes
+            $('input[name="ModuleIds"]').prop('checked', false);
+
+            // Reset to default values
+            $('#reportType').val('Booking');
+            $('#dateRange').val('last7days');
+
+            initializeReportForm();
+            $('#reportResults').html(`
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-chart-bar fa-3x mb-3"></i>
+                    <p>Configure your report filters and click "Generate Report" to see results</p>
+                </div>
+            `);
+        }
+
+                function addHiddenFieldsToFileExportForm(reportType) {
+            console.log("=== DEBUG ADDING HIDDEN FIELDS ===");
+            console.log("Report Type:", reportType);
+
+            // Handle statuses based on report type
+            if (reportType === 'Booking') {
+                console.log("Adding Booking statuses...");
+                if ($('#StatusPending').is(':checked')) {
+                    $('#fileExportForm').append('<input type="hidden" name="Statuses" value="Pending">');
+                    console.log("Added Status: Pending");
+                }
+                if ($('#StatusConfirmed').is(':checked')) {
+                    $('#fileExportForm').append('<input type="hidden" name="Statuses" value="Confirmed">');
+                    console.log("Added Status: Confirmed");
+                }
+                if ($('#StatusCompleted').is(':checked')) {
+                    $('#fileExportForm').append('<input type="hidden" name="Statuses" value="Completed">');
+                    console.log("Added Status: Completed");
+                }
+                if ($('#StatusCancelled').is(':checked')) {
+                    $('#fileExportForm').append('<input type="hidden" name="Statuses" value="Cancelled">');
+                    console.log("Added Status: Cancelled");
+                }
+            } else if (reportType === 'Student' || reportType === 'Tutor') {
+                console.log("Adding User statuses...");
+                if ($('#StatusActive').is(':checked')) {
+                    $('#fileExportForm').append('<input type="hidden" name="Statuses" value="Active">');
+                    console.log("Added Status: Active");
+                }
+                if ($('#StatusInactive').is(':checked')) {
+                    $('#fileExportForm').append('<input type="hidden" name="Statuses" value="Inactive">');
+                    console.log("Added Status: Inactive");
+                }
+            } else if (reportType === 'Everything') {
+                console.log("Everything report - no statuses added");
+                // For Everything report, don't add any statuses
+            } else {
+                console.log("Other report type - no statuses added");
+            }
+
+            // Handle module IDs based on report type
+            if (reportType === 'Booking' || reportType === 'ModuleDemand') {
+                console.log("Adding module IDs...");
+                let moduleCount = 0;
+                $('input[name="ModuleIds"]:checked').each(function() {
+                    const moduleId = $(this).val();
+                    $('#fileExportForm').append(`<input type="hidden" name="ModuleIds" value="${moduleId}">`);
+                    console.log(`Added Module ID: ${moduleId}`);
+                    moduleCount++;
+                });
+                console.log(`Total modules added: ${moduleCount}`);
+            } else if (reportType === 'Everything') {
+                console.log("Everything report - no module IDs added");
+                // For Everything report, don't add any module IDs
+            } else {
+                console.log("Other report type - no module IDs added");
+            }
+
+            console.log("=== END HIDDEN FIELDS DEBUG ===");
+        }
+    </script>
+}

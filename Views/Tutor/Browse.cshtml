@@ -1,7 +1,15 @@
 ﻿@model List<TutorConnect.WebApp.Models.BrowseTutorDTO>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
 
 @{
     ViewData["Title"] = "Browse Tutors";
+
+    // Get user role from claims
+    var userRole = HttpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+    var isStudent = userRole == "Student";
+    var isAdmin = userRole == "Admin";
+    var isTutor = userRole == "Tutor";
 }
 
 <div class="container mt-5">
@@ -43,6 +51,22 @@
             </div>
         </div>
     </div>
+
+    <!-- Role-based message for non-students -->
+    @if (!isStudent && User.Identity.IsAuthenticated)
+    {
+        <div class="alert alert-info mb-4">
+            <i class="fas fa-info-circle me-2"></i>
+            @if (isAdmin)
+            {
+                <span>As an administrator, you cannot book tutoring sessions. Switch to a student account to book sessions.</span>
+            }
+            else if (isTutor)
+            {
+                <span>As a tutor, you cannot book tutoring sessions. Switch to a student account to book sessions with other tutors.</span>
+            }
+        </div>
+    }
 
     <!-- Results Count -->
     @if (!string.IsNullOrEmpty(Context.Request.Query["searchString"]) || !string.IsNullOrEmpty(Context.Request.Query["subject"]))
@@ -87,12 +111,10 @@
                         </div>
 
                         <p class="small text-muted mb-3">
-                            @(
-                                                    string.IsNullOrEmpty(tutor.AboutMe)
+                            @(string.IsNullOrEmpty(tutor.AboutMe)
                                                     ? ""
-                                                    : (tutor.AboutMe.Length > 100 ? tutor.AboutMe.Substring(0, 100) + "..." : tutor.AboutMe)
-                                                    )
-                        </p>
+                                                    : (tutor.AboutMe.Length > 100 ? tutor.AboutMe.Substring(0, 100) + "..." : tutor.AboutMe))
+                    </p>
 
                             <!-- Ratings Display -->
                             <div class="mb-3">
@@ -121,7 +143,24 @@
 
                             <div class="d-flex justify-content-between">
                                 <a href="/Tutor/Profile/@tutor.TutorId" class="btn btn-sm" style="background-color: #0B2E3D; color: white; border-radius: 30px;">View Profile</a>
-                                <a href="/Booking/Create/@tutor.TutorId" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">Book Session</a>
+
+                                @if (isStudent)
+                                {
+                                    <!-- Students can book sessions -->
+                                    <a href="/Booking/Create/@tutor.TutorId" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">Book Session</a>
+                                }
+                                else if (User.Identity.IsAuthenticated)
+                                {
+                                    <!-- Disabled button for non-students (Admin/Tutor) -->
+                                    <button class="btn btn-sm" style="background-color: #cccccc; color: #666666; border-radius: 30px;" disabled title="Only students can book sessions">
+                                        Book Session
+                                    </button>
+                                }
+                                else
+                                {
+                                    <!-- Not logged in users -->
+                                    <a href="/Account/Login" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">Login to Book</a>
+                                }
                             </div>
                         </div>
                     </div>
@@ -165,5 +204,10 @@
             .card:hover {
                 transform: translateY(-2px);
             }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
     </style>
 }

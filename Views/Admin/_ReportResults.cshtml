@@ -1,0 +1,192 @@
+﻿@model TutorConnect.WebApp.Models.ReportResultDTO
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">@Model.ReportTitle</h6>
+        <div>
+            <small class="text-muted">Generated: @Model.GeneratedAt.ToString("yyyy-MM-dd HH:mm")</small>
+            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="window.print()">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Summary Cards -->
+        @if (Model.Summary != null)
+        {
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Records
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Summary.TotalRecords</div>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                @if (Model.Summary.AverageRating > 0)
+                {
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-warning shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Average Rating
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Summary.AverageRating.ToString("N1")</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.Summary.ActiveUsers > 0)
+                {
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card border-left-info shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                    Active Users
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.Summary.ActiveUsers</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        <!-- Data Table -->
+        <div class="table-responsive">
+            @if (Model.Data is TutorConnect.WebApp.Models.StudentReportDTO studentReport)
+            {
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Email</th>
+                            <th>Registration Date</th>
+                            <th>Total Bookings</th>
+                            <th>Completed</th>
+                            <th>Cancelled</th>
+                            <th>Engagement Score</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in studentReport.Students)
+                        {
+                            <tr>
+                                <td>@student.Name</td>
+                                <td>@student.Email</td>
+                                <td>@student.RegistrationDate.ToString("yyyy-MM-dd")</td>
+                                <td>@student.TotalBookings</td>
+                                <td>@student.CompletedSessions</td>
+                                <td>@student.CancelledSessions</td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar"
+                                             style="width: @student.EngagementScore%;"
+                                             aria-valuenow="@student.EngagementScore"
+                                             aria-valuemin="0" aria-valuemax="100">
+                                            @student.EngagementScore.ToString("N1")%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge @(student.IsActive ? "bg-success" : "bg-danger")">
+                                        @(student.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (Model.Data is TutorConnect.WebApp.Models.TutorReportDTO tutorReport)
+            {
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tutor Name</th>
+                            <th>Modules</th>
+                            <th>Rating</th>
+                            <th>Total Sessions</th>
+                            <th>Completed</th>
+                            <th>Earnings</th>
+                            <th>Join Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tutor in tutorReport.Tutors)
+                        {
+                            <tr>
+                                <td>@tutor.Name</td>
+                                <td>@string.Join(", ", tutor.Modules.Take(2))@(tutor.Modules.Count > 2 ? "..." : "")</td>
+                                <td>
+                                    <div class="rating-stars">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <i class="fas fa-star @(i <= Math.Round(tutor.AverageRating) ? "text-warning" : "text-muted")"></i>
+                                        }
+                                        <small class="text-muted">(@tutor.AverageRating.ToString("N1"))</small>
+                                    </div>
+                                </td>
+                                <td>@tutor.TotalSessions</td>
+                                <td>@tutor.CompletedSessions</td>
+                                <td>R @tutor.TotalEarnings.ToString("N2")</td>
+                                <td>@tutor.JoinDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <span class="badge @(tutor.IsActive ? "bg-success" : "bg-danger")">
+                                        @(tutor.IsActive ? "Active" : "Inactive")
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            <!-- Add similar tables for other report types -->
+        </div>
+
+        <!-- Charts Section -->
+        @if (Model.Charts != null)
+        {
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Visualizations</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="reportChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Chart.js implementation would go here
+                // This is a placeholder for chart rendering logic
+            </script>
+        }
+    </div>
+</div>
+
+<style>
+    .rating-stars {
+        white-space: nowrap;
+    }
+
+    .progress {
+        height: 20px;
+    }
+
+    .table th {
+        background-color: #f8f9fc;
+        border-color: #e3e6f0;
+    }
+</style>

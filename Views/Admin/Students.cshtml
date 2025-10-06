@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Manage Students";
 }
+@using TutorConnect.WebApp.Services
+@inject ApiService ApiService
+
 
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -55,10 +58,16 @@
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            @if (!string.IsNullOrEmpty(student.ProfileImage))
-                                            {
-                                                <img src="@student.ProfileImage" alt="@student.Name" class="rounded-circle me-2" style="width:40px;height:40px;object-fit:cover;" />
+                                            @{
+                                                var profileImageUrl = !string.IsNullOrEmpty(student.ProfileImage)
+                                                ? ApiService.GetProfileImageUrl(student.StudentId)
+                                                : Url.Content("~/images/default-profile.png");
                                             }
+                                            <img src="@profileImageUrl"
+                                                 alt="@student.Name"
+                                                 class="rounded-circle me-2"
+                                                 style="width:40px;height:40px;object-fit:cover;"
+                                                 onerror="this.src='@Url.Content("~/images/default-profile.png")'" />
                                             <div>
                                                 <div>@student.Name</div>
                                                 <small class="text-muted">ID: @student.StudentId</small>
@@ -86,7 +95,11 @@
                                     <td>
                                         @if (!string.IsNullOrEmpty(student.ProfileImage))
                                         {
-                                            <img src="@student.ProfileImage" alt="@student.Name" class="img-thumbnail" style="width:50px;height:50px;object-fit:cover;" />
+                                            <img src="@profileImageUrl"
+                                                 alt="@student.Name"
+                                                 class="img-thumbnail"
+                                                 style="width:50px;height:50px;object-fit:cover;"
+                                                 onerror="this.src='@Url.Content("~/images/default-profile.png")'" />
                                         }
                                         else
                                         {
@@ -94,6 +107,7 @@
                                         }
                                     </td>
                                     <td>
+                                        <!-- Actions remain the same -->
                                         <div class="btn-group">
                                             @if (student.IsBlocked)
                                             {

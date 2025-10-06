@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -505,6 +506,19 @@ namespace TutorConnect.WebApp.Services
             }
         }
 
+        // Add this method to your ApiService
+        public string GetProfileImageUrl(int studentId)
+        {
+            // Use the API endpoint to serve images through the controller
+            return $"{_client.BaseAddress}api/student/{studentId}/profile-image";
+        }
+
+        // Also add this method for tutor profile images
+        public string GetTutorProfileImageUrl(int tutorId)
+        {
+            return $"{_client.BaseAddress}api/tutor/{tutorId}/profile-image";
+        }
+
         public async Task<bool> UpdateSessionStatusAsync(int sessionId, string newStatus, string? reason = null)
         {
             var payload = new
@@ -585,10 +599,33 @@ namespace TutorConnect.WebApp.Services
 
         public async Task<List<ChatUserDTO>> GetChatUsersAsync()
         {
-            AddAuthHeader();
-            var response = await _client.GetAsync("api/chat/users"); // You’ll create this endpoint in API
-            return await HandleResponse<List<ChatUserDTO>>(response);
+            try
+            {
+                AddAuthHeader();
+                Console.WriteLine("ApiService: Fetching chat users from API...");
+
+                var response = await _client.GetAsync("api/chat/users");
+                Console.WriteLine($"ApiService: Response status: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var users = await response.Content.ReadFromJsonAsync<List<ChatUserDTO>>();
+                    Console.WriteLine($"ApiService: Retrieved {users?.Count ?? 0} users");
+                    return users ?? new List<ChatUserDTO>();
+                }
+                else
+                {
+                    Console.WriteLine($"ApiService: Error - {response.StatusCode}");
+                    return new List<ChatUserDTO>();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ApiService: Exception - {ex.Message}");
+                return new List<ChatUserDTO>();
+            }
         }
+
 
         public async Task<T> GetAsync<T>(string url)
         {
@@ -1137,8 +1174,127 @@ namespace TutorConnect.WebApp.Services
 
 
 
+        
+
+        public async Task<dynamic> GetReportOptionsAsync()
+        {
+            AddAuthHeader();
+            return await _client.GetFromJsonAsync<dynamic>("api/admin/report-options");
+        }
 
 
+        public async Task<ReportResultDTO> GenerateReportAsync(ReportFilterDTO filters)
+        {
+            try
+            {
+                AddAuthHeader();
+                var response = await _client.PostAsJsonAsync("api/admin/generate-report", filters);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException($"Report generation failed: {GetUserFriendlyErrorMessage(response.StatusCode, errorContent)}");
+                }
+
+                return await response.Content.ReadFromJsonAsync<ReportResultDTO>();
+            }
+            catch (HttpRequestException)
+            {
+                throw; // Re-throw our custom messages
+            }
+            catch (Exception ex)
+            {
+                throw new HttpRequestException($"Unable to generate report. Please try again later. ({ex.Message})");
+            }
+        }
+
+        public async Task<FileExportResult> GenerateReportFileAsync(ReportFilterDTO filters)
+        {
+            try
+            {
+                Console.WriteLine("=== API SERVICE DEBUG ===");
+                Console.WriteLine($"ReportType: '{filters?.ReportType}'");
+                Console.WriteLine($"DateRange: '{filters?.DateRange}'");
+                Console.WriteLine($"ExportFormat: '{filters?.ExportFormat}'");
+                Console.WriteLine($"UserType: '{filters?.UserType}'");
+                Console.WriteLine($"UserId: {filters?.UserId}");
+                Console.WriteLine($"StartDate: {filters?.StartDate}");
+                Console.WriteLine($"EndDate: {filters?.EndDate}");
+                Console.WriteLine($"Statuses: {(filters?.Statuses != null ? string.Join(", ", filters.Statuses) : "null")} (Count: {filters?.Statuses?.Count})");
+                Console.WriteLine($"ModuleIds: {(filters?.ModuleIds != null ? string.Join(", ", filters.ModuleIds) : "null")} (Count: {filters?.ModuleIds?.Count})");
+                Console.WriteLine("=== END API SERVICE DEBUG ===");
+
+                AddAuthHeader();
+                var response = await _client.PostAsJsonAsync("api/admin/generate-report", filters);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"API SERVICE ERROR: Status {response.StatusCode}, Content: {errorContent}");
+                    throw new HttpRequestException($"Report generation failed: {GetUserFriendlyErrorMessage(response.StatusCode, errorContent)}");
+                }
+
+                var content = await response.Content.ReadAsByteArrayAsync();
+                var contentType = response.Content.Headers.ContentType?.MediaType ?? "application/octet-stream";
+                var fileName = GetExportFileName(filters);
+
+                return new FileExportResult
+                {
+                    Content = content,
+                    ContentType = contentType,
+                    FileName = fileName
+                };
+            }
+            catch (HttpRequestException)
+            {
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"API SERVICE UNEXPECTED ERROR: {ex.Message}");
+                throw new HttpRequestException($"Unable to generate report file. Please try again later. ({ex.Message})");
+            }
+        }
+
+        private string GetUserFriendlyErrorMessage(HttpStatusCode statusCode, string errorContent)
+        {
+            return statusCode switch
+            {
+                HttpStatusCode.BadRequest when errorContent.Contains("Invalid report type", StringComparison.OrdinalIgnoreCase)
+                    => "The selected report type is not valid. Please choose a different report type.",
+                HttpStatusCode.BadRequest when errorContent.Contains("date", StringComparison.OrdinalIgnoreCase)
+                    => "The date range selected is not valid. Please check your date filters.",
+                HttpStatusCode.BadRequest when errorContent.Contains("module", StringComparison.OrdinalIgnoreCase)
+                    => "One or more selected modules are not valid. Please check your module selections.",
+                HttpStatusCode.BadRequest
+                    => "The report filters contain invalid data. Please check your selections and try again.",
+                HttpStatusCode.Unauthorized
+                    => "Your session has expired. Please log in again to generate reports.",
+                HttpStatusCode.Forbidden
+                    => "You don't have permission to generate reports. Please contact your administrator.",
+                HttpStatusCode.NotFound
+                    => "The report service is currently unavailable. Please try again later.",
+                HttpStatusCode.InternalServerError
+                    => "The report service encountered an unexpected error. Our team has been notified. Please try again later.",
+                _ => "An unexpected error occurred while generating the report. Please try again."
+            };
+        }
+
+   
+
+public class FileExportResult
+{
+    public byte[] Content { get; set; }
+    public string ContentType { get; set; }
+    public string FileName { get; set; }
+}
+
+private string GetExportFileName(ReportFilterDTO filters)
+{
+    var reportType = filters.ReportType?.ToLower() ?? "report";
+    var extension = filters.ExportFormat?.ToLower() ?? "file";
+    return $"{reportType}_report_{DateTime.UtcNow:yyyyMMdd_HHmmss}.{extension}";
+}
 
         public class CreateModuleRequest
         {

@@ -1,58 +1,61 @@
-﻿@{
+﻿@model TutorConnect.WebApp.Models.AdminDashboardViewModel
+@{
     ViewData["Title"] = "Admin Dashboard";
-    var stats = ViewBag.Stats as dynamic;
 }
 
 <div class="container-fluid">
     <!-- Dashboard Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0">Admin Dashboard</h1>
+        <h1 class="h3 mb-0 text-gray-800">Admin Dashboard</h1>
         <div>
-            
+            <a href="@Url.Action("Reports", "Admin")" class="btn btn-primary">
+                <i class="fas fa-chart-bar me-2"></i>Generate Reports
+            </a>
         </div>
     </div>
 
+    <!-- Error Alert -->
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            <strong>Error!</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+        <!-- Total Users Card -->
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-primary shadow h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Tutors</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.TotalTutors ?? 0)</div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Users</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(Model.TotalStudents + Model.TotalTutors)</div>
+                            <div class="text-xs text-muted">
+                                @Model.TotalStudents Students • @Model.TotalTutors Tutors
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-chalkboard-teacher fa-2x text-gray-300"></i>
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
+        <!-- Total Bookings Card -->
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-success shadow h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Students</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.TotalStudents ?? 0)</div>
-                        </div>
-                        <div class="col-auto">
-                            <i class="fas fa-user-graduate fa-2x text-gray-300"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Bookings</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.TotalBookings ?? 0)</div>
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Total Bookings</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalBookings</div>
+                            <div class="text-xs text-muted">
+                                @Model.CompletedThisWeek completed this week
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
@@ -62,13 +65,37 @@
             </div>
         </div>
 
-        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
+        <!-- Active Users Card -->
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-warning shadow h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Bookings</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.PendingBookings ?? 0)</div>
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Active Users</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ActiveUsers</div>
+                            <div class="text-xs text-muted">
+                                @Model.ActiveStudents Students • @Model.ActiveTutors Tutors
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-user-check fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Bookings Card -->
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-danger shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Pending Bookings</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.PendingBookings</div>
+                            <div class="text-xs text-muted">
+                                Awaiting confirmation
+                            </div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-clock fa-2x text-gray-300"></i>
@@ -78,23 +105,25 @@
             </div>
         </div>
 
-        <div class="col-xl-2 col-md-4 col-sm-6 mb-4">
-            <div class="card border-left-secondary shadow h-100 py-2">
+        <!-- Average Rating Card -->
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-info shadow h-100">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Active Modules</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">@(stats?.ActiveModules ?? 0)</div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Avg Rating</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.AverageTutorRating.ToString("F1")</div>
+                            <div class="text-xs text-muted">
+                                Tutor performance
+                            </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-book fa-2x text-gray-300"></i>
+                            <i class="fas fa-star fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </div>
 
     <!-- Quick Actions -->
@@ -105,30 +134,36 @@
                     <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
-                            <a asp-action="Tutors" class="btn btn-primary btn-circle btn-lg">
+                    <div class="row text-center">
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a asp-action="Tutors" class="btn btn-primary btn-circle btn-lg mb-2">
                                 <i class="fas fa-chalkboard-teacher"></i>
                             </a>
-                            <p class="mt-2">Manage Tutors</p>
+                            <p class="mb-0 small">Manage Tutors</p>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
-                            <a asp-action="Students" class="btn btn-success btn-circle btn-lg">
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a asp-action="Students" class="btn btn-success btn-circle btn-lg mb-2">
                                 <i class="fas fa-user-graduate"></i>
                             </a>
-                            <p class="mt-2">Manage Students</p>
+                            <p class="mb-0 small">Manage Students</p>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
-                            <a asp-action="Bookings" class="btn btn-info btn-circle btn-lg">
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a asp-action="Bookings" class="btn btn-info btn-circle btn-lg mb-2">
                                 <i class="fas fa-calendar-check"></i>
                             </a>
-                            <p class="mt-2">Manage Bookings</p>
+                            <p class="mb-0 small">Manage Bookings</p>
                         </div>
-                        <div class="col-lg-2 col-md-4 col-sm-6 text-center mb-3">
-                            <a asp-action="Modules" class="btn btn-secondary btn-circle btn-lg">
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a asp-action="Modules" class="btn btn-secondary btn-circle btn-lg mb-2">
                                 <i class="fas fa-book"></i>
                             </a>
-                            <p class="mt-2">Manage Modules</p>
+                            <p class="mb-0 small">Manage Modules</p>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a asp-action="Reports" class="btn btn-warning btn-circle btn-lg mb-2">
+                                <i class="fas fa-chart-bar"></i>
+                            </a>
+                            <p class="mb-0 small">Create Reports</p>
                         </div>
                     </div>
                 </div>
@@ -136,39 +171,118 @@
         </div>
     </div>
 
-    <!-- Recent Activity -->
+    <!-- Charts and Detailed Stats -->
     <div class="row">
-        <div class="col-lg-6">
-            <div class="card shadow mb-4">
+        <!-- Booking Status Chart -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Recent Bookings</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Booking Status Breakdown</h6>
                 </div>
                 <div class="card-body">
-                    <div class="text-center">
-                        <a asp-action="Bookings" class="btn btn-sm btn-primary">View All Bookings</a>
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="bookingStatusChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        <span class="me-3"><i class="fas fa-circle text-primary"></i> Pending: @Model.PendingBookings</span>
+                        <span class="me-3"><i class="fas fa-circle text-success"></i> Completed: @Model.CompletedBookings</span>
+                        <span class="me-3"><i class="fas fa-circle text-info"></i> Confirmed: @Model.ConfirmedBookings</span>
+                        <span><i class="fas fa-circle text-danger"></i> Cancelled: @Model.CancelledBookings</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-6">
-            <div class="card shadow mb-4">
+        <!-- Recent Activity -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Activity & Performance</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-left-success h-100">
+                                <div class="card-body text-center">
+                                    <div class="h5 text-success mb-1">@Model.RecentBookings</div>
+                                    <div class="text-xs text-muted">Bookings This Week</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-left-info h-100">
+                                <div class="card-body text-center">
+                                    <div class="h5 text-info mb-1">@Model.AverageTutorRating.ToString("F1")</div>
+                                    <div class="text-xs text-muted">Avg Tutor Rating</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Status and System Health -->
+    <div class="row">
+        <!-- User Status -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">User Status Overview</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="font-weight-bold text-dark mb-3">Tutors</h6>
+                            <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                <span>Active Tutors</span>
+                                <span class="badge bg-success">@Model.ActiveTutors</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                                <span>Blocked Tutors</span>
+                                <span class="badge bg-danger">@Model.BlockedTutors</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="font-weight-bold text-dark mb-3">Students</h6>
+                            <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                                <span>Active Students</span>
+                                <span class="badge bg-success">@Model.ActiveStudents</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                                <span>Blocked Students</span>
+                                <span class="badge bg-danger">@Model.BlockedStudents</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Health -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">System Health</h6>
                 </div>
                 <div class="card-body">
                     <div class="system-health">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Database</span>
+                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                            <span>Database Connection</span>
                             <span class="badge bg-success">Online</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
                             <span>API Service</span>
                             <span class="badge bg-success">Online</span>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <span>Storage</span>
+                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                            <span>File Storage</span>
                             <span class="badge bg-success">Normal</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                            <span>Booking Completion Rate</span>
+                            <span class="badge bg-info">@Model.BookingCompletionRate.ToString("F1")%</span>
                         </div>
                     </div>
                 </div>
@@ -177,24 +291,70 @@
     </div>
 </div>
 
-<!-- Cleanup Modal -->
-<div class="modal fade" id="cleanupModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Cleanup Old Data</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>This will remove all completed bookings older than 6 months. This action cannot be undone.</p>
-                <p class="text-warning"><i class="fas fa-exclamation-triangle"></i> Please ensure you have backups before proceeding.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form asp-action="CleanupOldBookings" method="post">
-                    <button type="submit" class="btn btn-danger">Proceed with Cleanup</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Your existing chart and animation code remains the same
+        // Booking Status Chart
+        var ctx = document.getElementById('bookingStatusChart').getContext('2d');
+        var bookingStatusChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'Completed', 'Confirmed', 'Cancelled'],
+                datasets: [{
+                    data: [
+                        @Model.PendingBookings,
+                        @Model.CompletedBookings,
+                        @Model.ConfirmedBookings,
+                        @Model.CancelledBookings
+                    ],
+                    backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#e74a3b'],
+                    hoverBackgroundColor: ['#2e59d9', '#17a673', '#2c9faf', '#d52a1a'],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 70,
+            },
+        });
+
+        // Counter animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.h5.mb-0.font-weight-bold.text-gray-800');
+            counters.forEach(counter => {
+                const target = parseInt(counter.innerText);
+                if (!isNaN(target) && target > 0) {
+                    animateCounter(counter, target);
+                }
+            });
+
+            function animateCounter(element, target) {
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        element.innerText = target;
+                        clearInterval(timer);
+                    } else {
+                        element.innerText = Math.floor(current);
+                    }
+                }, 25);
+            }
+        });
+    </script>
+}

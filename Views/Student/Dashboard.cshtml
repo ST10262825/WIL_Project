@@ -14,6 +14,15 @@
     int coursesEnrolled = 5;
 }
 
+@using TutorConnect.WebApp.Services
+@inject ApiService ApiService
+
+@{
+    var profileImageUrl = student?.ProfileImage != null
+        ? ApiService.GetProfileImageUrl(student.StudentId)
+        : Url.Content("~/images/default-profile.png");
+}
+
 <div class="container my-4">
     <div class="row">
         <!-- Sidebar -->
@@ -21,11 +30,11 @@
             <div class="sidebar">
                 <div class="p-4 text-center">
                     <div class="image-upload position-relative">
-                        <img src="@Url.Content(student?.ProfileImage ?? "~/images/default-profile.png")?v=@Guid.NewGuid().ToString("N")"
+                        <img src="@profileImageUrl"
                              alt="Profile"
                              class="profile-image"
                              id="profileImage"
-                             onerror="this.src='@Url.Content("~/images/default-profile.png")'">
+                             onerror="this.onerror=null; this.src='@Url.Content("~/images/default-profile.png")'">
                         <div class="upload-overlay" data-bs-toggle="modal" data-bs-target="#profileModal">
                             <i class="fas fa-camera"></i>
                         </div>
@@ -251,12 +260,12 @@
 
                 <div class="text-center mb-4">
                     <div class="image-upload position-relative mx-auto" style="width: 120px;">
-                        <img src="@Url.Content(student?.ProfileImage ?? "~/images/default-profile.png")?v=@Guid.NewGuid().ToString("N")"
+                        <img src="@profileImageUrl"
                              alt="Profile"
                              class="profile-image"
                              id="modalProfileImage"
                              style="width: 120px; height: 120px;"
-                             onerror="this.src='@Url.Content("~/images/default-profile.png")'">
+                             onerror="this.onerror=null; this.src='@Url.Content("~/images/default-profile.png")'">
                         <div class="upload-overlay" style="width: 30px; height: 30px;">
                             <i class="fas fa-camera"></i>
                         </div>
@@ -322,33 +331,32 @@
 
                 const result = await response.json();
 
-                if (result.success) {
-                    // Update the main profile image with cache busting
-                    if (result.profileImageUrl) {
-                        const timestamp = new Date().getTime();
-                        const mainImage = document.getElementById('profileImage');
-                        const modalImage = document.getElementById('modalProfileImage');
+                    if (result.success) {
+        // Update profile images using the ApiService method
+        const mainImage = document.getElementById('profileImage');
+        const modalImage = document.getElementById('modalProfileImage');
 
-                        mainImage.src = result.profileImageUrl + '?v=' + timestamp;
-                        modalImage.src = result.profileImageUrl + '?v=' + timestamp;
-                    }
+        // Use cache busting
+        const timestamp = new Date().getTime();
+        const newImageUrl = `@ApiService.GetProfileImageUrl(student.StudentId)?v=${timestamp}`;
 
-                    // Update bio if it exists
-                    if (result.bio) {
-                        const bioElement = document.querySelector('.profile-info p');
-                        if (bioElement) {
-                            bioElement.textContent = result.bio;
-                        }
-                    }
+        mainImage.src = newImageUrl;
+        modalImage.src = newImageUrl;
 
-                    // Show success message
-                    showNotification('Profile updated successfully!', 'success');
+        // Update bio if it exists
+        if (result.bio) {
+            const bioElement = document.querySelector('.profile-info p');
+            if (bioElement) {
+                bioElement.textContent = result.bio;
+            }
+        }
 
-                    // Close modal after a brief delay
-                    setTimeout(() => {
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
-                        modal.hide();
-                    }, 1500);
+        showNotification('Profile updated successfully!', 'success');
+
+        setTimeout(() => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
+            modal.hide();
+        }, 1500);
 
                 } else {
                     showNotification(result.message || 'Failed to update profile', 'error');
