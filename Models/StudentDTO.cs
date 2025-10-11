@@ -10,6 +10,6 @@
         public bool IsBlocked { get; set; }
         public string? ProfileImage { get; set; }
  
-        //public User User { get; set; }
+       
     }
 }

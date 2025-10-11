@@ -318,5 +318,213 @@ namespace TutorConnect.WebApp.Controllers
             Console.WriteLine($"Returning {availability.Count} time slots for week starting {startDate:yyyy-MM-dd}");
             return Ok(availability);
         }
+
+
+        // In your WebApp TutorController
+        [HttpGet]
+        public async Task<IActionResult> Materials()
+        {
+            var userId = GetUserId();
+            if (userId == null) return RedirectToLogin();
+
+            var tutor = await _apiService.GetTutorByUserIdAsync(userId.Value);
+            if (tutor == null) return NotFound();
+
+            // Get materials overview from API - THIS SHOULD GET FRESH DATA
+            var materialsOverview = await _apiService.GetTutorMaterialsOverviewAsync(tutor.TutorId);
+
+            ViewBag.TutorId = tutor.TutorId;
+            ViewBag.TutorName = $"{tutor.Name} {tutor.Surname}";
+
+            return View(materialsOverview);
+        }
+
+        // In your WebApp TutorController - FIX THESE METHODS
+        [HttpPost]
+        public async Task<IActionResult> CreateFolder(int tutorId, string name, string description, int? parentFolderId)
+        {
+            try
+            {
+                Console.WriteLine($"[WEBAPP DEBUG] CreateFolder START");
+                Console.WriteLine($"[WEBAPP DEBUG] Parameters - TutorId: {tutorId}, Name: {name}, Description: {description}, ParentFolderId: {parentFolderId}");
+
+                // Validate required fields
+                if (string.IsNullOrEmpty(name))
+                {
+                    TempData["ErrorMessage"] = "Folder name is required";
+                    Console.WriteLine($"[WEBAPP DEBUG] Validation failed - Name is empty");
+                    return RedirectToAction("Materials");
+                }
+
+                Console.WriteLine($"[WEBAPP DEBUG] Calling API Service...");
+                var result = await _apiService.CreateFolderAsync(tutorId, name, description, parentFolderId);
+
+                Console.WriteLine($"[WEBAPP DEBUG] API Service returned - IsSuccess: {result.IsSuccess}, Error: {result.ErrorMessage}");
+
+                if (result.IsSuccess)
+                {
+                    TempData["SuccessMessage"] = "Folder created successfully!";
+                    Console.WriteLine($"[WEBAPP DEBUG] Folder created successfully");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"Failed to create folder: {result.ErrorMessage}";
+                    Console.WriteLine($"[WEBAPP DEBUG] Folder creation failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error creating folder: {ex.Message}";
+                Console.WriteLine($"[WEBAPP DEBUG] Exception: {ex}");
+            }
+
+            Console.WriteLine($"[WEBAPP DEBUG] CreateFolder END - Redirecting to Materials");
+            return RedirectToAction("Materials");
+        }
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UploadMaterial(
+    int tutorId,
+    string title,
+    string description,
+    int? folderId,
+    string isPublic,  // Change from bool to string
+    IFormFile file)
+        {
+            try
+            {
+                Console.WriteLine($"[WEBAPP UPLOAD] UploadMaterial START");
+                Console.WriteLine($"[WEBAPP UPLOAD] TutorId: {tutorId}, Title: {title}, FolderId: {folderId}, IsPublic: '{isPublic}'");
+                Console.WriteLine($"[WEBAPP UPLOAD] File: {file?.FileName}, Size: {file?.Length}");
+
+                // Convert string to bool
+                bool isPublicBool = isPublic == "true";
+                Console.WriteLine($"[WEBAPP UPLOAD] IsPublic converted: {isPublicBool}");
+
+                if (file == null || file.Length == 0)
+                {
+                    TempData["ErrorMessage"] = "Please select a file to upload.";
+                    Console.WriteLine($"[WEBAPP UPLOAD] No file selected");
+                    return RedirectToAction("Materials");
+                }
+
+                Console.WriteLine($"[WEBAPP UPLOAD] Calling API Service...");
+                var result = await _apiService.UploadMaterialAsync(tutorId, title, description, folderId, isPublicBool, file);
+
+                if (result.IsSuccess)
+                {
+                    TempData["SuccessMessage"] = $"Material '{title}' uploaded successfully!";
+                    Console.WriteLine($"[WEBAPP UPLOAD] SUCCESS - Material ID: {result.Material?.LearningMaterialId}");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"Failed to upload material: {result.ErrorMessage}";
+                    Console.WriteLine($"[WEBAPP UPLOAD] FAILED: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error uploading material: {ex.Message}";
+                Console.WriteLine($"[WEBAPP UPLOAD] EXCEPTION: {ex}");
+            }
+
+            return RedirectToAction("Materials");
+        }
+
+
+        [HttpPost("DeleteMaterial")]
+        public async Task<IActionResult> DeleteMaterial([FromForm] int materialId)
+        {
+            try
+            {
+                Console.WriteLine($"[WEBAPP] DeleteMaterial called - MaterialId: {materialId}");
+
+                var success = await _apiService.DeleteMaterialAsync(materialId);
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "Material deleted successfully!";
+                    Console.WriteLine($"[WEBAPP] Material deleted successfully");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to delete material.";
+                    Console.WriteLine($"[WEBAPP] Material deletion failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error deleting material: {ex.Message}";
+                Console.WriteLine($"[WEBAPP] Exception in DeleteMaterial: {ex}");
+            }
+
+            return RedirectToAction("Materials");
+        }
+
+
+
+
+        
+        [HttpGet("materials/folder/{folderId}")]
+        public async Task<IActionResult> FolderContents(int folderId)
+        {
+            var userId = GetUserId();
+            if (userId == null) return RedirectToLogin();
+
+            var tutor = await _apiService.GetTutorByUserIdAsync(userId.Value);
+            if (tutor == null) return NotFound();
+
+            var folder = await _apiService.GetFolderContentsAsync(tutor.TutorId, folderId);
+            if (folder == null) return NotFound();
+
+            ViewBag.TutorId = tutor.TutorId;
+            ViewBag.TutorName = $"{tutor.Name} {tutor.Surname}";
+
+            return View("FolderContents", folder);
+        }
+
+
+        [HttpPost("materials/delete-folder")]
+        public async Task<IActionResult> DeleteFolder(int folderId)
+        {
+            try
+            {
+                Console.WriteLine($"[WEBAPP] DeleteFolder called - FolderId: {folderId}");
+
+                // First check if folder has any materials
+                var userId = GetUserId();
+                var tutor = await _apiService.GetTutorByUserIdAsync(userId.Value);
+
+                if (tutor == null)
+                {
+                    TempData["ErrorMessage"] = "Tutor not found.";
+                    return RedirectToAction("Materials");
+                }
+
+                // Call API to delete folder
+                var success = await _apiService.DeleteFolderAsync(folderId);
+
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "Folder deleted successfully!";
+                    Console.WriteLine($"[WEBAPP] Folder deleted successfully");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Failed to delete folder. It may contain materials or subfolders.";
+                    Console.WriteLine($"[WEBAPP] Folder deletion failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error deleting folder: {ex.Message}";
+                Console.WriteLine($"[WEBAPP] Exception in DeleteFolder: {ex}");
+            }
+
+            return RedirectToAction("Materials");
+        }
+
     }
 }

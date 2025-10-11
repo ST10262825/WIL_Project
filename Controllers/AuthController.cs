@@ -138,7 +138,8 @@ namespace TutorConnect.WebApp.Controllers
                 var success = await _apiService.VerifyEmailAsync(token);
                 if (success)
                 {
-                    TempData["SuccessMessage"] = "Email verified. You can now log in.";
+                    // NEW: Enhanced verification success message
+                    TempData["SuccessMessage"] = "🎉 Email verified successfully! You've earned 50 points. You can now log in and start earning more points!";
                     return RedirectToAction("Login");
                 }
 
@@ -162,7 +163,7 @@ namespace TutorConnect.WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(dto); // stops here if passwords don’t match
+                return View(dto);
             }
 
             try
@@ -175,7 +176,8 @@ namespace TutorConnect.WebApp.Controllers
                     Course = dto.Course
                 });
 
-                TempData["SuccessMessage"] = "Registration successful. Please verify your email.";
+                // NEW: Enhanced success message with gamification benefits
+                TempData["SuccessMessage"] = "Registration successful! 🎉 You've earned 100 welcome points! Please verify your email to earn 50 more points.";
                 return RedirectToAction("Verify", new { email = dto.Email });
             }
             catch (HttpRequestException ex)

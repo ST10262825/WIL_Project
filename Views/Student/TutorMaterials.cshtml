@@ -1,0 +1,114 @@
+﻿@model List<LearningMaterialDTO>
+@{
+    ViewData["Title"] = "Tutor Materials";
+    int tutorId = ViewBag.TutorId;
+    string tutorName = ViewBag.TutorName;
+    int studentId = ViewBag.StudentId;
+}
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Materials", "Student")">My Learning Materials</a></li>
+            <li class="breadcrumb-item active">@tutorName</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="fas fa-chalkboard-teacher me-2"></i>@tutorName's Materials</h2>
+                    <p class="text-muted">Learning materials from this tutor</p>
+                </div>
+                <a href="@Url.Action("Materials", "Student")" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to All Materials
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Materials List -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-folder-open me-2"></i>Available Materials</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Folder</th>
+                                        <th>Description</th>
+                                        <th>Type</th>
+                                        <th>Size</th>
+                                        <th>Uploaded</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var material in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>@material.Title</strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light text-dark">@material.FolderName</span>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">@material.Description</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary">@material.FileType.ToUpper()</span>
+                                                @if (material.IsPublic)
+                                                {
+                                                    <span class="badge bg-success">Public</span>
+                                                }
+                                            </td>
+                                            <td>@material.FileSizeFormatted</td>
+                                            <td>@material.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <a href="@material.FileUrl" class="btn btn-outline-primary btn-sm" target="_blank">
+                                                    <i class="fas fa-download"></i> Download
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No materials available from this tutor yet.</p>
+                            <p class="text-muted">The tutor may add materials soon.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Information -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <h6><i class="fas fa-info-circle me-2"></i>Access Information</h6>
+                <p class="mb-0">
+                    You can access these materials because you have an <strong>accepted booking</strong> with this tutor
+                    or your session was <strong>completed within the last 2 days</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

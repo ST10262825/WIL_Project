@@ -88,7 +88,6 @@ namespace TutorConnect.WebApp.Controllers
             }
         }
 
-
         private async Task<int> GetActualStudentIdAsync()
         {
             try
@@ -183,7 +182,6 @@ namespace TutorConnect.WebApp.Controllers
             return View(model);
         }
 
-
         // GET: Fetch availability for tutor (AJAX call)
         [HttpGet("Booking/Availability/{tutorId}")]
         public async Task<IActionResult> Availability(int tutorId, DateTime date)
@@ -212,7 +210,6 @@ namespace TutorConnect.WebApp.Controllers
             }
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateBookingStatus([FromBody] BookingStatusUpdateModel dto)
@@ -220,8 +217,25 @@ namespace TutorConnect.WebApp.Controllers
             try
             {
                 var success = await _apiService.UpdateBookingStatusAsync(dto.BookingId, dto.Status);
-                if (!success) return BadRequest(new { message = "Could not update booking status." });
-                return Ok();
+
+                if (success)
+                {
+                    // NEW: If booking is completed, show gamification message
+                    if (dto.Status == "Completed")
+                    {
+                        // You can add additional gamification feedback here
+                        // For example, show points earned notification
+                        return Ok(new
+                        {
+                            message = "Session completed successfully! 🎉 Points awarded!",
+                            showGamification = true
+                        });
+                    }
+
+                    return Ok(new { message = "Booking status updated successfully." });
+                }
+
+                return BadRequest(new { message = "Could not update booking status." });
             }
             catch
             {
@@ -229,7 +243,83 @@ namespace TutorConnect.WebApp.Controllers
             }
         }
 
+        // NEW: Complete session with gamification feedback
+        [HttpPost("CompleteSession/{bookingId}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CompleteSession(int bookingId)
+        {
+            try
+            {
+                // Use the new complete-session endpoint that awards points
+                var success = await _apiService.ReportSessionCompletedAsync(bookingId);
 
+                if (success)
+                {
+                    TempData["Success"] = "Session completed successfully! 🎉 50 points awarded to both student and tutor!";
 
+                    // NEW: Get updated gamification profile to show level up info
+                    var profile = await _apiService.GetGamificationProfileAsync();
+                    if (profile != null)
+                    {
+                        ViewBag.GamificationProfile = profile;
+                    }
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to complete session. Please try again.";
+                }
+
+                return RedirectToAction("MyBookings");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error completing session: {ex.Message}";
+                return RedirectToAction("MyBookings");
+            }
+        }
+
+        // NEW: Enhanced booking details view with gamification info
+        [HttpGet("Booking/Details/{bookingId}")]
+        public async Task<IActionResult> Details(int bookingId)
+        {
+            try
+            {
+                // Get booking details (you might need to add this to your ApiService)
+                var bookings = await _apiService.GetStudentBookingsAsync(await GetActualStudentIdAsync());
+                var booking = bookings.FirstOrDefault(b => b.BookingId == bookingId);
+
+                if (booking == null)
+                {
+                    TempData["Error"] = "Booking not found.";
+                    return RedirectToAction("MyBookings");
+                }
+
+                // NEW: Get gamification profile for the user
+                var profile = await _apiService.GetGamificationProfileAsync();
+                ViewBag.GamificationProfile = profile;
+
+                return View(booking);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error loading booking details: {ex.Message}";
+                return RedirectToAction("MyBookings");
+            }
+        }
+
+        // NEW: Add gamification widget to booking views
+        private async Task<GamificationProfileDTO> GetUserGamificationProfile()
+        {
+            try
+            {
+                return await _apiService.GetGamificationProfileAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log but don't break the page if gamification fails
+                Console.WriteLine($"Error getting gamification profile: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

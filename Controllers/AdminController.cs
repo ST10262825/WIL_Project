@@ -182,8 +182,7 @@ namespace TutorConnect.WebApp.Controllers
                 var bookings = await _api.GetAllBookingsAsync();
                 var modules = await _api.GetAllModulesAsync();
 
-                // Calculate comprehensive statistics
-
+                // Safe calculations with null checks
                 var activeTutors = tutors?.Count(t => !t.IsBlocked) ?? 0;
                 var blockedTutors = tutors?.Count(t => t.IsBlocked) ?? 0;
                 var activeStudents = students?.Count(s => !s.IsBlocked) ?? 0;
@@ -194,77 +193,51 @@ namespace TutorConnect.WebApp.Controllers
                 var recentBookings = bookings?.Count(b => b.StartTime >= lastWeek) ?? 0;
                 var completedThisWeek = bookings?.Count(b => b.Status == "Completed" && b.StartTime >= lastWeek) ?? 0;
 
-                // Calculate booking completion rate
-                var bookingCompletionRate = bookings?.Any() == true ?
-                    (decimal)bookings.Count(b => b.Status == "Completed") / bookings.Count * 100 : 0;
+                // Calculate booking completion rate safely
+                var bookingCompletionRate = 0m;
+                if (bookings?.Any() == true && bookings.Count > 0)
+                {
+                    bookingCompletionRate = (decimal)bookings.Count(b => b.Status == "Completed") / bookings.Count * 100;
+                }
 
-                // Calculate average tutor rating
-                var averageTutorRating = tutors?.Where(t => t.AverageRating > 0).Average(t => t.AverageRating) ?? 0;
+                // Calculate average tutor rating safely
+                var averageTutorRating = 0m;
+                var tutorsWithRatings = tutors?.Where(t => t.AverageRating > 0).ToList();
+                if (tutorsWithRatings?.Any() == true)
+                {
+                    averageTutorRating = (decimal)tutorsWithRatings.Average(t => t.AverageRating);
+                }
 
                 var viewModel = new AdminDashboardViewModel
                 {
-                    // Basic counts
+                    // Your existing properties...
                     TotalTutors = tutors?.Count ?? 0,
                     TotalStudents = students?.Count ?? 0,
                     TotalBookings = bookings?.Count ?? 0,
                     TotalModules = modules?.Count ?? 0,
-
-                    // Status breakdowns
                     ActiveTutors = activeTutors,
                     BlockedTutors = blockedTutors,
                     ActiveStudents = activeStudents,
                     BlockedStudents = blockedStudents,
-
-                    // Booking statuses
                     PendingBookings = bookings?.Count(b => b.Status == "Pending") ?? 0,
                     ConfirmedBookings = bookings?.Count(b => b.Status == "Confirmed") ?? 0,
                     CompletedBookings = bookings?.Count(b => b.Status == "Completed") ?? 0,
                     CancelledBookings = bookings?.Count(b => b.Status == "Cancelled") ?? 0,
-
-
-                    // Recent activity
                     RecentBookings = recentBookings,
                     CompletedThisWeek = completedThisWeek,
-
-                    // Performance metrics
-                    AverageTutorRating = averageTutorRating,
+                    AverageTutorRating = (double)averageTutorRating,
                     BookingCompletionRate = bookingCompletionRate,
-
-                    // Lists
-                    PopularModules = modules?
-                        .OrderByDescending(m => m.BookingCount)
-                        .Take(5)
-                        .ToList() ?? new List<ModuleDTO>(),
-                    TopRatedTutors = tutors?
-                        .Where(t => t.AverageRating > 0)
-                        .OrderByDescending(t => t.AverageRating)
-                        .Take(5)
-                        .ToList() ?? new List<TutorDTO>(),
-                    Students = students?.ToList() ?? new List<StudentDTO>(),
-                    Bookings = bookings?.ToList() ?? new List<BookingDTO>(),
-                    Modules = modules?.ToList() ?? new List<ModuleDTO>(),
-
-                    // System health (mock data for now)
-                    SystemHealth = new SystemHealthDTO
-                    {
-                        DatabaseStatus = "Online",
-                        Uptime = 86400, // 24 hours in seconds
-                        MemoryUsage = 512, // MB
-                        ActiveConnections = 42
-                    }
+                    // ... rest of your view model initialization
                 };
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                // Log the error
                 Console.WriteLine($"Error loading dashboard: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
 
                 TempData["Error"] = $"Error loading dashboard: {ex.Message}";
-
-                // Return empty view model instead of crashing
                 return View(new AdminDashboardViewModel());
             }
         }

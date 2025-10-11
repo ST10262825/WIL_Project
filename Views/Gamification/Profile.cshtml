@@ -1,0 +1,680 @@
+﻿@model GamificationProfileViewModel
+@{
+    ViewData["Title"] = "My Learning Journey";
+}
+
+<div class="container mt-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 style="color: #0B2E3D;">🎮 My Learning Journey</h2>
+                <div class="btn-group">
+                    <a href="@Url.Action("Achievements")" class="btn btn-outline-primary">
+                        <i class="fas fa-trophy me-2"></i>View All Achievements
+                    </a>
+                    <a href="@Url.Action("MyBookings", "Booking")" class="btn" style="background-color: #42E695; color: #0B2E3D;">
+                        <i class="fas fa-calendar me-2"></i>My Bookings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <div class="level-badge mx-auto mb-3"
+                         style="width: 80px; height: 80px; background: linear-gradient(135deg, #42E695, #3BB2B8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; color: white;">
+                        @Model.Profile.Level
+                    </div>
+                    <h5 class="card-title" style="color: #0B2E3D;">Level @Model.Profile.Level</h5>
+                    <p class="card-text text-muted">@Model.Profile.CurrentRank</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-star fa-2x mb-3" style="color: #FFD700;"></i>
+                    <h3 class="card-title" style="color: #0B2E3D;">@Model.Profile.ExperiencePoints</h3>
+                    <p class="card-text text-muted">Total XP</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-fire fa-2x mb-3" style="color: #FF6B35;"></i>
+                    <h3 class="card-title" style="color: #0B2E3D;">@Model.Profile.StreakCount</h3>
+                    <p class="card-text text-muted">Day Streak</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-trophy fa-2x mb-3" style="color: #3BB2B8;"></i>
+                    <h3 class="card-title" style="color: #0B2E3D;">@Model.Profile.Achievements.Count(a => a.IsCompleted)</h3>
+                    <p class="card-text text-muted">Achievements</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- XP Breakdown Section -->
+    <div class="row mb-4">
+        <div class="col-md-8 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header" style="background: linear-gradient(90deg, #42E695, #3BB2B8); color: white;">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>XP Breakdown</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <canvas id="xpBreakdownChart" width="400" height="250"></canvas>
+                        </div>
+                        <div class="col-md-4">
+                            <div id="xpLegend" class="xp-legend">
+                                <!-- Legend will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header" style="background: #0B2E3D; color: white;">
+                    <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Progress to Next Level</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="level-progress-circle mx-auto mb-3">
+                            <div class="progress-circle" data-progress="@(Model.Profile.LevelProgress * 100)">
+                                <span class="progress-value">@((Model.Profile.LevelProgress * 100).ToString("F0"))%</span>
+                            </div>
+                        </div>
+                        <h5 style="color: #0B2E3D;">Level @Model.Profile.Level → @(Model.Profile.Level + 1)</h5>
+                    </div>
+                    <div class="progress" style="height: 12px; border-radius: 10px;">
+                        <div class="progress-bar"
+                             style="width: @(Model.Profile.LevelProgress * 100)%; background: linear-gradient(90deg, #42E695, #3BB2B8);"
+                             role="progressbar"
+                             aria-valuenow="@(Model.Profile.LevelProgress * 100)"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                    <div class="text-center mt-2">
+                        <small class="text-muted">
+                            <strong>@Model.Profile.PointsToNextLevel XP</strong> needed for Level @(Model.Profile.Level + 1)
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity & Achievements -->
+    <div class="row">
+        <!-- Recent Achievements -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header" style="background: #0B2E3D; color: white;">
+                    <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Recent Achievements</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Profile.Achievements.Any(a => a.IsCompleted))
+                    {
+                        foreach (var achievement in Model.Profile.Achievements.Where(a => a.IsCompleted).OrderByDescending(a => a.EarnedAt).Take(5))
+                        {
+                            <div class="d-flex align-items-center mb-3 p-2 rounded achievement-item">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-trophy fa-lg me-3" style="color: #FFD700;"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1" style="color: #0B2E3D;">@achievement.Name</h6>
+                                    <p class="mb-0 small text-muted">@achievement.Description</p>
+                                    <small class="text-muted">Earned: @achievement.EarnedAt.ToString("MMM dd, yyyy")</small>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <span class="badge bg-success">+@(GetAchievementPoints(achievement.Name, Model.AllAchievements)) XP</span>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-trophy fa-2x mb-3" style="color: #ccc;"></i>
+                            <p>No achievements earned yet. Complete sessions to earn your first achievement!</p>
+                            <a href="@Url.Action("MyBookings", "Booking")" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D;">
+                                Book a Session
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- XP Activity Timeline -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header" style="background: #3BB2B8; color: white;">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent XP Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div id="xpTimeline">
+                        <!-- Sample timeline items - replace with actual data from your API -->
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-success"></div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold">Session Completed</span>
+                                    <span class="text-success">+50 XP</span>
+                                </div>
+                                <small class="text-muted">Mathematics with John Doe</small>
+                                <small class="text-muted d-block">Today, 2:30 PM</small>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-warning"></div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold">Achievement Unlocked</span>
+                                    <span class="text-warning">+100 XP</span>
+                                </div>
+                                <small class="text-muted">First Session</small>
+                                <small class="text-muted d-block">Yesterday, 10:15 AM</small>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker bg-info"></div>
+                            <div class="timeline-content">
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold">Daily Login</span>
+                                    <span class="text-info">+10 XP</span>
+                                </div>
+                                <small class="text-muted">Login streak: @Model.Profile.StreakCount days</small>
+                                <small class="text-muted d-block">2 days ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 style="color: #0B2E3D;">🚀 Level Up Faster!</h5>
+                    <p class="text-muted">Here's how you can earn more XP and achievements:</p>
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 rounded" style="background: #E3F2FD;">
+                                <i class="fas fa-calendar-check fa-lg mb-2" style="color: #42E695;"></i>
+                                <h6>Complete Sessions</h6>
+                                <small class="text-muted">+50 XP per session</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 rounded" style="background: #E8F5E8;">
+                                <i class="fas fa-sign-in-alt fa-lg mb-2" style="color: #3BB2B8;"></i>
+                                <h6>Daily Login</h6>
+                                <small class="text-muted">+10 XP every day</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 rounded" style="background: #FFF3CD;">
+                                <i class="fas fa-tasks fa-lg mb-2" style="color: #FFD700;"></i>
+                                <h6>Unlock Achievements</h6>
+                                <small class="text-muted">100-1000 XP each</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <div class="p-3 rounded" style="background: #FFE8E8;">
+                                <i class="fas fa-users fa-lg mb-2" style="color: #FF6B35;"></i>
+                                <h6>Help Students</h6>
+                                <small class="text-muted">Bonus XP for great reviews</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+    .level-badge {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .progress {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        border-radius: 10px;
+    }
+
+    /* Progress Circle */
+    .progress-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: conic-gradient(#42E695 0%, #3BB2B8 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+        }
+
+    .progress-value {
+        position: relative;
+        font-weight: bold;
+        color: #0B2E3D;
+        font-size: 1.2rem;
+    }
+
+    /* Timeline */
+    .timeline-item {
+        display: flex;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .timeline-marker {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        margin-top: 0.25rem;
+        flex-shrink: 0;
+    }
+
+    .timeline-content {
+        flex: 1;
+        padding-bottom: 1.5rem;
+        border-left: 2px solid #e9ecef;
+        padding-left: 1rem;
+    }
+
+    .timeline-item:last-child .timeline-content {
+        border-left: 2px solid transparent;
+    }
+
+    /* Achievement Items */
+    .achievement-item {
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+
+        .achievement-item:hover {
+            background: #f8f9fa;
+            border-left-color: #FFD700;
+            transform: translateX(5px);
+        }
+
+    /* XP Legend */
+    .xp-legend {
+        padding: 1rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 5px;
+        background: #f8f9fa;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+    }
+
+    .legend-text {
+        flex: 1;
+        font-size: 0.9rem;
+    }
+
+    .legend-value {
+        font-weight: bold;
+        color: #0B2E3D;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // TEMPORARY FIX: Load data via API calls instead of from Model
+        loadXPData();
+        animateProgressCircle();
+    });
+
+    async function loadXPData() {
+        try {
+            // Load XP Breakdown from API
+            const breakdownResponse = await fetch('/api/gamification/xp-breakdown');
+            if (!breakdownResponse.ok) {
+                throw new Error('Failed to fetch XP breakdown');
+            }
+            const xpData = await breakdownResponse.json();
+
+            // Create chart with real data
+            createXPChart(xpData);
+
+            // Load recent activity
+            await loadRecentActivity();
+
+        } catch (error) {
+            console.error('Error loading XP data:', error);
+            // Fallback to sample data if API fails
+            const fallbackData = {
+                sessions: 1500,
+                achievements: 800,
+                dailyLogin: 300,
+                bonuses: 200,
+                other: 150,
+                total: 2950
+            };
+            createXPChart(fallbackData);
+            showSampleActivities();
+        }
+    }
+
+    async function loadRecentActivity() {
+         try {
+             const activityResponse = await fetch('/api/gamification/recent-xp-activity');
+             if (!activityResponse.ok) {
+                 throw new Error('Failed to fetch recent activity');
+             }
+             const activities = await activityResponse.json();
+             updateActivityTimeline(activities);
+         } catch (error) {
+             console.error('Error loading recent activity:', error);
+             // Show sample activities if API fails
+             showSampleActivities();
+         }
+     }
+
+    function createXPChart(xpData) {
+        const ctx = document.getElementById('xpBreakdownChart').getContext('2d');
+
+        // Use the data structure from your API
+        const chartData = {
+            sessions: xpData.sessions || 0,
+            achievements: xpData.achievements || 0,
+            dailyLogin: xpData.dailyLogin || 0,
+            bonuses: xpData.bonuses || 0,
+            other: xpData.other || 0
+        };
+
+        const totalXP = xpData.total || Object.values(chartData).reduce((a, b) => a + b, 0);
+
+        // Destroy existing chart if it exists
+        if (window.xpBreakdownChart instanceof Chart) {
+            window.xpBreakdownChart.destroy();
+        }
+
+        window.xpBreakdownChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Sessions', 'Achievements', 'Daily Login', 'Bonuses', 'Other'],
+                datasets: [{
+                    data: Object.values(chartData),
+                    backgroundColor: [
+                        '#42E695',  // Sessions - Green
+                        '#FFD700',  // Achievements - Gold
+                        '#3BB2B8',  // Daily Login - Teal
+                        '#FF6B35',  // Bonuses - Orange
+                        '#0B2E3D'   // Other - Dark Blue
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const percentage = ((value / totalXP) * 100).toFixed(1);
+                                return `${label}: ${value} XP (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '60%'
+            }
+        });
+
+        // Create custom legend with real data
+        createXPLegend(chartData, totalXP);
+    }
+
+    function createXPLegend(xpData, totalXP) {
+        const legendContainer = document.getElementById('xpLegend');
+        legendContainer.innerHTML = ''; // Clear existing content
+
+        const colors = ['#42E695', '#FFD700', '#3BB2B8', '#FF6B35', '#0B2E3D'];
+        const labels = ['Sessions', 'Achievements', 'Daily Login', 'Bonuses', 'Other'];
+
+        labels.forEach((label, index) => {
+            const value = Object.values(xpData)[index];
+            const percentage = totalXP > 0 ? ((value / totalXP) * 100).toFixed(1) : '0.0';
+
+            const legendItem = document.createElement('div');
+            legendItem.className = 'legend-item';
+            legendItem.innerHTML = `
+                <div class="legend-color" style="background-color: ${colors[index]}"></div>
+                <div class="legend-text">
+                    <div>${label}</div>
+                    <small class="text-muted">${percentage}%</small>
+                </div>
+                <div class="legend-value">${value} XP</div>
+            `;
+            legendContainer.appendChild(legendItem);
+        });
+
+        // Add total XP
+        const totalItem = document.createElement('div');
+        totalItem.className = 'legend-item';
+        totalItem.style.background = 'linear-gradient(135deg, #42E695, #3BB2B8)';
+        totalItem.style.color = 'white';
+        totalItem.innerHTML = `
+            <div class="legend-text">
+                <div><strong>Total XP</strong></div>
+            </div>
+            <div class="legend-value" style="color: white;">${totalXP} XP</div>
+        `;
+        legendContainer.appendChild(totalItem);
+    }
+
+    function updateActivityTimeline(activities) {
+        const timelineContainer = document.getElementById('xpTimeline');
+        timelineContainer.innerHTML = '';
+
+        if (!activities || activities.length === 0) {
+            timelineContainer.innerHTML = `
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-history fa-2x mb-3" style="color: #ccc;"></i>
+                    <p>No recent activity found</p>
+                </div>
+            `;
+            return;
+        }
+
+        activities.forEach(activity => {
+            const activityHtml = `
+                <div class="timeline-item">
+                    <div class="timeline-marker ${activity.color || getActivityColor(activity.type)}"></div>
+                    <div class="timeline-content">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">${getActivityTypeDisplay(activity.type)}</span>
+                            <span class="text-success">+${activity.points} XP</span>
+                        </div>
+                        <small class="text-muted">${activity.description}</small>
+                        <small class="text-muted d-block">${formatTime(activity.testamp)}</small>
+                    </div>
+                </div>
+            `;
+            timelineContainer.appendChild(createElementFromHTML(activityHtml));
+        });
+    }
+
+    function showSampleActivities() {
+        const timelineContainer = document.getElementById('xpTimeline');
+        timelineContainer.innerHTML = '';
+
+        const sampleActivities = [
+            {
+                type: 'Session',
+                description: 'Completed Mathematics session',
+                points: 50,
+                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+                color: 'bg-success'
+            },
+            {
+                type: 'Achievement',
+                description: 'Unlocked "First Session"',
+                points: 100,
+                timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+                color: 'bg-warning'
+            },
+            {
+                type: 'DailyLogin',
+                description: 'Daily login bonus',
+                points: 10,
+                timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
+                color: 'bg-info'
+            }
+        ];
+
+        sampleActivities.forEach(activity => {
+            const activityHtml = `
+                <div class="timeline-item">
+                    <div class="timeline-marker ${activity.color}"></div>
+                    <div class="timeline-content">
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">${getActivityTypeDisplay(activity.type)}</span>
+                            <span class="text-success">+${activity.points} XP</span>
+                        </div>
+                        <small class="text-muted">${activity.description}</small>
+                        <small class="text-muted d-block">${formatTime(activity.timestamp)}</small>
+                    </div>
+                </div>
+            `;
+            timelineContainer.appendChild(createElementFromHTML(activityHtml));
+        });
+    }
+
+    function getActivityTypeDisplay(type) {
+        const types = {
+            'Session': 'Session Completed',
+            'Achievement': 'Achievement Unlocked',
+            'DailyLogin': 'Daily Login',
+            'Bonus': 'Bonus Earned'
+        };
+        return types[type] || type;
+    }
+
+    function getActivityColor(type) {
+        const colors = {
+            'Session': 'bg-success',
+            'Achievement': 'bg-warning',
+            'DailyLogin': 'bg-info',
+            'Bonus': 'bg-primary'
+        };
+        return colors[type] || 'bg-secondary';
+    }
+
+    function formatTime(timestamp) {
+        if (!timestamp) return 'Recently';
+
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diff = now - date;
+
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+
+        if (minutes < 1) return 'Just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        if (days < 7) return `${days}d ago`;
+
+        return date.toLocaleDateString();
+    }
+
+    function createElementFromHTML(htmlString) {
+        const div = document.createElement('div');
+        div.innerHTML = htmlString.trim();
+        return div.firstChild;
+    }
+
+    function animateProgressCircle() {
+        const progressCircle = document.querySelector('.progress-circle');
+        if (!progressCircle) return;
+
+        const progress = progressCircle.dataset.progress;
+        progressCircle.style.background = `conic-gradient(#42E695 0%, #3BB2B8 ${progress}%, #e9ecef ${progress}% 100%)`;
+    }
+
+    // Refresh data every 30 seconds (optional)
+    setInterval(loadXPData, 30000);
+</script>
+
+
+@functions {
+    private int GetAchievementPoints(string achievementName, List<Achievement> allAchievements)
+    {
+        var achievement = allAchievements?.FirstOrDefault(a => a.Name == achievementName);
+        return achievement?.PointsReward ?? 0;
+    }
+}

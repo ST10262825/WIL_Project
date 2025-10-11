@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TutorConnect.WebApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d98eb220b317517970b6fb2482c0c3fadc6403f9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc91c0ae70924d9cecce39d24ad15149c84eecd6")]
 [assembly: System.Reflection.AssemblyProductAttribute("TutorConnect.WebApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TutorConnect.WebApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

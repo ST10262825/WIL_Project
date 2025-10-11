@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using TutorConnect.WebApp.Models;
@@ -33,6 +34,10 @@ namespace TutorConnect.WebApp.Controllers
 
                 // Get dashboard summary with timeout
                 var summary = await GetWithTimeout(_apiService.GetStudentDashboardSummaryAsync(), 5000);
+
+                
+                var upcomingSessions = bookings?.Where(b => b.StartTime >= DateTime.Today && b.Status == "Accepted").ToList() ?? new List<BookingDTO>();
+                ViewBag.UpcomingSessionsWithAccess = upcomingSessions;
 
                 // Get unread messages count
                 var unreadMessagesCount = 0;
@@ -309,6 +314,267 @@ public async Task<IActionResult> MySessions()
                 return Json(new { success = false, message = "Error submitting review." });
             }
         }
+
+
+
+        [HttpGet]
+        public async Task<IActionResult> Materials()
+        {
+            try
+            {
+                Console.WriteLine("[WEBAPP] Student Materials page accessed");
+
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null)
+                {
+                    Console.WriteLine("[WEBAPP] Student not found - redirecting to login");
+                    return RedirectToAction("Login", "Account");
+                }
+
+                Console.WriteLine($"[WEBAPP] Student found: ID={student.StudentId}, Name={student.Name}");
+
+                // Get materials overview (now strongly-typed)
+                Console.WriteLine("[WEBAPP] Calling GetStudentMaterialsOverviewAsync...");
+                var materialsOverview = await _apiService.GetStudentMaterialsOverviewAsync(student.StudentId);
+                Console.WriteLine($"[WEBAPP] Materials overview - TotalMaterials: {materialsOverview?.TotalMaterials}, TotalTutors: {materialsOverview?.TotalTutors}, Tutors Count: {materialsOverview?.Tutors?.Count}");
+
+                // Get all accessible materials
+                Console.WriteLine("[WEBAPP] Calling GetStudentMaterialsAsync...");
+                var materials = await _apiService.GetStudentMaterialsAsync(student.StudentId);
+                Console.WriteLine($"[WEBAPP] Materials received: Count={materials?.Count ?? 0}");
+
+                ViewBag.StudentId = student.StudentId;
+                ViewBag.StudentName = student.Name;
+                ViewBag.MaterialsOverview = materialsOverview; // This is now strongly-typed
+
+                return View(materials ?? new List<LearningMaterialDTO>());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WEBAPP] ERROR in Materials: {ex.Message}");
+                Console.WriteLine($"[WEBAPP] Stack trace: {ex.StackTrace}");
+                TempData["Error"] = "Error loading learning materials.";
+                return RedirectToAction("Dashboard");
+            }
+        }
+
+
+
+        [HttpGet("Student/TutorMaterials/{tutorId}")]
+        public async Task<IActionResult> TutorMaterials(int tutorId)
+        {
+            try
+            {
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return RedirectToAction("Login", "Account");
+
+                var materials = await _apiService.GetTutorMaterialsForStudentAsync(student.StudentId, tutorId);
+
+                // Get tutor info for display
+                var tutor = await _apiService.GetTutorByIdAsync(tutorId);
+
+                ViewBag.TutorId = tutorId;
+                ViewBag.TutorName = tutor?.Name + " " + tutor?.Surname;
+                ViewBag.StudentId = student.StudentId;
+
+                return View(materials ?? new List<LearningMaterialDTO>());
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error loading tutor materials.";
+                return RedirectToAction("Materials");
+            }
+        }
+
+        // Update these methods in your StudentController (WebApp)
+       
+        [HttpGet]
+        public async Task<IActionResult> Settings()
+        {
+            try
+            {
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return RedirectToAction("Login", "Auth");
+
+                // FIX: Add parentheses to call the method
+                var currentTheme = await _apiService.GetCurrentThemeAsync();
+                ViewBag.CurrentTheme = currentTheme ?? "light";
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "Error loading settings.";
+                return RedirectToAction("Dashboard");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword()
+        {
+            try
+            {
+                Console.WriteLine($"[WebApp Controller] ChangePassword called");
+
+                // Read the raw request body
+                using var reader = new StreamReader(Request.Body);
+                var rawRequestBody = await reader.ReadToEndAsync();
+                Console.WriteLine($"[WebApp Controller] Raw request body: {rawRequestBody}");
+
+                // Try to parse as JSON
+                ChangePasswordDTO dto = null;
+                try
+                {
+                    dto = System.Text.Json.JsonSerializer.Deserialize<ChangePasswordDTO>(rawRequestBody, new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+                    Console.WriteLine($"[WebApp Controller] Deserialized DTO - Current: '{dto?.CurrentPassword}', New: '{dto?.NewPassword}', Confirm: '{dto?.ConfirmPassword}'");
+                }
+                catch (Exception jsonEx)
+                {
+                    Console.WriteLine($"[WebApp Controller] JSON deserialization failed: {jsonEx.Message}");
+                }
+
+                // If deserialization failed, try manual parsing
+                if (dto == null || string.IsNullOrEmpty(dto.CurrentPassword))
+                {
+                    Console.WriteLine($"[WebApp Controller] Attempting manual JSON parsing...");
+
+                    // Manual parsing as fallback
+                    using var jsonDoc = System.Text.Json.JsonDocument.Parse(rawRequestBody);
+                    var root = jsonDoc.RootElement;
+
+                    dto = new ChangePasswordDTO
+                    {
+                        CurrentPassword = root.TryGetProperty("CurrentPassword", out var currentProp) ? currentProp.GetString() :
+                                         root.TryGetProperty("currentPassword", out var currentLower) ? currentLower.GetString() : null,
+                        NewPassword = root.TryGetProperty("NewPassword", out var newProp) ? newProp.GetString() :
+                                     root.TryGetProperty("newPassword", out var newLower) ? newLower.GetString() : null,
+                        ConfirmPassword = root.TryGetProperty("ConfirmPassword", out var confirmProp) ? confirmProp.GetString() :
+                                         root.TryGetProperty("confirmPassword", out var confirmLower) ? confirmLower.GetString() : null
+                    };
+
+                    Console.WriteLine($"[WebApp Controller] Manually parsed - Current: '{dto.CurrentPassword}', New: '{dto.NewPassword}', Confirm: '{dto.ConfirmPassword}'");
+                }
+
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return Json(new { success = false, message = "Student not found" });
+
+                if (string.IsNullOrEmpty(dto.CurrentPassword))
+                {
+                    Console.WriteLine($"[WebApp Controller] VALIDATION FAILED: CurrentPassword is null or empty");
+                    return Json(new { success = false, message = "Current password is required." });
+                }
+
+                if (string.IsNullOrEmpty(dto.NewPassword) || dto.NewPassword.Length < 6)
+                {
+                    return Json(new { success = false, message = "New password must be at least 6 characters long." });
+                }
+
+                if (dto.NewPassword != dto.ConfirmPassword)
+                {
+                    return Json(new { success = false, message = "New password and confirmation do not match." });
+                }
+
+                Console.WriteLine($"[WebApp Controller] Calling API service...");
+                var success = await _apiService.ChangePasswordAsync(dto);
+
+                if (success)
+                {
+                    return Json(new { success = true, message = "Password changed successfully!" });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Failed to change password. Please check your current password." });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WebApp Controller] Exception: {ex.Message}");
+                Console.WriteLine($"[WebApp Controller] Stack: {ex.StackTrace}");
+                return Json(new { success = false, message = "Error changing password. Please try again." });
+            }
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteAccount(string confirmation)
+        {
+            try
+            {
+                if (confirmation?.ToLower() != "delete my account")
+                {
+                    return Json(new { success = false, message = "Please type 'delete my account' to confirm." });
+                }
+
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return Json(new { success = false, message = "Student not found" });
+
+                var success = await _apiService.DeleteAccountAsync();
+                if (success)
+                {
+                    await HttpContext.SignOutAsync("Cookies");
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Account deleted successfully.",
+                        redirectUrl = Url.Action("Login", "Auth")
+                    });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Failed to delete account. Please try again." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error deleting account: " + ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleTheme()
+        {
+            try
+            {
+                var student = await _apiService.GetStudentByUserIdAsync();
+                if (student == null) return Json(new { success = false, message = "Student not found" });
+
+                var success = await _apiService.ToggleThemeAsync();
+                if (success)
+                {
+                    // Get the new theme after toggling
+                    var newTheme = await _apiService.GetCurrentThemeAsync();
+
+                    // Set theme cookie
+                    Response.Cookies.Append("ThemePreference", newTheme ?? "light", new CookieOptions
+                    {
+                        Expires = DateTimeOffset.Now.AddYears(1),
+                        Path = "/"
+                    });
+
+                    return Json(new
+                    {
+                        success = true,
+                        message = "Theme preference updated!",
+                        theme = newTheme,
+                        reload = true
+                    });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Failed to update theme." });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error updating theme: " + ex.Message });
+            }
+        }
+
+
 
     }
 }

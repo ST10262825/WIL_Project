@@ -1,0 +1,86 @@
+﻿@model LearningMaterialFolderDTO
+
+<div class="folder-item mb-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-folder fa-2x me-3" style="color: #FFD700;"></i>
+                    <div>
+                        <h5 class="mb-1">@Model.Name</h5>
+                        <p class="text-muted mb-0 small">@Model.Description</p>
+                        <small class="text-muted">
+                            @Model.MaterialCount materials, @Model.SubfolderCount subfolders
+                        </small>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-primary"
+                            onclick="setParentFolder(@Model.FolderId)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createFolderModal">
+                        <i class="fas fa-folder-plus"></i> Add Subfolder
+                    </button>
+                    <button class="btn btn-sm btn-outline-success"
+                            onclick="setParentFolder(@Model.FolderId)"
+                            data-bs-toggle="modal"
+                            data-bs-target="#uploadModal">
+                        <i class="fas fa-upload"></i> Add Material
+                    </button>
+                    <!-- ADD DELETE FOLDER BUTTON -->
+                    <button class="btn btn-sm btn-outline-danger delete-folder"
+                            data-folder-id="@Model.FolderId"
+                            data-folder-name="@Model.Name"
+                            data-material-count="@Model.MaterialCount"
+                            data-subfolder-count="@Model.SubfolderCount">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+
+            <!-- Materials in this folder -->
+            @if (Model.Materials.Any())
+            {
+                <div class="mt-3">
+                    <h6>Materials:</h6>
+                    <div class="row">
+                        @foreach (var material in Model.Materials)
+                        {
+                            <div class="col-md-6 mb-2">
+                                <div class="d-flex align-items-center p-2 border rounded">
+                                    <i class="fas fa-file me-2 text-muted"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold">@material.Title</div>
+                                        <small class="text-muted">@material.FileSizeFormatted • @material.FileType.ToUpper()</small>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="@material.FileUrl" class="btn btn-outline-primary" target="_blank">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                        <button class="btn btn-outline-danger delete-material" data-material-id="@material.LearningMaterialId">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- Subfolders -->
+            @if (Model.Subfolders.Any())
+            {
+                <div class="mt-3">
+                    <h6>Subfolders:</h6>
+                    <div class="ms-4">
+                        @foreach (var subfolder in Model.Subfolders)
+                        {
+                            @await Html.PartialAsync("_FolderPartial", subfolder)
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -53,6 +53,7 @@
 
             .sidebar-menu li {
                 border-bottom: 1px solid #f1f1f1;
+                position: relative;
             }
 
                 .sidebar-menu li:last-child {
@@ -173,6 +174,60 @@
                 background-color: #e86c29;
                 color: white;
             }
+
+        /* Toast Notifications */
+        .toast-achievement {
+            border-left: 4px solid #FFD700;
+            background: linear-gradient(135deg, #fff9e6, #fff);
+        }
+
+        .toast-xp {
+            border-left: 4px solid #42E695;
+            background: linear-gradient(135deg, #e8f5e8, #fff);
+        }
+
+        .toast-level-up {
+            border-left: 4px solid #3BB2B8;
+            background: linear-gradient(135deg, #e3f2fd, #fff);
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 8px;
+            right: 20px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .journey-notification {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
     </style>
 </head>
 <body>
@@ -198,7 +253,20 @@
                                 }
                             </a>
                         </li>
-                        <li><a href="#"><span><i class="fas fa-users"></i> My Students</span></a></li>
+                        <!-- ADD LEARNING MATERIALS TAB HERE -->
+                        <li>
+                            <a href="/Tutor/Materials">
+                                <span><i class="fas fa-folder-open me-1"></i> Learning Materials</span>
+                                @* Optional: Add badge for new materials count if needed *@
+                                @* <span class="badge bg-primary rounded-pill">3</span> *@
+                            </a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Profile", "Gamification")">
+                                <span><i class="fas fa-trophy me-1"></i> My Journey</span>
+                                <span id="achievementNotification" class="notification-badge journey-notification d-none">0</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="/Tutor/Chat">
                                 <span><i class="fas fa-comment-dots"></i> Messages</span>
@@ -255,6 +323,7 @@
                     </div>
                 </div>
 
+                
 
                 <!-- Upcoming Sessions -->
                 <div class="dashboard-card">
@@ -286,10 +355,10 @@
                                         </span>
                                         <br />
                                         <span class="badge session-status
-                            @(session.Status == "Pending" ? "bg-warning text-dark" :
-                                                                    session.Status == "Accepted" ? "bg-primary" :
-                                                                    session.Status == "Declined" ? "bg-danger" :
-                                                                    session.Status == "Completed" ? "bg-success" : "bg-secondary")">
+                                    @(session.Status == "Pending" ? "bg-warning text-dark" :
+                                                                                                                  session.Status == "Accepted" ? "bg-primary" :
+                                                                                                                  session.Status == "Declined" ? "bg-danger" :
+                                                                                                                  session.Status == "Completed" ? "bg-success" : "bg-secondary")">
                                     @session.Status
                                 </span>
                             </div>
@@ -328,8 +397,19 @@
                                 </div>
                             </div>
                         }
-
                     }
+                </div>
+
+                <!-- Recent Activity Panel -->
+                <div class="dashboard-card">
+                    <h5><i class="fas fa-bell"></i> Recent Activity</h5>
+                    <div id="recentActivity">
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Pending Bookings Section -->
@@ -349,133 +429,323 @@
             </div>
         </div>
     </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    
     <script>
         $(document).ready(function () {
+            // Load recent activity and check for new achievements
+            loadRecentActivity();
+            checkNewAchievements();
 
-                    function updateStats(upcomingDelta, pendingDelta, completedDelta) {
-            // Update upcoming sessions count
-            let upcomingCount = parseInt($("#upcomingCount").text()) + upcomingDelta;
-            $("#upcomingCount").text(upcomingCount);
+            // Set up polling for new achievements (every 30 seconds)
+            setInterval(checkNewAchievements, 30000);
 
-            // Update pending bookings count
-            let pendingCount = parseInt($("#pendingCount").text()) + pendingDelta;
-            $("#pendingCount").text(pendingCount);
+            // Notification functions
+                    function showAchievementNotification(achievementName, description, iconUrl) {
+            const toastHtml = `
+                <div class="toast toast-achievement" role="alert" data-bs-delay="10000"> <!-- Changed from 5000 to 10000 (10 seconds) -->
+                    <div class="toast-header">
+                        <i class="fas fa-trophy text-warning me-2"></i>
+                        <strong class="me-auto">Achievement Unlocked!</strong>
+                        <small>Just now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        <div class="d-flex align-items-center">
+                            <img src="${iconUrl || '/images/achievements/default.png'}"
+                                 class="rounded me-3" style="width: 40px; height: 40px;"
+                                 alt="${achievementName}">
+                            <div>
+                                <h6 class="mb-1">${achievementName}</h6>
+                                <p class="mb-0 text-muted small">${description}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            // Update completed sessions count
-            let completedCount = parseInt($("#completedCount").text()) + completedDelta;
-            $("#completedCount").text(completedCount);
-
-            // FIX: Also update the pending badge in the sidebar if needed
-            const sidebarPendingBadge = $(".sidebar-menu .badge.bg-danger");
-            if (sidebarPendingBadge.length > 0) {
-                const newPendingCount = parseInt(sidebarPendingBadge.text()) + pendingDelta;
-                if (newPendingCount > 0) {
-                    sidebarPendingBadge.text(newPendingCount);
-                } else {
-                    sidebarPendingBadge.remove();
-                }
-            }
+            $('#toastContainer').append(toastHtml);
+            new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
         }
 
-                    // Accept / Decline buttons
-        $(".update-status-btn").click(function () {
-            const button = $(this);
-            const bookingId = button.data("booking-id");
-            const status = button.data("status");
+        function showXPNotification(points, reason) {
+            const toastHtml = `
+                <div class="toast toast-xp" role="alert" data-bs-delay="8000"> <!-- Changed from 3000 to 8000 (8 seconds) -->
+                    <div class="toast-header">
+                        <i class="fas fa-star text-success me-2"></i>
+                        <strong class="me-auto">XP Earned!</strong>
+                        <small>Just now</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="mb-1">+${points} XP</h6>
+                                <p class="mb-0 text-muted small">${reason}</p>
+                            </div>
+                            <i class="fas fa-arrow-up text-success fs-4"></i>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            // Show confirmation for decline
-            if (status === "Declined") {
-                if (!confirm("Are you sure you want to decline this booking?")) {
-                    return;
+            $('#toastContainer').append(toastHtml);
+            new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
+        }
+
+        function showLevelUpNotification(newLevel) {
+            const toastHtml = `
+                <div class="toast toast-level-up" role="alert" data-bs-delay="15000"> <!-- Changed from 7000 to 15000 (15 seconds) -->
+                    <div class="toast-header">
+                        <i class="fas fa-arrow-up text-primary me-2"></i>
+                        <strong class="me-auto">Level Up! 🎉</strong>
+                        <small>Congratulations!</small>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body text-center">
+                        <div class="level-badge mb-2"
+                             style="width: 60px; height: 60px; background: linear-gradient(135deg, #42E695, #3BB2B8);
+                                    border-radius: 50%; display: inline-flex; align-items: center;
+                                    justify-content: center; font-size: 1.5rem; font-weight: bold; color: white;">
+                            ${newLevel}
+                        </div>
+                        <h5 class="mb-1">You reached Level ${newLevel}!</h5>
+                        <p class="mb-0 text-muted">Keep up the great work!</p>
+                    </div>
+                </div>
+            `;
+
+            $('#toastContainer').append(toastHtml);
+            new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
+        }
+
+            // Check for new achievements
+            function checkNewAchievements() {
+                $.get('/api/gamification/recent-achievements', function(data) {
+                    if (data.newAchievements > 0) {
+                        updateAchievementBadge(data.newAchievements);
+
+                        // Show toast for each new achievement
+                        if (data.achievements && data.achievements.length > 0) {
+                            data.achievements.forEach(achievement => {
+                                showAchievementNotification(
+                                    achievement.name,
+                                    achievement.description,
+                                    achievement.iconUrl
+                                );
+                            });
+                        }
+                    }
+                }).fail(function() {
+                    console.log('Could not check for new achievements');
+                });
+            }
+
+            // Update achievement notification badge
+            function updateAchievementBadge(count) {
+                const badge = $('#achievementNotification');
+                if (count > 0) {
+                    badge.removeClass('d-none').text(count);
+                } else {
+                    badge.addClass('d-none');
                 }
             }
 
-            $.ajax({
-                url: '/Booking/UpdateBookingStatus',
-                type: 'POST',
-                headers: {
-                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(),
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify({
-                    bookingId: bookingId,
-                    status: status
-                }),
-                success: function (response) {
-                    const sessionDiv = $("#session_" + bookingId);
-                    const badge = sessionDiv.find(".session-status");
-                    const actionsDiv = sessionDiv.find(".pending-actions");
+            // Load recent activity
+            function loadRecentActivity() {
+                // Simulate API call - replace with actual API endpoint
+                setTimeout(() => {
+                    const activities = [
+                        { type: 'session', message: 'Completed session with John Doe', points: 50, timestamp: new Date(Date.now() - 300000) },
+                        { type: 'achievement', message: 'Unlocked "Dedicated Learner"', points: null, timestamp: new Date(Date.now() - 600000) },
+                        { type: 'xp', message: 'Daily login bonus', points: 10, timestamp: new Date(Date.now() - 86400000) }
+                    ];
 
-                    // Update badge
-                    badge.text(status)
-                         .removeClass("bg-warning bg-primary bg-danger bg-success bg-secondary")
-                         .addClass("badge " +
-                            (status === "Pending" ? "bg-warning text-dark" :
-                             status === "Accepted" ? "bg-primary" :
-                             status === "Declined" ? "bg-danger" :
-                             status === "Completed" ? "bg-success" : "bg-secondary"));
+                    const container = $('#recentActivity');
+                    container.empty();
 
-                    // Remove action buttons
-                    actionsDiv.remove();
-
-                    // Remove the entire session from upcoming if status is Declined or Completed
-                    if (status === "Declined" || status === "Completed") {
-                        sessionDiv.remove(); // Remove the session card completely
+                    if (activities.length === 0) {
+                        container.html('<p class="text-muted text-center py-3">No recent activity</p>');
+                        return;
                     }
 
-                    // Update stats
-                    const upcomingDelta = (status === "Declined" || status === "Completed") ? -1 : 0;
-                    const pendingDelta = (status === "Accepted" || status === "Declined") ? -1 : 0;
-                    const completedDelta = (status === "Completed") ? 1 : 0;
+                    activities.forEach(activity => {
+                        const activityHtml = `
+                            <div class="d-flex align-items-center mb-3 p-2 rounded" style="background: #f8f9fa;">
+                                <div class="flex-shrink-0">
+                                    <i class="fas ${getActivityIcon(activity.type)} me-3"
+                                       style="color: ${getActivityColor(activity.type)}"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <p class="mb-1 small">${activity.message}</p>
+                                    <small class="text-muted">${formatTime(activity.timestamp)}</small>
+                                </div>
+                                ${activity.points ? `<span class="badge bg-success">+${activity.points} XP</span>` : ''}
+                            </div>
+                        `;
+                        container.append(activityHtml);
+                    });
+                }, 1000);
+            }
 
-                    updateStats(upcomingDelta, pendingDelta, completedDelta);
+            function getActivityIcon(type) {
+                const icons = {
+                    'achievement': 'fa-trophy',
+                    'xp': 'fa-star',
+                    'level': 'fa-arrow-up',
+                    'session': 'fa-calendar-check'
+                };
+                return icons[type] || 'fa-bell';
+            }
 
-                    // Show success message
-                    alert("Booking status updated successfully!");
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error updating status:", error);
-                    alert("Failed to update booking status. Please try again.");
+            function getActivityColor(type) {
+                const colors = {
+                    'achievement': '#FFD700',
+                    'xp': '#42E695',
+                    'level': '#3BB2B8',
+                    'session': '#FF7E36'
+                };
+                return colors[type] || '#6c757d';
+            }
+
+            function formatTime(timestamp) {
+                const now = new Date();
+                const diff = now - new Date(timestamp);
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(diff / 3600000);
+                const days = Math.floor(diff / 86400000);
+
+                if (minutes < 1) return 'Just now';
+                if (minutes < 60) return `${minutes}m ago`;
+                if (hours < 24) return `${hours}h ago`;
+                return `${days}d ago`;
+            }
+
+            // Demo notifications (remove in production)
+            setTimeout(() => {
+                // Uncomment to test notifications
+                // showXPNotification(50, "Completed a tutoring session");
+                // showAchievementNotification("First Session", "Complete your first tutoring session", "/images/achievements/first-session.png");
+            }, 2000);
+
+            // Existing booking management functions
+            function updateStats(upcomingDelta, pendingDelta, completedDelta) {
+                let upcomingCount = parseInt($("#upcomingCount").text()) + upcomingDelta;
+                $("#upcomingCount").text(upcomingCount);
+
+                let pendingCount = parseInt($("#pendingCount").text()) + pendingDelta;
+                $("#pendingCount").text(pendingCount);
+
+                let completedCount = parseInt($("#completedCount").text()) + completedDelta;
+                $("#completedCount").text(completedCount);
+
+                const sidebarPendingBadge = $(".sidebar-menu .badge.bg-danger");
+                if (sidebarPendingBadge.length > 0) {
+                    const newPendingCount = parseInt(sidebarPendingBadge.text()) + pendingDelta;
+                    if (newPendingCount > 0) {
+                        sidebarPendingBadge.text(newPendingCount);
+                    } else {
+                        sidebarPendingBadge.remove();
+                    }
                 }
-            });
-        });
+            }
 
-        // Mark Complete checkbox - FIXED
-        $(".complete-session-checkbox").change(function () {
-            const checkbox = $(this);
-            const bookingId = checkbox.data("booking-id");
+            // Accept / Decline buttons
+            $(".update-status-btn").click(function () {
+                const button = $(this);
+                const bookingId = button.data("booking-id");
+                const status = button.data("status");
 
-            if (checkbox.is(":checked")) {
+                if (status === "Declined") {
+                    if (!confirm("Are you sure you want to decline this booking?")) {
+                        return;
+                    }
+                }
+
                 $.ajax({
                     url: '/Booking/UpdateBookingStatus',
                     type: 'POST',
-                    headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
-                    contentType: 'application/json',
-                    data: JSON.stringify({ bookingId: bookingId, status: "Completed" }),
-                    success: function () {
-                        const sessionDiv = $("#session_" + bookingId);
-
-                        // Remove the entire session card
-                        sessionDiv.remove();
-
-                        // Update stats
-                        updateStats(-1, 0, 1);
-
-                        alert("Session marked as completed!");
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val(),
+                        'Content-Type': 'application/json'
                     },
-                    error: function () {
-                        alert("Failed to update session status.");
-                        checkbox.prop("checked", false);
+                    data: JSON.stringify({
+                        bookingId: bookingId,
+                        status: status
+                    }),
+                    success: function (response) {
+                        const sessionDiv = $("#session_" + bookingId);
+                        const badge = sessionDiv.find(".session-status");
+                        const actionsDiv = sessionDiv.find(".pending-actions");
+
+                        badge.text(status)
+                             .removeClass("bg-warning bg-primary bg-danger bg-success bg-secondary")
+                             .addClass("badge " +
+                                (status === "Pending" ? "bg-warning text-dark" :
+                                 status === "Accepted" ? "bg-primary" :
+                                 status === "Declined" ? "bg-danger" :
+                                 status === "Completed" ? "bg-success" : "bg-secondary"));
+
+                        actionsDiv.remove();
+
+                        if (status === "Declined" || status === "Completed") {
+                            sessionDiv.remove();
+                        }
+
+                        const upcomingDelta = (status === "Declined" || status === "Completed") ? -1 : 0;
+                        const pendingDelta = (status === "Accepted" || status === "Declined") ? -1 : 0;
+                        const completedDelta = (status === "Completed") ? 1 : 0;
+
+                        updateStats(upcomingDelta, pendingDelta, completedDelta);
+
+                        // Show XP notification when session is completed
+                        if (status === "Completed") {
+                            showXPNotification(50, "Completed a tutoring session");
+                        }
+
+                        alert("Booking status updated successfully!");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error updating status:", error);
+                        alert("Failed to update booking status. Please try again.");
                     }
                 });
-            }
-        });
+            });
 
+            // Mark Complete checkbox
+            $(".complete-session-checkbox").change(function () {
+                const checkbox = $(this);
+                const bookingId = checkbox.data("booking-id");
+
+                if (checkbox.is(":checked")) {
+                    $.ajax({
+                        url: '/Booking/UpdateBookingStatus',
+                        type: 'POST',
+                        headers: { 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val() },
+                        contentType: 'application/json',
+                        data: JSON.stringify({ bookingId: bookingId, status: "Completed" }),
+                        success: function () {
+                            const sessionDiv = $("#session_" + bookingId);
+                            sessionDiv.remove();
+                            updateStats(-1, 0, 1);
+
+                            // Show XP notification
+                            showXPNotification(50, "Completed a tutoring session");
+
+                            alert("Session marked as completed!");
+                        },
+                        error: function () {
+                            alert("Failed to update session status.");
+                            checkbox.prop("checked", false);
+                        }
+                    });
+                }
+            });
         });
     </script>
-
-
-    
 </body>
 </html>

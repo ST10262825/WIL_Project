@@ -1,0 +1,140 @@
+﻿@model AchievementsViewModel
+@{
+    ViewData["Title"] = "Achievements Gallery";
+}
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 style="color: #0B2E3D;">🏆 Achievements Gallery</h2>
+                <a href="@Url.Action("Profile")" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Profile
+                </a>
+            </div>
+            <p class="text-muted">Unlock achievements to earn bonus XP and showcase your progress</p>
+
+            <!-- Progress Summary -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center">
+                    <h4 style="color: #0B2E3D;">@Model.EarnedCount out of @Model.TotalCount Achievements Unlocked</h4>
+                    <div class="progress mx-auto" style="max-width: 400px; height: 15px;">
+                        <div class="progress-bar"
+                             style="width: @((Model.EarnedCount * 100) / Model.TotalCount)%; background: linear-gradient(90deg, #42E695, #3BB2B8);">
+                        </div>
+                    </div>
+                    <small class="text-muted">@(((Model.EarnedCount * 100) / Model.TotalCount))% Complete</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Grid -->
+    <div class="row">
+        @foreach (var achievement in Model.Achievements.OrderBy(a => a.Type))
+        {
+            var userAchievement = Model.Profile?.Achievements.FirstOrDefault(ua => ua.Name == achievement.Name);
+            var isEarned = userAchievement?.IsCompleted ?? false;
+
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm @(isEarned ? "achievement-earned" : "achievement-locked")">
+                    <div class="card-body text-center">
+                        <!-- Achievement Icon -->
+                        <div class="achievement-icon mb-3">
+                            @if (isEarned)
+                            {
+                                <i class="fas fa-trophy fa-3x" style="color: #FFD700;"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-lock fa-3x" style="color: #6c757d;"></i>
+                            }
+                        </div>
+
+                        <!-- Achievement Info -->
+                        <h5 class="card-title" style="color: #0B2E3D;">@achievement.Name</h5>
+                        <p class="card-text text-muted small">@achievement.Description</p>
+
+                        <!-- Points -->
+                        <div class="points-badge mb-3">
+                            <span class="badge" style="background: #42E695; color: #0B2E3D;">
+                                +@achievement.PointsReward XP
+                            </span>
+                        </div>
+
+                        <!-- Status -->
+                        @if (isEarned)
+                        {
+                            <div class="earned-info">
+                                <small class="text-success">
+                                    <i class="fas fa-check-circle me-1"></i>
+                                    Earned on @userAchievement.EarnedAt.ToString("MMM dd, yyyy")
+                                </small>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="locked-info">
+                                <small class="text-muted">
+                                    <i class="fas fa-lock me-1"></i>
+                                    Locked - Keep learning to unlock!
+                                </small>
+                            </div>
+                        }
+
+                        <!-- Type Badge -->
+                        <div class="type-badge mt-2">
+                            <span class="badge @GetTypeBadgeClass(achievement.Type)">
+                                @achievement.Type
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .achievement-earned {
+        border-left: 4px solid #42E695;
+        background: linear-gradient(135deg, #f8f9fa, #E8F5E8);
+    }
+
+    .achievement-locked {
+        border-left: 4px solid #6c757d;
+        background: #f8f9fa;
+        opacity: 0.8;
+    }
+
+    .card {
+        transition: transform 0.2s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .achievement-icon {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .achievement-earned .achievement-icon:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+</style>
+
+@functions {
+    private string GetTypeBadgeClass(string type)
+    {
+        return type switch
+        {
+            "Attendance" => "bg-primary",
+            "Progress" => "bg-success",
+            "Mastery" => "bg-warning",
+            "Social" => "bg-info",
+            _ => "bg-secondary"
+        };
+    }
+}

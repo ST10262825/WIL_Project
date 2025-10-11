@@ -1,0 +1,147 @@
+﻿@model List<LearningMaterialDTO>
+@{
+    ViewData["Title"] = "My Learning Materials";
+    var overview = ViewBag.MaterialsOverview as StudentMaterialsOverviewDTO;
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-book me-2"></i>My Learning Materials</h2>
+            <p class="text-muted">Access learning materials from tutors you've completed sessions with</p>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <h6><i class="fas fa-info-circle me-2"></i>Access Information</h6>
+        <p class="mb-0">You can access learning materials from tutors when:</p>
+        <ul class="mb-0">
+            <li>Your booking is <strong>Accepted</strong></li>
+            <li>Up to <strong>2 days after session completion</strong></li>
+            <li>Materials are marked as <strong>Public</strong> (available to all students)</li>
+        </ul>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-file fa-2x mb-3 text-primary"></i>
+                    <h3 class="card-title">@(overview?.TotalMaterials ?? 0)</h3>
+                    <p class="card-text text-muted">Total Materials</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card text-center border-0 shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-chalkboard-teacher fa-2x mb-3 text-success"></i>
+                    <h3 class="card-title">@(overview?.TotalTutors ?? 0)</h3>
+                    <p class="card-text text-muted">Tutors</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* <!-- Tutors List -->
+    @if (overview?.Tutors != null && overview.Tutors.Count > 0)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-chalkboard-teacher me-2"></i>Your Tutors</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var tutor in overview.Tutors)
+                            {
+                                <div class="col-md-4 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body text-center">
+                                            <i class="fas fa-user-graduate fa-2x mb-3 text-primary"></i>
+                                            <h6>@tutor.TutorName</h6>
+                                            <a href="@Url.Action("TutorMaterials", "Student", new { tutorId = tutor.TutorId })"
+                                               class="btn btn-sm btn-outline-primary mt-2">
+                                                View Materials
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    } *@
+    
+
+    <!-- Recent Materials -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Recent Materials</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Tutor</th>
+                                        <th>Type</th>
+                                        <th>Size</th>
+                                        <th>Uploaded</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var material in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <strong>@material.Title</strong>
+                                                    <br>
+                                                    <small class="text-muted">@material.Description</small>
+                                                </div>
+                                            </td>
+                                            <td>@material.TutorName</td>
+                                            <td>
+                                                <span class="badge bg-secondary">@material.FileType.ToUpper()</span>
+                                                @if (material.IsPublic)
+                                                {
+                                                    <span class="badge bg-success">Public</span>
+                                                }
+                                            </td>
+                                            <td>@material.FileSizeFormatted</td>
+                                            <td>@material.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <a href="@material.FileUrl" class="btn btn-outline-primary btn-sm" target="_blank">
+                                                    <i class="fas fa-download"></i> Download
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No learning materials available yet.</p>
+                            <p class="text-muted">Book sessions with tutors to access their learning materials.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,459 @@
+﻿@{
+    ViewData["Title"] = "Settings";
+    var currentTheme = ViewBag.CurrentTheme as string ?? "light";
+}
+
+@using TutorConnect.WebApp.Services
+@inject ApiService ApiService
+
+@{
+    var student = await ApiService.GetStudentByUserIdAsync();
+    var profileImageUrl = student?.ProfileImage != null
+        ? ApiService.GetProfileImageUrl(student.StudentId)
+        : Url.Content("~/images/default-profile.png");
+}
+
+<div class="container my-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="sidebar">
+                <div class="p-4 text-center">
+                    <div class="image-upload position-relative">
+                        <img src="@profileImageUrl"
+                             alt="Profile"
+                             class="profile-image"
+                             id="profileImage"
+                             onerror="this.onerror=null; this.src='@Url.Content("~/images/default-profile.png")'">
+                    </div>
+                    <h5 class="mt-3 mb-1">@(student?.Name ?? "Student")</h5>
+                    <p class="text-muted mb-0">@(student?.Bio ?? "Computer Science Student")</p>
+                </div>
+                <ul class="sidebar-menu">
+                    <li>
+                        <a href="@Url.Action("Dashboard", "Student")">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Browse", "Tutor")">
+                            <i class="fas fa-search"></i> Find Tutors
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("MySessions", "Student")">
+                            <i class="fas fa-calendar-alt"></i> My Sessions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Profile", "Gamification")">
+                            <i class="fas fa-trophy me-1"></i>My Journey
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Chat", "Tutor")">
+                            <i class="fas fa-comment-dots"></i> Messages
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Student/Materials">
+                            <i class="fas fa-book me-1"></i> Learning Materials
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Settings", "Student")" class="active">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <div class="dashboard-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="profile-info">
+                        <h4>Settings ⚙️</h4>
+                        <p class="text-muted mb-0">Manage your account preferences and security settings.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <!-- App Preferences -->
+                <div class="settings-section mb-4">
+                    <h6><i class="fas fa-palette me-2"></i>App Preferences</h6>
+                    <div class="d-flex align-items-center gap-2">
+                        <button class="btn @(currentTheme == "dark" ? "btn-dark" : "btn-outline-dark") btn-sm"
+                                id="themeToggleBtn">
+                            <i class="fas @(currentTheme == "dark" ? "fa-sun" : "fa-moon") me-1"></i>
+                            @(currentTheme == "dark" ? "Light Mode" : "Dark Mode")
+                        </button>
+                        <small class="text-muted">Current: @currentTheme theme</small>
+                    </div>
+                </div>
+
+                <!-- Account Security -->
+                <div class="settings-section mb-4">
+                    <h6><i class="fas fa-lock me-2"></i>Account Security</h6>
+                    <button class="btn btn-outline-primary btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        <i class="fas fa-key me-1"></i>Change Password
+                    </button>
+                    <br>
+                    <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                        <i class="fas fa-trash me-1"></i>Delete Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="changePasswordForm">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" name="CurrentPassword" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="NewPassword" class="form-control" required minlength="6">
+                        <small class="text-muted">Password must be at least 6 characters long.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm New Password</label>
+                        <input type="password" name="ConfirmPassword" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">Delete Account</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone!
+                </div>
+                <p>This will permanently delete your account, all your data, sessions, and progress.</p>
+                <div class="mb-3">
+                    <label class="form-label">Type "delete my account" to confirm:</label>
+                    <input type="text" class="form-control" id="deleteConfirmation" placeholder="delete my account">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete Account</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Theme Toggle
+               // Simple theme toggle with page reload
+        document.getElementById('themeToggleBtn').addEventListener('click', async function() {
+            const btn = this;
+            const originalText = btn.innerHTML;
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Switching...';
+
+                const response = await fetch('@Url.Action("ToggleTheme", "Student")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    // Always reload the page to apply theme
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showNotification(result.message, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            } catch (error) {
+                showNotification('Error switching theme: ' + error.message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+
+                // Change Password Form - UPDATED VERSION
+               document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const currentPassword = document.querySelector('input[name="CurrentPassword"]').value;
+            const newPassword = document.querySelector('input[name="NewPassword"]').value;
+            const confirmPassword = document.querySelector('input[name="ConfirmPassword"]').value;
+
+            console.log('Form values:', { currentPassword, newPassword, confirmPassword });
+
+            // Client-side validation
+            if (!currentPassword) {
+                showNotification('Current password is required!', 'error');
+                return;
+            }
+
+            if (!newPassword || newPassword.length < 6) {
+                showNotification('New password must be at least 6 characters long.', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showNotification('Passwords do not match!', 'error');
+                return;
+            }
+
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+
+            try {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Changing...';
+
+                const data = {
+                    CurrentPassword: currentPassword,
+                    NewPassword: newPassword,
+                    ConfirmPassword: confirmPassword
+                };
+
+                console.log('Sending data:', data);
+                console.log('Stringified data:', JSON.stringify(data));
+
+                const response = await fetch('@Url.Action("ChangePassword", "Student")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('Response status:', response.status);
+
+                const result = await response.json();
+                console.log('Response result:', result);
+
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('changePasswordModal'));
+                        modal.hide();
+                        this.reset();
+                    }, 1500);
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Error changing password: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+
+        // Delete Account
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            const confirmation = document.getElementById('deleteConfirmation').value;
+            const btn = this;
+            const originalText = btn.innerHTML;
+
+            if (confirmation.toLowerCase() !== 'delete my account') {
+                showNotification('Please type "delete my account" exactly to confirm.', 'error');
+                return;
+            }
+
+            if (!confirm('Are you absolutely sure? This cannot be undone!')) {
+                return;
+            }
+
+            try {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+
+                const response = await fetch('@Url.Action("DeleteAccount", "Student")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ confirmation: confirmation })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification(result.message, 'success');
+                    if (result.redirectUrl) {
+                        setTimeout(() => window.location.href = result.redirectUrl, 2000);
+                    }
+                } else {
+                    showNotification(result.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Error deleting account: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        });
+
+        // Notification function (reuse from your existing code)
+        function showNotification(message, type) {
+            const existingNotifications = document.querySelectorAll('.custom-notification');
+            existingNotifications.forEach(notif => notif.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `custom-notification alert alert-${type === 'success' ? 'success' : 'danger'}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} me-2"></i>
+                    ${message}
+                </div>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Reset modals when closed
+        document.getElementById('changePasswordModal').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('changePasswordForm').reset();
+        });
+
+        document.getElementById('deleteAccountModal').addEventListener('hidden.bs.modal', function () {
+            document.getElementById('deleteConfirmation').value = '';
+        });
+    </script>
+
+    <style>
+        .settings-section {
+            padding: 20px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+            .settings-section h6 {
+                color: #495057;
+                margin-bottom: 15px;
+                font-weight: 600;
+            }
+
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .sidebar-menu li {
+                border-bottom: 1px solid #f1f1f1;
+            }
+
+                .sidebar-menu li:last-child {
+                    border-bottom: none;
+                }
+
+            .sidebar-menu a {
+                display: flex;
+                align-items: center;
+                padding: 15px 20px;
+                color: #555;
+                text-decoration: none;
+                transition: all 0.3s;
+            }
+
+                .sidebar-menu a:hover {
+                    background-color: #f8f9fa;
+                    color: #3BB2B8;
+                }
+
+                .sidebar-menu a.active {
+                    background-color: #e8f5fe;
+                    color: #3BB2B8;
+                    font-weight: 500;
+                    border-left: 4px solid #3BB2B8;
+                }
+
+            .sidebar-menu i {
+                margin-right: 10px;
+                width: 20px;
+                text-align: center;
+            }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #42E695;
+            object-fit: cover;
+        }
+
+        .dashboard-header {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            border: 1px solid #f1f1f1;
+        }
+    </style>
+}

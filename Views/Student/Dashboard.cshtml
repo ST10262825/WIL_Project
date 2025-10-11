@@ -65,10 +65,9 @@
                             }
                         </a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <i class="fas fa-chalkboard-teacher"></i> My Tutors
-                            <span class="badge bg-primary rounded-pill ms-auto">@activeTutors</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("Profile", "Gamification")">
+                            <i class="fas fa-trophy me-1"></i>My Journey
                         </a>
                     </li>
                     <li>
@@ -81,12 +80,16 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
-                            <i class="fas fa-book"></i> Learning Materials
+                        <a href="/Student/Materials">
+                            <span><i class="fas fa-book me-1"></i> Learning Materials</span>
+                            @if (ViewBag.MaterialsCount > 0)
+                            {
+                                <span class="badge bg-primary rounded-pill">@ViewBag.MaterialsCount</span>
+                            }
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="@Url.Action("Settings", "Student")">
                             <i class="fas fa-cog"></i> Settings
                         </a>
                     </li>
@@ -129,19 +132,19 @@
                 <div class="col-md-3 mb-3">
                     <div class="stats-card h-100">
                         <div class="stats-icon" style="background-color: #e8f5e9; color: #388e3c;">
-                            <i class="fas fa-graduation-cap"></i>
+                            <i class="fas fa-check-circle"></i>
                         </div>
-                        <h3 class="mb-0 fw-bold">@coursesEnrolled</h3>
-                        <p class="text-muted mb-0">Courses</p>
+                        <h3 class="mb-0 fw-bold">@completedCount</h3>
+                        <p class="text-muted mb-0">Completed Sessions</p>
                     </div>
                 </div>
                 <div class="col-md-3 mb-3">
                     <div class="stats-card h-100">
                         <div class="stats-icon" style="background-color: #ffebee; color: #c62828;">
-                            <i class="fas fa-chalkboard-teacher"></i>
+                            <i class="fas fa-graduation-cap"></i>
                         </div>
-                        <h3 class="mb-0 fw-bold">@activeTutors</h3>
-                        <p class="text-muted mb-0">Active Tutors</p>
+                        <h3 class="mb-0 fw-bold">@coursesEnrolled</h3>
+                        <p class="text-muted mb-0">Courses</p>
                     </div>
                 </div>
             </div>

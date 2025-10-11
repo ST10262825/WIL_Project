@@ -414,6 +414,9 @@ namespace TutorConnect.WebApp.Services
             }
         }
 
+
+
+
         public async Task<bool> IsUserBlockedAsync(int userId)
         {
             AddAuthHeader();
@@ -1280,9 +1283,400 @@ namespace TutorConnect.WebApp.Services
             };
         }
 
-   
 
-public class FileExportResult
+
+        // In ApiService.cs - Add these methods
+        // Add these methods to your existing ApiService
+        public async Task<bool> ReportSessionCompletedAsync(int bookingId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PutAsync($"api/bookings/complete-session/{bookingId}", null);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reporting session completion: {ex.Message}");
+                return false;
+            }
+        }
+
+        // In your WebApp ApiService - ensure these methods are correct
+        // In your ApiService - enhance the GetGamificationProfileAsync method
+        public async Task<GamificationProfileDTO> GetGamificationProfileAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/gamification/profile");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"=== GAMIFICATION PROFILE API RESPONSE ===");
+                    Console.WriteLine($"Status: {response.StatusCode}");
+                    Console.WriteLine($"Content: {content}");
+                    Console.WriteLine($"Content Length: {content.Length}");
+
+                    var profile = JsonConvert.DeserializeObject<GamificationProfileDTO>(content);
+
+                    // Log detailed achievement info
+                    if (profile != null)
+                    {
+                        Console.WriteLine($"=== PROFILE DETAILS ===");
+                        Console.WriteLine($"User ID: {profile.UserId}");
+                        Console.WriteLine($"XP: {profile.ExperiencePoints}");
+                        Console.WriteLine($"Level: {profile.Level}");
+                        Console.WriteLine($"Achievements Count: {profile.Achievements?.Count ?? 0}");
+
+                        if (profile.Achievements != null)
+                        {
+                            foreach (var achievement in profile.Achievements)
+                            {
+                                Console.WriteLine($"  - {achievement.Name}: Progress={achievement.Progress}, IsCompleted={achievement.IsCompleted}, EarnedAt={achievement.EarnedAt}");
+                            }
+                        }
+                    }
+
+                    return profile;
+                }
+                else
+                {
+                    Console.WriteLine($"=== API ERROR ===");
+                    Console.WriteLine($"Status: {response.StatusCode}");
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Error: {errorContent}");
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"=== EXCEPTION ===");
+                Console.WriteLine($"Error getting gamification profile: {ex.Message}");
+                Console.WriteLine($"Stack: {ex.StackTrace}");
+                return null;
+            }
+        }
+
+        public async Task<List<Achievement>> GetAchievementsAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/gamification/achievements");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"Achievements API Response: {content}"); // Debug log
+                    return JsonConvert.DeserializeObject<List<Achievement>>(content);
+                }
+                Console.WriteLine($"Failed to get achievements: {response.StatusCode}");
+                return new List<Achievement>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting achievements: {ex.Message}");
+                return new List<Achievement>();
+            }
+        }
+
+
+        
+
+        // In your WebApp ApiService
+        public async Task<XPBreakdownDTO> GetXPBreakdownAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/gamification/xp-breakdown");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<XPBreakdownDTO>(content);
+                }
+                Console.WriteLine($"Failed to get XP breakdown: {response.StatusCode}");
+                return new XPBreakdownDTO();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting XP breakdown: {ex.Message}");
+                return new XPBreakdownDTO();
+            }
+        }
+
+        public async Task<List<XPActivityDTO>> GetRecentXPActivityAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/gamification/recent-xp-activity");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<XPActivityDTO>>(content);
+                }
+                Console.WriteLine($"Failed to get recent XP activity: {response.StatusCode}");
+                return new List<XPActivityDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting recent XP activity: {ex.Message}");
+                return new List<XPActivityDTO>();
+            }
+        }
+
+
+        public async Task<TutorMaterialsOverviewDTO> GetTutorMaterialsOverviewAsync(int tutorId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/learning-materials/tutor/{tutorId}/overview");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<TutorMaterialsOverviewDTO>(content);
+                }
+                Console.WriteLine($"Failed to get materials overview: {response.StatusCode}");
+                return new TutorMaterialsOverviewDTO();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting materials overview: {ex.Message}");
+                return new TutorMaterialsOverviewDTO();
+            }
+        }
+
+        public async Task<CreateFolderResponse> CreateFolderAsync(int tutorId, string name, string description, int? parentFolderId)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[API SERVICE DEBUG] CreateFolderAsync START");
+                Console.WriteLine($"[API SERVICE DEBUG] Parameters - TutorId: {tutorId}, Name: {name}");
+
+                var request = new
+                {
+                    Name = name,
+                    Description = description,
+                    ParentFolderId = parentFolderId
+                };
+
+                var json = JsonConvert.SerializeObject(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                Console.WriteLine($"[API SERVICE DEBUG] Sending request to: api/learning-materials/tutor/{tutorId}/folders");
+                var response = await _client.PostAsync($"api/learning-materials/tutor/{tutorId}/folders", content);
+
+                Console.WriteLine($"[API SERVICE DEBUG] Response status: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[API SERVICE DEBUG] Success response: {responseContent}");
+
+                    var folder = JsonConvert.DeserializeObject<LearningMaterialFolderDTO>(responseContent);
+                    Console.WriteLine($"[API SERVICE DEBUG] CreateFolderAsync SUCCESS");
+                    return new CreateFolderResponse { IsSuccess = true, Folder = folder };
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[API SERVICE DEBUG] Error response: {errorContent}");
+                    return new CreateFolderResponse { IsSuccess = false, ErrorMessage = errorContent };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[API SERVICE DEBUG] Exception: {ex.Message}");
+                Console.WriteLine($"[API SERVICE DEBUG] Stack trace: {ex.StackTrace}");
+                return new CreateFolderResponse { IsSuccess = false, ErrorMessage = ex.Message };
+            }
+        }
+
+        public async Task<UploadMaterialResponse> UploadMaterialAsync(int tutorId, string title, string description, int? folderId, bool isPublic, IFormFile file)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[API SERVICE] Uploading material - TutorId: {tutorId}, Title: {title}, File: {file.FileName}");
+
+                using var formData = new MultipartFormDataContent();
+
+                formData.Add(new StringContent(title), "Title");
+                formData.Add(new StringContent(description ?? ""), "Description");
+
+                if (folderId.HasValue)
+                    formData.Add(new StringContent(folderId.Value.ToString()), "FolderId");
+
+                formData.Add(new StringContent(isPublic.ToString()), "IsPublic");
+
+                if (file != null)
+                {
+                    var fileContent = new StreamContent(file.OpenReadStream());
+                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                    formData.Add(fileContent, "File", file.FileName);
+                }
+
+                var response = await _client.PostAsync($"api/learning-materials/tutor/{tutorId}/upload", formData);
+
+                Console.WriteLine($"[API SERVICE] Upload response status: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[API SERVICE] Upload success response: {responseContent}");
+
+                    var material = JsonConvert.DeserializeObject<LearningMaterialDTO>(responseContent);
+                    return new UploadMaterialResponse { IsSuccess = true, Material = material };
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[API SERVICE] Upload error response: {errorContent}");
+                    return new UploadMaterialResponse { IsSuccess = false, ErrorMessage = errorContent };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[API SERVICE] Upload exception: {ex.Message}");
+                return new UploadMaterialResponse { IsSuccess = false, ErrorMessage = ex.Message };
+            }
+        }
+
+        public async Task<LearningMaterialFolderDTO> GetFolderContentsAsync(int tutorId, int folderId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/learning-materials/tutor/{tutorId}/folders/{folderId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<LearningMaterialFolderDTO>(content);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting folder contents: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteMaterialAsync(int materialId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.DeleteAsync($"api/learning-materials/materials/{materialId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting material: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteFolderAsync(int folderId)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[API SERVICE] Deleting folder {folderId}");
+                var response = await _client.DeleteAsync($"api/learning-materials/folders/{folderId}");
+
+                Console.WriteLine($"[API SERVICE] Delete folder response: {response.StatusCode}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[API SERVICE] Error deleting folder: {ex.Message}");
+                return false;
+            }
+        }
+
+        // Add these to your ApiService
+
+        public async Task<List<LearningMaterialDTO>> GetStudentMaterialsAsync(int studentId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/student/{studentId}/materials");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<LearningMaterialDTO>>(content) ?? new List<LearningMaterialDTO>();
+                }
+                return new List<LearningMaterialDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting student materials: {ex.Message}");
+                return new List<LearningMaterialDTO>();
+            }
+        }
+
+        public async Task<List<LearningMaterialDTO>> GetTutorMaterialsForStudentAsync(int studentId, int tutorId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/student/{studentId}/materials/tutor/{tutorId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<List<LearningMaterialDTO>>(content) ?? new List<LearningMaterialDTO>();
+                }
+                return new List<LearningMaterialDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting tutor materials for student: {ex.Message}");
+                return new List<LearningMaterialDTO>();
+            }
+        }
+
+        public async Task<StudentMaterialsOverviewDTO> GetStudentMaterialsOverviewAsync(int studentId)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[API SERVICE] Getting student materials overview for student {studentId}");
+                var response = await _client.GetAsync($"api/student/{studentId}/materials/overview");
+
+                Console.WriteLine($"[API SERVICE] Overview response status: {response.StatusCode}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[API SERVICE] Overview content: {content}");
+
+                    // Deserialize to strongly-typed DTO
+                    var overview = JsonConvert.DeserializeObject<StudentMaterialsOverviewDTO>(content);
+                    Console.WriteLine($"[API SERVICE] Strongly-typed overview - TotalMaterials: {overview?.TotalMaterials}, TotalTutors: {overview?.TotalTutors}");
+
+                    return overview ?? new StudentMaterialsOverviewDTO();
+                }
+                else
+                {
+                    Console.WriteLine($"[API SERVICE] Overview error: {response.StatusCode}");
+                }
+                return new StudentMaterialsOverviewDTO();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[API SERVICE] Exception getting overview: {ex.Message}");
+                return new StudentMaterialsOverviewDTO();
+            }
+        }
+
+
+
+        public class FileExportResult
 {
     public byte[] Content { get; set; }
     public string ContentType { get; set; }
@@ -1295,6 +1689,165 @@ private string GetExportFileName(ReportFilterDTO filters)
     var extension = filters.ExportFormat?.ToLower() ?? "file";
     return $"{reportType}_report_{DateTime.UtcNow:yyyyMMdd_HHmmss}.{extension}";
 }
+
+        // Update these methods in your ApiService (WebApp)
+        public async Task<bool> ChangePasswordAsync(ChangePasswordDTO dto)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[WebApp] Changing password...");
+                Console.WriteLine($"[WebApp] Sending - Current: {dto.CurrentPassword}, New: {dto.NewPassword}, Confirm: {dto.ConfirmPassword}");
+
+                // The DTO properties are PascalCase, which matches the API expectation
+                var data = new
+                {
+                    CurrentPassword = dto.CurrentPassword,
+                    NewPassword = dto.NewPassword,
+                    ConfirmPassword = dto.ConfirmPassword
+                };
+
+                var response = await _client.PutAsJsonAsync("api/student/change-password", data);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"[WebApp] Change password response: {response.StatusCode}");
+                Console.WriteLine($"[WebApp] Response content: {responseContent}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new HttpRequestException(responseContent);
+                }
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WebApp] Error changing password: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> DeleteAccountAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var student = await GetStudentByUserIdAsync();
+                if (student == null) return false;
+
+                var response = await _client.DeleteAsync($"api/student/delete-account/{student.StudentId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting account: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> ToggleThemeAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PutAsync("api/student/toggle-theme", null);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error toggling theme: {ex.Message}");
+                return false;
+            }
+        }
+
+        // New method to get current theme without UserDTO
+        public async  Task<string> GetCurrentThemeAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/student/current-theme");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var result = JsonConvert.DeserializeObject<dynamic>(content);
+                    return result?.themePreference?.ToString() ?? "light";
+                }
+                return "light";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting current theme: {ex.Message}");
+                return "light";
+            }
+        }
+
+
+
+        // Add to your existing ApiService
+        public async Task<ChatResponse> AskChatbotAsync(string question, int? conversationId = null, string context = null)
+        {
+            AddAuthHeader();
+            try
+            {
+                var request = new ChatQuestionRequest
+                {
+                    Question = question,
+                    ConversationId = conversationId,
+                    Context = context
+                };
+
+                var response = await _client.PostAsJsonAsync("api/chatbot/ask", request);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException($"Chatbot API error: {response.StatusCode} - {errorContent}");
+                }
+
+                return await response.Content.ReadFromJsonAsync<ChatResponse>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error asking chatbot: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<List<ConversationDTO>> GetChatbotConversationsAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                return await _client.GetFromJsonAsync<List<ConversationDTO>>("api/chatbot/conversations");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting chatbot conversations: {ex.Message}");
+                return new List<ConversationDTO>();
+            }
+        }
+
+        public async Task<bool> DeleteChatbotConversationAsync(int conversationId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.DeleteAsync($"api/chatbot/conversations/{conversationId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting chatbot conversation: {ex.Message}");
+                return false;
+            }
+        }
+
+
+
+
+
+
 
         public class CreateModuleRequest
         {
