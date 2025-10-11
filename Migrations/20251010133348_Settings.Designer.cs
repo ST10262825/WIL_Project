@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TutorConnectAPI.Data;
 
@@ -11,9 +12,11 @@ using TutorConnectAPI.Data;
 namespace TutorConnectAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251010133348_Settings")]
+    partial class Settings
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,100 +143,6 @@ namespace TutorConnectAPI.Migrations
                     b.ToTable("ChatMessages");
                 });
 
-            modelBuilder.Entity("TutorConnectAPI.Models.ChatbotConversation", b =>
-                {
-                    b.Property<int>("ConversationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ConversationId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ChatbotConversations");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.ChatbotMessage", b =>
-                {
-                    b.Property<int>("MessageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MessageId"));
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsUserMessage")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MessageType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Metadata")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("MessageId");
-
-                    b.HasIndex("ConversationId");
-
-                    b.ToTable("ChatbotMessages");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.ChatbotSuggestion", b =>
-                {
-                    b.Property<int>("SuggestionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SuggestionId"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Question")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UsageCount")
-                        .HasColumnType("int");
-
-                    b.HasKey("SuggestionId");
-
-                    b.ToTable("ChatbotSuggestions");
-                });
-
             modelBuilder.Entity("TutorConnectAPI.Models.Course", b =>
                 {
                     b.Property<int>("CourseId")
@@ -317,52 +226,6 @@ namespace TutorConnectAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("GamificationProfiles");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.KnowledgeBaseDocument", b =>
-                {
-                    b.Property<int>("DocumentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentId"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DocumentType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.PrimitiveCollection<string>("Embedding")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.PrimitiveCollection<string>("Tags")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("DocumentId");
-
-                    b.ToTable("KnowledgeBaseDocuments");
                 });
 
             modelBuilder.Entity("TutorConnectAPI.Models.LearningMaterial", b =>
@@ -904,28 +767,6 @@ namespace TutorConnectAPI.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("TutorConnectAPI.Models.ChatbotConversation", b =>
-                {
-                    b.HasOne("TutorConnectAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.ChatbotMessage", b =>
-                {
-                    b.HasOne("TutorConnectAPI.Models.ChatbotConversation", "Conversation")
-                        .WithMany("Messages")
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Conversation");
-                });
-
             modelBuilder.Entity("TutorConnectAPI.Models.Enrollment", b =>
                 {
                     b.HasOne("TutorConnectAPI.Models.Course", "Course")
@@ -1167,11 +1008,6 @@ namespace TutorConnectAPI.Migrations
             modelBuilder.Entity("TutorConnectAPI.Models.Booking", b =>
                 {
                     b.Navigation("Review");
-                });
-
-            modelBuilder.Entity("TutorConnectAPI.Models.ChatbotConversation", b =>
-                {
-                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("TutorConnectAPI.Models.Course", b =>

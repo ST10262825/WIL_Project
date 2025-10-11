@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TutorConnectAPI.Data;
 using TutorConnectAPI.DTOs;
 using TutorConnectAPI.Models;
+using TutorConnectAPI.Services; // Add this for IGamificationService
 
 namespace TutorConnectAPI.Controllers
 {
@@ -11,13 +12,16 @@ namespace TutorConnectAPI.Controllers
     public class BookingController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IGamificationService _gamificationService; // Add this
 
-        public BookingController(ApplicationDbContext context)
+        // Update constructor to include gamification service
+        public BookingController(ApplicationDbContext context, IGamificationService gamificationService)
         {
             _context = context;
+            _gamificationService = gamificationService;
         }
 
-        // ✅ Create booking with time slots
+        // ✅ Create booking with time slots (NO CHANGES NEEDED HERE)
         [HttpPost("create")]
         public async Task<IActionResult> CreateBooking(CreateBookingDTO dto)
         {
@@ -84,7 +88,7 @@ namespace TutorConnectAPI.Controllers
             }
         }
 
-        // ✅ Get all bookings for a student
+        // ✅ Get all bookings for a student (NO CHANGES NEEDED HERE)
         [HttpGet("student/{studentId}")]
         public async Task<IActionResult> GetStudentBookings(int studentId)
         {
@@ -110,7 +114,7 @@ namespace TutorConnectAPI.Controllers
             return Ok(bookings);
         }
 
-        // ✅ Get all bookings for a tutor
+        // ✅ Get all bookings for a tutor (NO CHANGES NEEDED HERE)
         [HttpGet("tutor/{tutorId}")]
         public async Task<IActionResult> GetTutorBookings(int tutorId)
         {
@@ -136,21 +140,122 @@ namespace TutorConnectAPI.Controllers
             return Ok(bookings);
         }
 
-        // ✅ Update booking status
+        // ✅ UPDATE THIS METHOD: Update booking status with gamification
         [HttpPut("update-status/{bookingId}")]
         public async Task<IActionResult> UpdateBookingStatus(int bookingId, [FromQuery] string status)
         {
-            var booking = await _context.Bookings.FindAsync(bookingId);
-            if (booking == null)
-                return NotFound("Booking not found.");
+            try
+            {
+                var booking = await _context.Bookings
+                    .Include(b => b.Student)
+                    .ThenInclude(s => s.User)
+                    .Include(b => b.Tutor)
+                    .ThenInclude(t => t.User)
+                    .FirstOrDefaultAsync(b => b.BookingId == bookingId);
 
-            booking.Status = status;
-            await _context.SaveChangesAsync();
+                if (booking == null)
+                    return NotFound("Booking not found.");
 
-            return Ok("Booking status updated.");
+                var oldStatus = booking.Status;
+                booking.Status = status;
+
+                // If session is being marked as completed, trigger gamification
+                if (status == "Completed" && oldStatus != "Completed")
+                {
+                    booking.CompletedAt = DateTime.UtcNow;
+
+                    // Award gamification points to both student and tutor
+                    if (booking.Student?.User != null)
+                    {
+                        await _gamificationService.AwardPointsAsync(
+                            booking.Student.User.UserId,
+                            "SessionCompleted",
+                            50,
+                            "Completed a tutoring session"
+                        );
+                    }
+
+                    if (booking.Tutor?.User != null)
+                    {
+                        await _gamificationService.AwardPointsAsync(
+                            booking.Tutor.User.UserId,
+                            "SessionCompleted",
+                            50,
+                            "Completed a tutoring session"
+                        );
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    Message = $"Booking status updated to {status}",
+                    BookingId = bookingId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error updating booking status: {ex.Message}");
+            }
         }
 
-        // ✅ Get available time slots for a tutor on a given day
+        // ✅ ADD THIS NEW METHOD: Complete session with gamification
+        [HttpPut("complete-session/{bookingId}")]
+        public async Task<IActionResult> CompleteSession(int bookingId)
+        {
+            try
+            {
+                var booking = await _context.Bookings
+                    .Include(b => b.Student)
+                    .ThenInclude(s => s.User)
+                    .Include(b => b.Tutor)
+                    .ThenInclude(t => t.User)
+                    .FirstOrDefaultAsync(b => b.BookingId == bookingId);
+
+                if (booking == null)
+                    return NotFound("Booking not found");
+
+                // Update booking status
+                booking.Status = "Completed";
+                booking.CompletedAt = DateTime.UtcNow;
+
+                await _context.SaveChangesAsync();
+
+                // Award gamification points to both student and tutor
+                if (booking.Student?.User != null)
+                {
+                    var studentResponse = await _gamificationService.AwardPointsAsync(
+                        booking.Student.User.UserId,
+                        "SessionCompleted",
+                        50,
+                        "Completed a tutoring session"
+                    );
+                }
+
+                if (booking.Tutor?.User != null)
+                {
+                    var tutorResponse = await _gamificationService.AwardPointsAsync(
+                        booking.Tutor.User.UserId,
+                        "SessionCompleted",
+                        50,
+                        "Completed a tutoring session"
+                    );
+                }
+
+                return Ok(new
+                {
+                    Message = "Session completed successfully",
+                    BookingId = bookingId
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error completing session: {ex.Message}");
+            }
+        }
+
+        // ✅ Get available time slots for a tutor on a given day (NO CHANGES NEEDED HERE)
         [HttpGet("tutor/{tutorId}/availability")]
         public async Task<IActionResult> GetTutorAvailability(int tutorId, [FromQuery] DateTime date)
         {

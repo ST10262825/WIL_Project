@@ -7,6 +7,7 @@ using TutorConnectAPI.Data;
 using TutorConnectAPI.Hubs;
 using TutorConnectAPI.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // ---------------------
@@ -16,9 +17,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// ✅ ADD THIS: Logging service
+builder.Services.AddLogging();
+builder.Services.AddHttpClient(); // ✅ ADD THIS LINE
+
+
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddControllers();
+
+// Gamification services
+builder.Services.AddScoped<IGamificationService, GamificationService>();
+builder.Services.AddScoped<IChatbotService, ChatbotService>();
+
 
 // ---------------------
 // CORS - allow WebApp project to access API & SignalR
@@ -123,7 +134,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
-
 // ---------------------
 // Build app
 // ---------------------
@@ -136,7 +146,25 @@ using (var scope = app.Services.CreateScope())
 {
     var scopedServices = scope.ServiceProvider;
     var dbContext = scopedServices.GetRequiredService<ApplicationDbContext>();
-    DbSeeder.Seed(dbContext);
+
+    try
+    {
+        // ✅ ADDED: Ensure database is created and migrations are applied
+        dbContext.Database.Migrate();
+
+        // Your existing seeder
+        DbSeeder.Seed(dbContext);
+
+        // ✅ ADDED: Seed achievements for gamification system
+        AchievementSeeder.SeedAchievements(dbContext);
+
+        Console.WriteLine("Database seeded successfully.");
+    }
+    catch (Exception ex)
+    {
+        var logger = scopedServices.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while seeding the database.");
+    }
 }
 
 // ---------------------
@@ -146,8 +174,6 @@ app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
-
 app.UseHttpsRedirection();
 
 app.UseCors(); // <-- Enable CORS here
@@ -155,7 +181,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ---------------------
-// Map Controllers & SignalR hubs
+// Map Controllers & SignalR hubsz
 // ---------------------
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub"); // SignalR hub endpoint

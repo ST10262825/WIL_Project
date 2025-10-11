@@ -14,9 +14,9 @@ namespace TutorConnectAPI.Models
         public ICollection<Session> Sessions { get; set; }
         public ICollection<Booking> Bookings { get; set; }
         public bool IsBlocked { get; set; } = false;
-        [ForeignKey("Review")]
-        public int? ReviewId { get; set; }  // nullable
-        public Review? Review { get; set; }
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public User User { get; set; }
+
+        public ICollection<StudentMaterialAccess> MaterialAccesses { get; set; } = new List<StudentMaterialAccess>();
     }
 }

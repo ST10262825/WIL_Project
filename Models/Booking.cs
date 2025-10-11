@@ -36,5 +36,6 @@ namespace TutorConnectAPI.Models
 
         [MaxLength(20)]
         public string Status { get; set; } = "Pending"; // Pending, Accepted, Declined, Completed
+        public DateTime? CompletedAt { get; set; }
     }
 }

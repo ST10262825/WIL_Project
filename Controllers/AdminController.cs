@@ -490,7 +490,7 @@ namespace TutorConnectAPI.Controllers
                     .Include(s => s.User)
                     .Include(s => s.Bookings)
                         .ThenInclude(b => b.Review) // Include booking reviews
-                    .Include(s => s.Review) // Reviews written by student
+                    .Include(s => s.Reviews) // Reviews written by student
                     .FirstOrDefaultAsync(s => s.StudentId == id);
 
                 if (student == null)

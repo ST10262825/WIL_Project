@@ -17,7 +17,10 @@
         public ICollection<Session> Sessions { get; set; }
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<TutorModule> TutorModules { get; set; }
-      
+
+        public ICollection<LearningMaterial> LearningMaterials { get; set; } = new List<LearningMaterial>();
+        public ICollection<LearningMaterialFolder> LearningMaterialFolders { get; set; } = new List<LearningMaterialFolder>();
+
         public User User { get; set; }
 
     //Review and Rating Properties
