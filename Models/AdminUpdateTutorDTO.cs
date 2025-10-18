@@ -38,5 +38,6 @@ namespace TutorConnect.WebApp.Models
     [Required(ErrorMessage = "At least one module must be selected")]
     [MinLength(1, ErrorMessage = "At least one module must be selected")]
     public List<int> ModuleIds { get; set; } = new List<int>();
-}
+        public int CourseId { get; set; }
+    }
 }

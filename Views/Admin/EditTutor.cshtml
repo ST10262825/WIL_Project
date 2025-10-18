@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Edit Tutor";
     var modules = ViewBag.Modules as List<TutorConnect.WebApp.Models.ModuleDTO> ?? new List<TutorConnect.WebApp.Models.ModuleDTO>();
+    var courses = ViewBag.Courses as List<CourseDTO> ?? new List<CourseDTO>();
 }
 
 
@@ -81,6 +82,35 @@
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
+                </div>
+
+                <!-- ADD COURSE SELECTION FIELD -->
+                <div class="form-group mb-3">
+                    <label asp-for="CourseId" class="form-label">Course *</label>
+                    <select asp-for="CourseId" class="form-control" required>
+                        <option value="">-- Select Course --</option>
+                        @if (courses.Any())
+                        {
+                            foreach (var course in courses)
+                            {
+                                <option value="@course.CourseId" selected="@(Model.CourseId == course.CourseId)">
+                                    @course.Title
+                                </option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="" disabled>No courses available</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CourseId" class="text-danger"></span>
+                    <small class="form-text text-muted">Select the course this tutor will teach under</small>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Bio" class="form-label">Bio/Description *</label>
+                    <textarea asp-for="Bio" class="form-control" rows="3" placeholder="Brief description about the tutor..."></textarea>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
@@ -165,7 +195,9 @@
     </div>
 </div>
 
-@section Scripts {
+
+
+   @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 
     <script>
@@ -182,13 +214,33 @@
             // Form validation enhancement
             const form = document.querySelector('form');
             form.addEventListener('submit', function(e) {
+                const courseSelect = form.querySelector('#CourseId');
                 const checkboxes = form.querySelectorAll('input[name="ModuleIds"]:checked');
+                
+                // Validate course selection
+                if (!courseSelect.value) {
+                    e.preventDefault();
+                    alert('Please select a course for the tutor.');
+                    return false;
+                }
+                
+                // Validate module selection
                 if (checkboxes.length === 0) {
                     e.preventDefault();
                     alert('Please select at least one module for the tutor.');
                     return false;
                 }
             });
+
+            // ADD: Course change handler to potentially filter modules by course
+            const courseSelect = document.querySelector('#CourseId');
+            if (courseSelect) {
+                courseSelect.addEventListener('change', function() {
+                    // Optional: You can add logic here to filter modules by selected course
+                    console.log('Course selected:', this.value);
+                    // Future enhancement: Filter modules dropdown based on selected course
+                });
+            }
         });
     </script>
 }

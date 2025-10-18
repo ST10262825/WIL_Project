@@ -37,6 +37,9 @@ namespace TutorConnect.WebApp.Controllers
             ViewBag.TutorBio = tutor.Bio ?? "No bio set";
             ViewBag.UnreadMessagesCount = unreadMessagesCount;
 
+            // ADD COURSE INFO
+            ViewBag.CourseName = tutor.CourseName ?? "Not assigned to course";
+
             ViewBag.TutorProfileImageUrl = string.IsNullOrEmpty(tutor.ProfileImageUrl)
                 ? Url.Content("~/images/default-profile.png")
                 : $"{tutor.ProfileImageUrl}?v={DateTime.UtcNow.Ticks}";
@@ -57,6 +60,9 @@ namespace TutorConnect.WebApp.Controllers
             if (tutor == null) return NotFound();
 
             var model = MapTutorToProfileViewModel(tutor);
+
+            ViewBag.CourseName = tutor.CourseName ?? "Not assigned to course";
+
             return View(model);
         }
 
@@ -66,36 +72,51 @@ namespace TutorConnect.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> MyProfile(TutorProfileViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
-
-            // Convert ExpertiseList to comma-separated string
-            var expertiseCsv = model.ExpertiseList != null ? string.Join(", ", model.ExpertiseList) : "";
-
-            // Convert EducationList to JSON string
-            var educationJson = model.EducationList != null
-                ? JsonSerializer.Serialize(model.EducationList)
-                : "[]";
-
-            var (IsSuccess, ErrorMessage, ProfileImageUrl) = await _apiService.UpdateTutorProfileAsync(
-                model.TutorId,
-                model.Bio,
-                model.AboutMe,
-                expertiseCsv,
-                educationJson,
-                model.ProfileImage
-            );
-
-            if (!IsSuccess)
+            try
             {
-                TempData["ErrorMessage"] = $"Failed to update profile: {ErrorMessage}";
+                if (!ModelState.IsValid)
+                {
+                    TempData["ErrorMessage"] = "Please correct the validation errors.";
+                    return View(model);
+                }
+
+                var expertiseCsv = model.ExpertiseList != null ? string.Join(", ", model.ExpertiseList) : "";
+                var educationJson = model.EducationList != null
+                    ? JsonSerializer.Serialize(model.EducationList)
+                    : "[]";
+
+                Console.WriteLine($"Sending to API - Expertise: {expertiseCsv}");
+                Console.WriteLine($"Sending to API - Education JSON: {educationJson}");
+
+                var (IsSuccess, ErrorMessage, ProfileImageUrl) = await _apiService.UpdateTutorProfileAsync(
+                    model.TutorId,
+                    model.Bio,
+                    model.AboutMe,
+                    expertiseCsv,
+                    educationJson,
+                    model.ProfileImage
+                );
+
+                if (!IsSuccess)
+                {
+                    TempData["ErrorMessage"] = $"Failed to update profile: {ErrorMessage}";
+                    Console.WriteLine($"API Error: {ErrorMessage}");
+                    return View(model);
+                }
+
+                TempData["SuccessMessage"] = "Profile updated successfully!";
+                if (!string.IsNullOrEmpty(ProfileImageUrl))
+                    ViewBag.TutorProfileImageUrl = $"{ProfileImageUrl}?v={DateTime.UtcNow.Ticks}";
+
+                return RedirectToAction("Dashboard");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in MyProfile POST: {ex.Message}");
+                Console.WriteLine($"Stack: {ex.StackTrace}");
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
                 return View(model);
             }
-
-            TempData["SuccessMessage"] = "Profile updated successfully!";
-            if (!string.IsNullOrEmpty(ProfileImageUrl))
-                ViewBag.TutorProfileImageUrl = $"{ProfileImageUrl}?v={DateTime.UtcNow.Ticks}";
-
-            return RedirectToAction("Dashboard");
         }
 
         // -------------------------
@@ -107,14 +128,21 @@ namespace TutorConnect.WebApp.Controllers
             var tutor = await _apiService.GetTutorByIdAsync(tutorId);
             if (tutor == null) return NotFound();
 
+            // ADD THIS: Check if student can access this tutor (same course)
+            var student = await GetCurrentStudentAsync();
+            if (student != null && student.CourseId != tutor.CourseId)
+            {
+                TempData["ErrorMessage"] = "You can only view tutors in your course.";
+                return RedirectToAction("Browse");
+            }
+
             // Get tutor reviews
             var reviews = await _apiService.GetTutorReviewsAsync(tutorId);
 
             // Get tutor availability for the current week
             var availability = await _apiService.GetTutorAvailabilityAsync(tutorId, DateTime.Today);
 
-
-            var model = MapTutorToProfileViewModel(tutor, reviews,availability);
+            var model = MapTutorToProfileViewModel(tutor, reviews, availability);
             return View(model);
         }
 
@@ -136,9 +164,21 @@ namespace TutorConnect.WebApp.Controllers
         {
             try
             {
-                var tutors = await _apiService.GetAllTutorsAsync();
+                var student = await GetCurrentStudentAsync();
+                List<BrowseTutorDTO> tutors;
 
-                // Apply filters
+                if (student != null)
+                {
+                    // USE THE NEW API METHOD - More secure and efficient
+                    tutors = await _apiService.GetTutorsForStudentAsync(student.StudentId);
+                }
+                else
+                {
+                    // Fallback to old method (for admin viewing or edge cases)
+                    tutors = await _apiService.GetAllTutorsAsync();
+                }
+
+                // Apply additional filters (search, subject) - this is fine client-side
                 var filteredTutors = tutors.AsQueryable();
 
                 // Filter by search string (tutor name)
@@ -146,7 +186,6 @@ namespace TutorConnect.WebApp.Controllers
                 {
                     searchString = searchString.Trim().ToLower();
                     filteredTutors = filteredTutors.Where(t =>
-                        (t.FullName).ToLower().Contains(searchString) ||
                         t.FullName.ToLower().Contains(searchString));
                 }
 
@@ -167,8 +206,7 @@ namespace TutorConnect.WebApp.Controllers
                     .ToList();
 
                 ViewBag.Subjects = allSubjects;
-
-                // Pass search parameters to view for persistence
+                ViewBag.StudentCourse = student?.CourseName ?? "All Courses";
                 ViewBag.SearchString = searchString;
                 ViewBag.SelectedSubject = subject;
 
@@ -176,10 +214,29 @@ namespace TutorConnect.WebApp.Controllers
             }
             catch (Exception ex)
             {
-                // Handle error
                 Console.WriteLine($"Error in Browse: {ex.Message}");
                 TempData["ErrorMessage"] = "Error loading tutors. Please try again.";
-                return View(new List<TutorDTO>());
+                return View(new List<BrowseTutorDTO>());
+            }
+        }
+
+        // -------------------------
+        // Helper: Get current Student with Course info
+        // -------------------------
+        private async Task<StudentDTO> GetCurrentStudentAsync()
+        {
+            var userId = GetUserId();
+            if (userId == null) return null;
+
+            try
+            {
+                var student = await _apiService.GetStudentByUserIdAsync(userId.Value);
+                return student;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting current student: {ex.Message}");
+                return null;
             }
         }
 
@@ -209,19 +266,20 @@ namespace TutorConnect.WebApp.Controllers
                     : new List<EducationDTO>(),
 
                 // Rating properties
-            AverageRating = tutor.AverageRating,
-            TotalReviews = tutor.TotalReviews,
-            RatingCount1 = tutor.RatingCount1,
-            RatingCount2 = tutor.RatingCount2,
-            RatingCount3 = tutor.RatingCount3,
-            RatingCount4 = tutor.RatingCount4,
-            RatingCount5 = tutor.RatingCount5,
+                AverageRating = tutor.AverageRating,
+                TotalReviews = tutor.TotalReviews,
+                RatingCount1 = tutor.RatingCount1,
+                RatingCount2 = tutor.RatingCount2,
+                RatingCount3 = tutor.RatingCount3,
+                RatingCount4 = tutor.RatingCount4,
+                RatingCount5 = tutor.RatingCount5,
+
+                // ADD COURSE INFO
+                CourseName = tutor.CourseName, // Add this property to TutorProfileViewModel
+                CourseId = tutor.CourseId,     // Add this property to TutorProfileViewModel
+
                 Reviews = reviews ?? new List<ReviewDTO>(),
-                 Availability = availability
-
-
-
-
+                Availability = availability
             };
         }
 
@@ -255,11 +313,18 @@ namespace TutorConnect.WebApp.Controllers
                 // Get the logged-in tutor's ID
                 var tutorId = await GetLoggedInTutorIdAsync();
 
+                // ADD: Get tutor info for course context
+                var userId = GetUserId();
+                var tutor = await _apiService.GetTutorByUserIdAsync(userId.Value);
+
                 // Get all bookings for this tutor
                 var bookings = await _apiService.GetTutorBookingsAsync(tutorId);
 
                 ViewBag.PendingCount = bookings.Count(b => b.Status == "Pending");
                 ViewBag.TutorId = tutorId;
+
+                // ADD COURSE INFO
+                ViewBag.CourseName = tutor?.CourseName ?? "Not assigned";
 
                 return View(bookings);
             }
@@ -300,6 +365,17 @@ namespace TutorConnect.WebApp.Controllers
         {
             Console.WriteLine($"WebApp Availability Called: tutorId={tutorId}, date={date}");
 
+            // ADD THIS: Check if student can access this tutor (same course)
+            var student = await GetCurrentStudentAsync();
+            if (student != null)
+            {
+                var tutor = await _apiService.GetTutorByIdAsync(tutorId);
+                if (tutor != null && student.CourseId != tutor.CourseId)
+                {
+                    return Unauthorized("You can only view availability for tutors in your course.");
+                }
+            }
+
             if (!DateTime.TryParse(date, out var startDate))
             {
                 startDate = DateTime.Today;
@@ -335,6 +411,8 @@ namespace TutorConnect.WebApp.Controllers
 
             ViewBag.TutorId = tutor.TutorId;
             ViewBag.TutorName = $"{tutor.Name} {tutor.Surname}";
+
+            ViewBag.CourseName = tutor.CourseName ?? "Not assigned to course";
 
             return View(materialsOverview);
         }

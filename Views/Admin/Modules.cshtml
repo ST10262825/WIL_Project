@@ -1,6 +1,7 @@
 ﻿@model List<ModuleDTO>
 @{
     ViewData["Title"] = "Manage Modules";
+    var courses = ViewBag.Courses as List<CourseDTO> ?? new List<CourseDTO>();
 }
 
 <div class="container-fluid">
@@ -46,6 +47,7 @@
                             <tr>
                                 <th>Code</th>
                                 <th>Name</th>
+                                <th>Course</th>
                                 <th>Tutors</th>
                                 <th>Bookings</th>
                                 <th>Actions</th>
@@ -58,6 +60,17 @@
                                     <td><strong>@module.Code</strong></td>
                                     <td>@module.Name</td>
                                     <td>
+                                        <!-- ADD COURSE COLUMN -->
+                                        @if (!string.IsNullOrEmpty(module.CourseName))
+                                        {
+                                            <span class="badge bg-secondary">@module.CourseName</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No course</span>
+                                        }
+                                    </td>
+                                    <td>
                                         <span class="badge bg-primary">@module.TutorCount tutor@(module.TutorCount != 1 ? "s" : "")</span>
                                     </td>
                                     <td>
@@ -68,7 +81,8 @@
                                             <button class="btn btn-sm btn-outline-primary edit-module-btn"
                                                     data-module-id="@module.ModuleId"
                                                     data-module-code="@module.Code"
-                                                    data-module-name="@module.Name">
+                                                    data-module-name="@module.Name"
+                                                  data-course-id="@module.CourseId">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
                                             <form asp-action="DeleteModule" method="post" class="d-inline">
@@ -100,6 +114,25 @@
             </div>
             <form asp-action="CreateModule" method="post">
                 <div class="modal-body">
+                    <!-- ADD COURSE SELECTION -->
+                    <div class="mb-3">
+                        <label for="createCourse" class="form-label">Course *</label>
+                        <select class="form-control" id="createCourse" name="CourseId" required>
+                            <option value="">-- Select Course --</option>
+                            @if (courses.Any())
+                            {
+                                foreach (var course in courses)
+                                {
+                                    <option value="@course.CourseId">@course.Title</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="" disabled>No courses available. Please create a course first.</option>
+                            }
+                        </select>
+                        <small class="form-text text-muted">Select the course this module belongs to</small>
+                    </div>
                     <div class="mb-3">
                         <label for="createCode" class="form-label">Module Code *</label>
                         <input type="text" class="form-control" id="createCode" name="Code" required
@@ -113,7 +146,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Module</button>
+                    <button type="submit" class="btn btn-primary" @(courses.Any() ? "" : "disabled")>
+                        Create Module
+                    </button>
                 </div>
             </form>
         </div>
@@ -131,6 +166,24 @@
             <form asp-action="EditModule" method="post">
                 <input type="hidden" id="editModuleId" name="id" />
                 <div class="modal-body">
+                    <!-- ADD COURSE SELECTION -->
+                    <div class="mb-3">
+                        <label for="editCourse" class="form-label">Course *</label>
+                        <select class="form-control" id="editCourse" name="CourseId" required>
+                            <option value="">-- Select Course --</option>
+                            @if (courses.Any())
+                            {
+                                foreach (var course in courses)
+                                {
+                                    <option value="@course.CourseId">@course.Title</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="" disabled>No courses available</option>
+                            }
+                        </select>
+                    </div>
                     <div class="mb-3">
                         <label for="editCode" class="form-label">Module Code *</label>
                         <input type="text" class="form-control" id="editCode" name="Code" required
@@ -171,10 +224,12 @@
                     const moduleId = this.dataset.moduleId;
                     const moduleCode = this.dataset.moduleCode;
                     const moduleName = this.dataset.moduleName;
+                    const courseId = this.dataset.courseId;
 
                     document.getElementById('editModuleId').value = moduleId;
                     document.getElementById('editCode').value = moduleCode;
                     document.getElementById('editName').value = moduleName;
+                    document.getElementById('editCourse').value = courseId || '';
 
                     editModal.show();
                 });
@@ -186,15 +241,28 @@
 
             [createForm, editForm].forEach(form => {
                 form.addEventListener('submit', function(e) {
+                    const course = this.querySelector('select[name="CourseId"]').value;
                     const code = this.querySelector('input[name="Code"]').value.trim();
                     const name = this.querySelector('input[name="Name"]').value.trim();
 
-                    if (!code || !name) {
+                    if (!course || !code || !name) {
                         e.preventDefault();
                         alert('Please fill in all required fields.');
                     }
                 });
             });
+
+            // Show warning if no courses exist
+            const createButton = document.querySelector('#createModuleModal .btn-primary');
+            if (createButton && createButton.disabled) {
+                const modal = new bootstrap.Modal(document.getElementById('createModuleModal'));
+                document.querySelector('[data-bs-target="#createModuleModal"]').addEventListener('click', function() {
+                    if (!@courses.Any().ToString().ToLower()) {
+                        alert('Please create at least one course before adding modules.');
+                        return false;
+                    }
+                });
+            }
         });
     </script>
 }

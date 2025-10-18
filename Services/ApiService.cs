@@ -73,6 +73,52 @@ namespace TutorConnect.WebApp.Services
             return response.IsSuccessStatusCode;
         }
 
+        // ==========================
+        // Chat-related methods
+        // ==========================
+
+       
+        
+
+       
+
+        public async Task<int> GetUnreadCountAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+                {
+                    Console.WriteLine("[ApiService] GetUnreadCountAsync: UserId claim missing");
+                    return 0;
+                }
+
+                Console.WriteLine($"[ApiService] GetUnreadCountAsync: Getting unread count for user {userId}");
+
+                var response = await _client.GetAsync($"api/chat/unread-count");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"[ApiService] GetUnreadCountAsync: Error - {response.StatusCode}");
+                    return 0;
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<dynamic>();
+                int unreadCount = result?.unreadCount ?? 0;
+
+                Console.WriteLine($"[ApiService] GetUnreadCountAsync: Unread count = {unreadCount}");
+                return unreadCount;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ApiService] GetUnreadCountAsync: Exception - {ex.Message}");
+                return 0;
+            }
+        }
+
+        
+
 
         // Get tutor bookings
         public async Task<List<BookingDTO>> GetTutorBookingsAsync(int tutorId)
@@ -312,6 +358,9 @@ namespace TutorConnect.WebApp.Services
             return response.IsSuccessStatusCode;
         }
 
+
+
+
         public async Task<(bool Success, string Message, bool HasPendingBookings)> DeleteTutorAsync(int id)
         {
             AddAuthHeader();
@@ -536,11 +585,33 @@ namespace TutorConnect.WebApp.Services
 
         public async Task<TutorDTO> GetTutorByUserIdAsync(int userId)
         {
-            var response = await _client.GetAsync($"api/tutor-dashboard/user/{userId}");
-            if (!response.IsSuccessStatusCode)
-                throw new HttpRequestException($"API returned error or empty response: {response.StatusCode} - {await response.Content.ReadAsStringAsync()}");
+            try
+            {
+                Console.WriteLine($"[ApiService] Getting tutor by user ID: {userId}");
+                var response = await _client.GetAsync($"api/tutor-dashboard/user/{userId}");
 
-            return await response.Content.ReadFromJsonAsync<TutorDTO>();
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        Console.WriteLine($"[ApiService] Tutor not found for user ID: {userId}");
+                        return null; // Return null instead of throwing exception
+                    }
+
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[ApiService] API error: {response.StatusCode} - {errorContent}");
+                    throw new HttpRequestException($"API returned error: {response.StatusCode} - {errorContent}");
+                }
+
+                var tutor = await response.Content.ReadFromJsonAsync<TutorDTO>();
+                Console.WriteLine($"[ApiService] Successfully retrieved tutor: {tutor?.Name}");
+                return tutor;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ApiService] Exception getting tutor by user ID: {ex.Message}");
+                throw;
+            }
         }
 
 
@@ -630,6 +701,116 @@ namespace TutorConnect.WebApp.Services
         }
 
 
+        public async Task<(bool IsSuccess, string ErrorMessage, string ProfileImageUrl)>
+    UpdateTutorProfileAsync(int tutorId, string bio, string aboutMe, string expertise, string education, IFormFile profileImage)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[API SERVICE] UpdateTutorProfileAsync START");
+                Console.WriteLine($"[API SERVICE] TutorId: {tutorId}");
+                Console.WriteLine($"[API SERVICE] Bio: {bio}");
+                Console.WriteLine($"[API SERVICE] AboutMe: {aboutMe}");
+                Console.WriteLine($"[API SERVICE] Expertise: {expertise}");
+                Console.WriteLine($"[API SERVICE] Education: {education}");
+                Console.WriteLine($"[API SERVICE] ProfileImage: {profileImage?.FileName ?? "null"}");
+
+                using var formData = new MultipartFormDataContent();
+
+                formData.Add(new StringContent(bio ?? ""), "Bio");
+                formData.Add(new StringContent(aboutMe ?? ""), "AboutMe");
+                formData.Add(new StringContent(expertise ?? ""), "Expertise");
+                formData.Add(new StringContent(education ?? ""), "Education");
+
+                if (profileImage != null)
+                {
+                    Console.WriteLine($"[API SERVICE] Adding profile image: {profileImage.FileName}");
+                    var fileContent = new StreamContent(profileImage.OpenReadStream());
+                    fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(profileImage.ContentType);
+                    formData.Add(fileContent, "ProfileImage", profileImage.FileName);
+                }
+
+                Console.WriteLine($"[API SERVICE] Sending PUT request to: api/tutor-dashboard/{tutorId}/profile");
+                var response = await _client.PutAsync($"api/tutor-dashboard/{tutorId}/profile", formData);
+
+                Console.WriteLine($"[API SERVICE] Response status: {response.StatusCode}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[API SERVICE] Error response: {errorContent}");
+                    return (false, errorContent, null);
+                }
+
+                var json = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                string updatedUrl = null;
+
+                if (json != null && json.TryGetValue("profileImageUrl", out var url) && !string.IsNullOrEmpty(url))
+                {
+                    updatedUrl = Uri.IsWellFormedUriString(url, UriKind.Absolute) ? url : new Uri(_client.BaseAddress!, url).ToString();
+                }
+
+                Console.WriteLine($"[API SERVICE] Update successful, ProfileImageUrl: {updatedUrl ?? "null"}");
+                return (true, null, updatedUrl);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[API SERVICE] Exception: {ex.Message}");
+                Console.WriteLine($"[API SERVICE] Stack: {ex.StackTrace}");
+                return (false, ex.Message, null);
+            }
+        }
+
+
+        public async Task<(bool Success, string Message)> DeleteStudentAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"API Service: Deleting student {id}");
+                var response = await _client.DeleteAsync($"api/admin/delete-student/{id}");
+
+                Console.WriteLine($"API Response Status: {response.StatusCode}");
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Response Content: {responseContent}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Delete successful");
+                    return (true, "Student deleted successfully.");
+                }
+
+                // Handle specific error conditions
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    try
+                    {
+                        var errorObj = JsonConvert.DeserializeObject<dynamic>(responseContent);
+                        string errorMessage = errorObj?.message?.ToString() ?? responseContent;
+
+                        bool hasGamificationProfile = errorObj?.hasGamificationProfile?.Value ?? false;
+                        bool hasActiveBookings = errorObj?.hasActiveBookings?.Value ?? false;
+                        bool hasReviews = errorObj?.hasReviews?.Value ?? false;
+
+                        return (false, errorMessage);
+                    }
+                    catch
+                    {
+                        return (false, responseContent);
+                    }
+                }
+
+                return (false, $"Delete failed: {responseContent}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"API Service Exception: {ex.Message}");
+                return (false, $"An error occurred: {ex.Message}");
+            }
+        }
+
+
         public async Task<T> GetAsync<T>(string url)
         {
             var response = await _client.GetAsync(url);
@@ -661,48 +842,7 @@ namespace TutorConnect.WebApp.Services
 
 
 
-        public async Task<(bool IsSuccess, string ErrorMessage, string? ProfileImageUrl)>
-     UpdateTutorProfileAsync(int tutorId, string bio, string? aboutMe, string? expertise, string? education, IFormFile? profileImage)
-        {
-            using var form = new MultipartFormDataContent();
-
-            // Add all text fields
-            form.Add(new StringContent(bio ?? ""), "Bio");
-            form.Add(new StringContent(aboutMe ?? ""), "AboutMe");
-            form.Add(new StringContent(expertise ?? ""), "Expertise");
-            form.Add(new StringContent(education ?? ""), "Education");
-
-            // Add profile image if exists
-            if (profileImage != null)
-            {
-                var streamContent = new StreamContent(profileImage.OpenReadStream());
-                form.Add(streamContent, "ProfileImage", profileImage.FileName);
-            }
-
-            // Send PUT request to API
-            var response = await _client.PutAsync($"api/tutor-dashboard/{tutorId}/profile", form);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var error = await response.Content.ReadAsStringAsync();
-                return (false, error, null);
-            }
-
-            // Read updated profile info from API
-            var json = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
-            string? updatedUrl = null;
-
-            if (json != null && json.TryGetValue("profileImageUrl", out var url) && !string.IsNullOrEmpty(url))
-            {
-                // Ensure absolute URL
-                if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                    updatedUrl = url;
-                else
-                    updatedUrl = new Uri(_client.BaseAddress!, url).ToString();
-            }
-
-            return (true, null, updatedUrl);
-        }
+       
 
         public async Task<List<BrowseTutorDTO>> GetAllTutorsAsync()
         {
@@ -983,6 +1123,7 @@ namespace TutorConnect.WebApp.Services
             AddAuthHeader();
             try
             {
+                // The request should now include CourseId
                 var response = await _client.PostAsJsonAsync("api/admin/create-module", request);
 
                 if (response.IsSuccessStatusCode)
@@ -1004,6 +1145,7 @@ namespace TutorConnect.WebApp.Services
             AddAuthHeader();
             try
             {
+                // The request should now include CourseId
                 var response = await _client.PutAsJsonAsync($"api/admin/update-module/{id}", request);
 
                 if (response.IsSuccessStatusCode)
@@ -1095,54 +1237,7 @@ namespace TutorConnect.WebApp.Services
             }
         }
 
-        public async Task<(bool Success, string Message)> DeleteStudentAsync(int id)
-        {
-            AddAuthHeader();
-            try
-            {
-                Console.WriteLine($"Attempting to delete student with ID: {id}");
-
-                var response = await _client.DeleteAsync($"api/admin/delete-student/{id}");
-
-                Console.WriteLine($"Delete response status: {response.StatusCode}");
-
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("Student deleted successfully");
-                    return (true, "Student deleted successfully.");
-                }
-
-                // Handle specific error cases
-                var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Delete error content: {errorContent}");
-
-                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    if (errorContent.Contains("bookings", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return (false, "Cannot delete student with existing bookings.");
-                    }
-                    return (false, errorContent);
-                }
-
-                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return (false, "Student not found.");
-                }
-
-                return (false, $"Failed to delete student: {errorContent}");
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.WriteLine($"HTTP error deleting student: {ex.Message}");
-                return (false, $"Network error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting student: {ex.Message}");
-                return (false, $"Error deleting student: {ex.Message}");
-            }
-        }
+       
 
         // -- Tutors (convenience wrappers; you already have ToggleBlockTutorAsync) --
         public async Task<bool> BlockTutorAsync(int id)
@@ -1176,8 +1271,24 @@ namespace TutorConnect.WebApp.Services
         }
 
 
+        // Add this method to your ApiService
+        public async Task<List<BrowseTutorDTO>> GetTutorsForStudentAsync(int studentId)
+        {
+            try
+            {
+                var response = await _client.GetAsync($"api/tutor-dashboard/browse-for-student/{studentId}");
+                if (!response.IsSuccessStatusCode)
+                    return new List<BrowseTutorDTO>();
 
-        
+                return await response.Content.ReadFromJsonAsync<List<BrowseTutorDTO>>() ?? new List<BrowseTutorDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting tutors for student: {ex.Message}");
+                return new List<BrowseTutorDTO>();
+            }
+        }
+
 
         public async Task<dynamic> GetReportOptionsAsync()
         {
@@ -1745,42 +1856,6 @@ private string GetExportFileName(ReportFilterDTO filters)
             }
         }
 
-        public async Task<bool> ToggleThemeAsync()
-        {
-            AddAuthHeader();
-            try
-            {
-                var response = await _client.PutAsync("api/student/toggle-theme", null);
-                return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error toggling theme: {ex.Message}");
-                return false;
-            }
-        }
-
-        // New method to get current theme without UserDTO
-        public async  Task<string> GetCurrentThemeAsync()
-        {
-            AddAuthHeader();
-            try
-            {
-                var response = await _client.GetAsync("api/student/current-theme");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<dynamic>(content);
-                    return result?.themePreference?.ToString() ?? "light";
-                }
-                return "light";
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error getting current theme: {ex.Message}");
-                return "light";
-            }
-        }
 
 
 
@@ -1790,6 +1865,9 @@ private string GetExportFileName(ReportFilterDTO filters)
             AddAuthHeader();
             try
             {
+                Console.WriteLine($"[ApiService] Asking chatbot: {question}");
+                Console.WriteLine($"[ApiService] ConversationId: {conversationId}");
+
                 var request = new ChatQuestionRequest
                 {
                     Question = question,
@@ -1797,19 +1875,26 @@ private string GetExportFileName(ReportFilterDTO filters)
                     Context = context
                 };
 
+                Console.WriteLine($"[ApiService] Sending request to: {_client.BaseAddress}api/chatbot/ask");
                 var response = await _client.PostAsJsonAsync("api/chatbot/ask", request);
+
+                Console.WriteLine($"[ApiService] Response status: {response.StatusCode}");
 
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[ApiService] Error response: {errorContent}");
                     throw new HttpRequestException($"Chatbot API error: {response.StatusCode} - {errorContent}");
                 }
 
-                return await response.Content.ReadFromJsonAsync<ChatResponse>();
+                var chatResponse = await response.Content.ReadFromJsonAsync<ChatResponse>();
+                Console.WriteLine($"[ApiService] ✅ Got chatbot response: {chatResponse?.Answer?.Length ?? 0} chars");
+
+                return chatResponse;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error asking chatbot: {ex.Message}");
+                Console.WriteLine($"[ApiService] ❌ Error asking chatbot: {ex.Message}");
                 throw;
             }
         }
@@ -1819,11 +1904,14 @@ private string GetExportFileName(ReportFilterDTO filters)
             AddAuthHeader();
             try
             {
-                return await _client.GetFromJsonAsync<List<ConversationDTO>>("api/chatbot/conversations");
+                Console.WriteLine($"[ApiService] Getting chatbot conversations");
+                var conversations = await _client.GetFromJsonAsync<List<ConversationDTO>>("api/chatbot/conversations");
+                Console.WriteLine($"[ApiService] ✅ Got {conversations?.Count ?? 0} conversations");
+                return conversations ?? new List<ConversationDTO>();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error getting chatbot conversations: {ex.Message}");
+                Console.WriteLine($"[ApiService] ❌ Error getting conversations: {ex.Message}");
                 return new List<ConversationDTO>();
             }
         }
@@ -1833,32 +1921,158 @@ private string GetExportFileName(ReportFilterDTO filters)
             AddAuthHeader();
             try
             {
+                Console.WriteLine($"[ApiService] Deleting conversation {conversationId}");
                 var response = await _client.DeleteAsync($"api/chatbot/conversations/{conversationId}");
+                Console.WriteLine($"[ApiService] Delete response: {response.StatusCode}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error deleting chatbot conversation: {ex.Message}");
+                Console.WriteLine($"[ApiService] ❌ Error deleting conversation: {ex.Message}");
                 return false;
             }
         }
 
 
 
+        // Add to ApiService class
+        public async Task<List<CourseDTO>> GetCoursesAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/admin/courses");
+                if (!response.IsSuccessStatusCode)
+                    return new List<CourseDTO>();
 
+                return await response.Content.ReadFromJsonAsync<List<CourseDTO>>() ?? new List<CourseDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting courses: {ex.Message}");
+                return new List<CourseDTO>();
+            }
+        }
 
+        public async Task<bool> CreateCourseAsync(CreateCourseDTO dto)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/admin/courses", dto);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error creating course: {ex.Message}");
+                return false;
+            }
+        }
 
+        public async Task<bool> UpdateCourseAsync(UpdateCourseDTO dto)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PutAsJsonAsync($"api/admin/courses/{dto.CourseId}", dto);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating course: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<(bool Success, string Message)> DeleteCourseAsync(int id)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.DeleteAsync($"api/admin/courses/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, "Course deleted successfully.");
+                }
+
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return (false, errorContent);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error deleting course: {ex.Message}");
+                return (false, $"Error deleting course: {ex.Message}");
+            }
+        }
+
+        // Optional: Additional methods for course details
+        public async Task<List<ModuleDTO>> GetModulesByCourseAsync(int courseId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/admin/courses/{courseId}/modules");
+                if (!response.IsSuccessStatusCode)
+                    return new List<ModuleDTO>();
+
+                return await response.Content.ReadFromJsonAsync<List<ModuleDTO>>() ?? new List<ModuleDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting course modules: {ex.Message}");
+                return new List<ModuleDTO>();
+            }
+        }
+
+        public async Task<List<TutorDTO>> GetTutorsByCourseAsync(int courseId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/admin/courses/{courseId}/tutors");
+                if (!response.IsSuccessStatusCode)
+                    return new List<TutorDTO>();
+
+                return await response.Content.ReadFromJsonAsync<List<TutorDTO>>() ?? new List<TutorDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting course tutors: {ex.Message}");
+                return new List<TutorDTO>();
+            }
+        }
+
+        public async Task<List<StudentDTO>> GetStudentsByCourseAsync(int courseId)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync($"api/admin/courses/{courseId}/students");
+                if (!response.IsSuccessStatusCode)
+                    return new List<StudentDTO>();
+
+                return await response.Content.ReadFromJsonAsync<List<StudentDTO>>() ?? new List<StudentDTO>();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting course students: {ex.Message}");
+                return new List<StudentDTO>();
+            }
+        }
 
         public class CreateModuleRequest
         {
             public string Code { get; set; }
             public string Name { get; set; }
+            public int CourseId { get; set; }
         }
 
         public class UpdateModuleRequest
         {
             public string Code { get; set; }
             public string Name { get; set; }
+            public int CourseId { get; set; }
         }
 
     }

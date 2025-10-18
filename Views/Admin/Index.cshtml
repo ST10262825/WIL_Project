@@ -45,6 +45,26 @@
             </div>
         </div>
 
+        <!-- Total Courses Card - ADD THIS NEW CARD -->
+        <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
+            <div class="card border-left-secondary shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Total Courses</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalCourses</div>
+                            <div class="text-xs text-muted">
+                                Active courses
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-graduation-cap fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Total Bookings Card -->
         <div class="col-xl-2 col-md-4 col-sm-6 mb-3">
             <div class="card border-left-success shadow h-100">
@@ -147,6 +167,13 @@
                             </a>
                             <p class="mb-0 small">Manage Students</p>
                         </div>
+                        <!-- ADD COURSES QUICK ACTION -->
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <a asp-action="Index" asp-controller="Courses" class="btn btn-secondary btn-circle btn-lg mb-2">
+                                <i class="fas fa-graduation-cap"></i>
+                            </a>
+                            <p class="mb-0 small">Manage Courses</p>
+                        </div>
                         <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                             <a asp-action="Bookings" class="btn btn-info btn-circle btn-lg mb-2">
                                 <i class="fas fa-calendar-check"></i>
@@ -154,13 +181,13 @@
                             <p class="mb-0 small">Manage Bookings</p>
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a asp-action="Modules" class="btn btn-secondary btn-circle btn-lg mb-2">
+                            <a asp-action="Modules" class="btn btn-warning btn-circle btn-lg mb-2">
                                 <i class="fas fa-book"></i>
                             </a>
                             <p class="mb-0 small">Manage Modules</p>
                         </div>
                         <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
-                            <a asp-action="Reports" class="btn btn-warning btn-circle btn-lg mb-2">
+                            <a asp-action="Reports" class="btn btn-danger btn-circle btn-lg mb-2">
                                 <i class="fas fa-chart-bar"></i>
                             </a>
                             <p class="mb-0 small">Create Reports</p>
@@ -201,7 +228,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <div class="card border-left-success h-100">
                                 <div class="card-body text-center">
                                     <div class="h5 text-success mb-1">@Model.RecentBookings</div>
@@ -209,11 +236,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <div class="card border-left-info h-100">
                                 <div class="card-body text-center">
                                     <div class="h5 text-info mb-1">@Model.AverageTutorRating.ToString("F1")</div>
                                     <div class="text-xs text-muted">Avg Tutor Rating</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ADD COURSE STAT -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-left-secondary h-100">
+                                <div class="card-body text-center">
+                                    <div class="h5 text-secondary mb-1">@Model.TotalCourses</div>
+                                    <div class="text-xs text-muted">Active Courses</div>
                                 </div>
                             </div>
                         </div>
@@ -280,6 +316,10 @@
                             <span>File Storage</span>
                             <span class="badge bg-success">Normal</span>
                         </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                            <span>Course Management</span>
+                            <span class="badge bg-success">Active</span>
+                        </div>
                         <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
                             <span>Booking Completion Rate</span>
                             <span class="badge bg-info">@Model.BookingCompletionRate.ToString("F1")%</span>
@@ -332,12 +372,12 @@
             },
         });
 
-        // Counter animation
+                // Counter animation
         document.addEventListener('DOMContentLoaded', function() {
             const counters = document.querySelectorAll('.h5.mb-0.font-weight-bold.text-gray-800');
             counters.forEach(counter => {
                 const target = parseInt(counter.innerText);
-                if (!isNaN(target) && target > 0) {
+                if (!isNaN(target) && target >= 0) { // Changed to >= 0 to handle zero values
                     animateCounter(counter, target);
                 }
             });

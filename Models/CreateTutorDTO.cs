@@ -19,6 +19,7 @@ namespace TutorConnect.WebApp.Models
         public string Surname { get; set; }
         public string Phone { get; set; }
         public string Bio { get; set; }
+        public int CourseId { get; set; }
 
         public List<int> ModuleIds { get; set; } = new();
     }

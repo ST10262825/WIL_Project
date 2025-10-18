@@ -15,6 +15,6 @@ public class RegisterStudentDTO
     [Compare("Password", ErrorMessage = "Passwords do not match.")]
     public string ConfirmPassword { get; set; } = string.Empty;
 
-    public string Course { get; set; } = string.Empty;
+    public int CourseId { get; set; }
 
 }

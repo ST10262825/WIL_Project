@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IdentityModel.Tokens.Jwt;
-using TutorConnect.WebApp.Services;
-using TutorConnect.WebApp.Models;
 using System.Net.Http;
+using System.Security.Claims;
+using TutorConnect.WebApp.Models;
+using TutorConnect.WebApp.Services;
 
 namespace TutorConnect.WebApp.Controllers
 {
@@ -25,7 +26,24 @@ namespace TutorConnect.WebApp.Controllers
         public IActionResult Login() => View();
 
         [HttpGet]
-        public IActionResult Register() => View();
+        public async Task<IActionResult> Register()
+        {
+            try
+            {
+                // Get available courses for dropdown
+                var courses = await _apiService.GetCoursesAsync();
+                ViewBag.Courses = new SelectList(courses ?? new List<CourseDTO>(), "CourseId", "Title");
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                // If courses fail to load, still show the form but log the error
+                Console.WriteLine($"Error loading courses: {ex.Message}");
+                ViewBag.Courses = new SelectList(new List<CourseDTO>(), "CourseId", "Title");
+                return View();
+            }
+        }
 
         [HttpGet]
         public IActionResult Verify(string? email)
@@ -163,6 +181,9 @@ namespace TutorConnect.WebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
+                // Reload courses on validation error
+                var courses = await _apiService.GetCoursesAsync();
+                ViewBag.Courses = new SelectList(courses ?? new List<CourseDTO>(), "CourseId", "Title");
                 return View(dto);
             }
 
@@ -173,7 +194,7 @@ namespace TutorConnect.WebApp.Controllers
                     Email = dto.Email,
                     Password = dto.Password,
                     Name = dto.Name,
-                    Course = dto.Course
+                    CourseId = dto.CourseId // CHANGE FROM Course TO CourseId
                 });
 
                 // NEW: Enhanced success message with gamification benefits
@@ -182,6 +203,9 @@ namespace TutorConnect.WebApp.Controllers
             }
             catch (HttpRequestException ex)
             {
+                // Reload courses on API error
+                var courses = await _apiService.GetCoursesAsync();
+                ViewBag.Courses = new SelectList(courses ?? new List<CourseDTO>(), "CourseId", "Title");
                 ViewBag.Error = ex.Message;
                 return View(dto);
             }

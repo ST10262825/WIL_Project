@@ -21,7 +21,9 @@ namespace TutorConnect.WebApp.Controllers
         public async Task<IActionResult> CreateTutor()
         {
             var modules = await _api.GetModulesAsync();
+            var courses = await _api.GetCoursesAsync();
             ViewBag.Modules = modules;
+            ViewBag.Courses = courses;
             return View();
         }
 
@@ -35,6 +37,7 @@ namespace TutorConnect.WebApp.Controllers
                                               .ToList();
                 ViewBag.Errors = errors;
                 ViewBag.Modules = await _api.GetModulesAsync();
+                ViewBag.Courses = await _api.GetCoursesAsync();
                 return View(dto);
             }
 
@@ -65,7 +68,9 @@ namespace TutorConnect.WebApp.Controllers
                 }
 
                 var modules = await _api.GetModulesAsync();
+                var courses = await _api.GetCoursesAsync(); // ADD THIS LINE
                 ViewBag.Modules = modules;
+                ViewBag.Courses = courses; // ADD THIS LINE
 
                 var adminupdateDto = new AdminUpdateTutorDTO
                 {
@@ -73,12 +78,13 @@ namespace TutorConnect.WebApp.Controllers
                     Name = tutor.Name,
                     Surname = tutor.Surname,
                     Phone = tutor.Phone,
-                    Email = tutor.Email, // Make sure your TutorDTO has Email property
+                    Email = tutor.Email,
                     Bio = tutor.Bio,
                     AboutMe = tutor.AboutMe,
                     Expertise = tutor.Expertise,
                     Education = tutor.Education,
                     IsBlocked = tutor.IsBlocked,
+                    CourseId = tutor.CourseId, 
                     ModuleIds = tutor.Modules?.Select(m => m.ModuleId).ToList() ?? new List<int>()
                 };
 
@@ -99,6 +105,7 @@ namespace TutorConnect.WebApp.Controllers
             if (!ModelState.IsValid)
             {
                 ViewBag.Modules = await _api.GetModulesAsync();
+                ViewBag.Courses = await _api.GetCoursesAsync();
                 return View(dto);
             }
 
@@ -172,6 +179,7 @@ namespace TutorConnect.WebApp.Controllers
 
 
 
+     
         // Dashboard with comprehensive stats
         public async Task<IActionResult> Index()
         {
@@ -181,6 +189,7 @@ namespace TutorConnect.WebApp.Controllers
                 var students = await _api.GetAllStudentsAsync();
                 var bookings = await _api.GetAllBookingsAsync();
                 var modules = await _api.GetAllModulesAsync();
+                var courses = await _api.GetCoursesAsync(); // ADD THIS LINE
 
                 // Safe calculations with null checks
                 var activeTutors = tutors?.Count(t => !t.IsBlocked) ?? 0;
@@ -210,11 +219,11 @@ namespace TutorConnect.WebApp.Controllers
 
                 var viewModel = new AdminDashboardViewModel
                 {
-                    // Your existing properties...
                     TotalTutors = tutors?.Count ?? 0,
                     TotalStudents = students?.Count ?? 0,
                     TotalBookings = bookings?.Count ?? 0,
                     TotalModules = modules?.Count ?? 0,
+                    TotalCourses = courses?.Count ?? 0, // ADD THIS LINE
                     ActiveTutors = activeTutors,
                     BlockedTutors = blockedTutors,
                     ActiveStudents = activeStudents,
@@ -227,7 +236,6 @@ namespace TutorConnect.WebApp.Controllers
                     CompletedThisWeek = completedThisWeek,
                     AverageTutorRating = (double)averageTutorRating,
                     BookingCompletionRate = bookingCompletionRate,
-                    // ... rest of your view model initialization
                 };
 
                 return View(viewModel);
@@ -421,13 +429,13 @@ namespace TutorConnect.WebApp.Controllers
         }
 
         // ------------------ Modules ------------------
-        // In your AdminController.cs
-
         public async Task<IActionResult> Modules()
         {
             try
             {
                 var modules = await _api.GetAllModulesAsync();
+                var courses = await _api.GetCoursesAsync(); 
+                ViewBag.Courses = courses; 
                 return View(modules ?? new List<ModuleDTO>());
             }
             catch (Exception ex)
@@ -437,8 +445,9 @@ namespace TutorConnect.WebApp.Controllers
             }
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> CreateModule(string Code, string Name)
+        public async Task<IActionResult> CreateModule(string Code, string Name, int CourseId) // ADD CourseId parameter
         {
             try
             {
@@ -448,7 +457,12 @@ namespace TutorConnect.WebApp.Controllers
                     return RedirectToAction(nameof(Modules));
                 }
 
-                var request = new CreateModuleRequest { Code = Code.Trim(), Name = Name.Trim() };
+                var request = new CreateModuleRequest
+                {
+                    Code = Code.Trim(),
+                    Name = Name.Trim(),
+                    CourseId = CourseId // ADD THIS
+                };
                 var (success, message) = await _api.CreateModuleAsync(request);
 
                 if (success)
@@ -471,7 +485,7 @@ namespace TutorConnect.WebApp.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> EditModule(int id, string Code, string Name)
+        public async Task<IActionResult> EditModule(int id, string Code, string Name, int CourseId) // ADD CourseId parameter
         {
             try
             {
@@ -481,7 +495,12 @@ namespace TutorConnect.WebApp.Controllers
                     return RedirectToAction(nameof(Modules));
                 }
 
-                var request = new UpdateModuleRequest { Code = Code.Trim(), Name = Name.Trim() };
+                var request = new UpdateModuleRequest
+                {
+                    Code = Code.Trim(),
+                    Name = Name.Trim(),
+                    CourseId = CourseId // ADD THIS
+                };
                 var (success, message) = await _api.UpdateModuleAsync(id, request);
 
                 if (success)

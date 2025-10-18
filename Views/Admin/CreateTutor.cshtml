@@ -1,9 +1,8 @@
 ﻿@model CreateTutorDTO
 @{
     var modules = ViewBag.Modules as List<ModuleDTO>;
+    var courses = ViewBag.Courses as List<CourseDTO>; // ADD THIS LINE
 }
-
-
 
 <h2>Create Tutor</h2>
 
@@ -20,7 +19,6 @@
         }
     </ul>
 }
-
 
 <form method="post">
     <div class="form-group">
@@ -43,19 +41,76 @@
         <label>Phone</label>
         <input asp-for="Phone" class="form-control" />
     </div>
+
+    <!-- ADD COURSE SELECTION -->
+    <div class="form-group">
+        <label>Course *</label>
+        <select asp-for="CourseId" class="form-control" required>
+            <option value="">-- Select Course --</option>
+            @if (courses != null)
+            {
+                foreach (var course in courses)
+                {
+                    <option value="@course.CourseId">@course.Title</option>
+                }
+            }
+        </select>
+        <small class="form-text text-muted">Select the course this tutor will teach under</small>
+    </div>
+
     <div class="form-group">
         <label>Bio</label>
         <textarea asp-for="Bio" class="form-control"></textarea>
     </div>
+
     <div class="form-group">
-        <label>Modules</label><br />
-        @foreach (var module in modules)
+        <label>Modules *</label><br />
+        @if (modules != null && modules.Any())
         {
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="ModuleIds" value="@module.ModuleId" />
-                <label class="form-check-label">@module.Code</label>
+            foreach (var module in modules)
+            {
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="ModuleIds" value="@module.ModuleId" />
+                    <label class="form-check-label">@module.Code - @module.Name</label>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                No modules available. Please create modules first in the Modules management section.
             </div>
         }
     </div>
-    <button type="submit" class="btn btn-success">Create</button>
+
+    <div class="form-group mt-4">
+        <button type="submit" class="btn btn-success">Create Tutor</button>
+        <a asp-action="Tutors" class="btn btn-secondary">Cancel</a>
+    </div>
 </form>
+
+<!-- ADD SCRIPT FOR BETTER USER EXPERIENCE -->
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add validation for at least one module selected
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const moduleCheckboxes = document.querySelectorAll('input[name="ModuleIds"]:checked');
+                const courseSelect = document.querySelector('#CourseId');
+
+                if (courseSelect.value === '') {
+                    e.preventDefault();
+                    alert('Please select a course for the tutor.');
+                    return;
+                }
+
+                if (moduleCheckboxes.length === 0) {
+                    e.preventDefault();
+                    alert('Please select at least one module for the tutor.');
+                    return;
+                }
+            });
+        });
+    </script>
+}

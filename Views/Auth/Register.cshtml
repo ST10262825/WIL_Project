@@ -45,9 +45,11 @@
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label asp-for="Course" class="form-label"></label>
-                                <input asp-for="Course" class="form-control" placeholder="Course of study" />
-                                <span asp-validation-for="Course" class="text-danger"></span>
+                                <label asp-for="CourseId" class="form-label">Course</label>
+                                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.Courses">
+                                    <option value="">-- Select Your Course --</option>
+                                </select>
+                                <span asp-validation-for="CourseId" class="text-danger"></span>
                             </div>
                         </div>
 

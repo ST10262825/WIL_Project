@@ -15,6 +15,8 @@
         public string? Expertise { get; set; }
         public string? Education { get; set; }
         public bool IsBlocked { get; set; }
+        public int CourseId { get; set; }
+        public string CourseName { get; set; }
         public List<string> Subjects { get; set; } = new();
         public List<ModuleDTO> Modules { get; set; }
 

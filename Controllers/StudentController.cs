@@ -67,6 +67,9 @@ namespace TutorConnect.WebApp.Controllers
                 ViewBag.UnreadMessagesCount = unreadMessagesCount;
                 ViewBag.PendingReviewsCount = pendingReviews.Count; // Add this line
 
+                //  COURSE INFO
+                ViewBag.CourseName = student.CourseName ?? "Not enrolled in course";
+
                 return View(bookings ?? new List<BookingDTO>());
             }
             catch (TimeoutException)
@@ -184,6 +187,7 @@ public async Task<IActionResult> MySessions()
                     });
                 }
 
+                ViewBag.CourseName = student.CourseName ?? "Not enrolled in course";
 
                 return View(bookingsWithReviewStatus);
     }
@@ -257,6 +261,8 @@ public async Task<IActionResult> MySessions()
 
                 // Store count for sidebar badge
                 ViewBag.PendingReviewsCount = pendingReviews.Count;
+
+                ViewBag.CourseName = student.CourseName ?? "Not enrolled in course";
 
                 return View(pendingReviews);
             }
@@ -347,6 +353,9 @@ public async Task<IActionResult> MySessions()
                 ViewBag.StudentName = student.Name;
                 ViewBag.MaterialsOverview = materialsOverview; // This is now strongly-typed
 
+                //  COURSE INFO
+                ViewBag.CourseName = student.CourseName ?? "Not enrolled in course";
+
                 return View(materials ?? new List<LearningMaterialDTO>());
             }
             catch (Exception ex)
@@ -377,6 +386,8 @@ public async Task<IActionResult> MySessions()
                 ViewBag.TutorName = tutor?.Name + " " + tutor?.Surname;
                 ViewBag.StudentId = student.StudentId;
 
+                ViewBag.CourseName = student.CourseName ?? "Not enrolled in course";
+
                 return View(materials ?? new List<LearningMaterialDTO>());
             }
             catch (Exception ex)
@@ -396,9 +407,10 @@ public async Task<IActionResult> MySessions()
                 var student = await _apiService.GetStudentByUserIdAsync();
                 if (student == null) return RedirectToAction("Login", "Auth");
 
-                // FIX: Add parentheses to call the method
-                var currentTheme = await _apiService.GetCurrentThemeAsync();
-                ViewBag.CurrentTheme = currentTheme ?? "light";
+                // ADD COURSE INFO
+                ViewBag.CourseName = student.CourseName ?? "Not enrolled in course";
+                ViewBag.CourseId = student.CourseId;
+
 
                 return View();
             }
@@ -534,45 +546,7 @@ public async Task<IActionResult> MySessions()
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> ToggleTheme()
-        {
-            try
-            {
-                var student = await _apiService.GetStudentByUserIdAsync();
-                if (student == null) return Json(new { success = false, message = "Student not found" });
-
-                var success = await _apiService.ToggleThemeAsync();
-                if (success)
-                {
-                    // Get the new theme after toggling
-                    var newTheme = await _apiService.GetCurrentThemeAsync();
-
-                    // Set theme cookie
-                    Response.Cookies.Append("ThemePreference", newTheme ?? "light", new CookieOptions
-                    {
-                        Expires = DateTimeOffset.Now.AddYears(1),
-                        Path = "/"
-                    });
-
-                    return Json(new
-                    {
-                        success = true,
-                        message = "Theme preference updated!",
-                        theme = newTheme,
-                        reload = true
-                    });
-                }
-                else
-                {
-                    return Json(new { success = false, message = "Failed to update theme." });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "Error updating theme: " + ex.Message });
-            }
-        }
+       
 
 
 

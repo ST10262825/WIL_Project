@@ -9,6 +9,7 @@ namespace TutorConnect.WebApp.Models
         public int TotalStudents { get; set; }
         public int TotalBookings { get; set; }
         public int TotalModules { get; set; }
+        public int TotalCourses { get; set; }
 
         // Status breakdowns
         public int ActiveTutors { get; set; }
