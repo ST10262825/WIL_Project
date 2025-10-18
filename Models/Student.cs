@@ -7,7 +7,9 @@ namespace TutorConnectAPI.Models
         public int StudentId { get; set; }
         public int UserId { get; set; }
         public string Name { get; set; }
-        public string Course { get; set; }
+        // Change from string Course to relationship
+        public int CourseId { get; set; }
+        public Course Course { get; set; }
         public string? ProfileImage { get; set; }
         public string? Bio { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }

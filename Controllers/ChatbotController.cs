@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
 using TutorConnectAPI.Data;
 using TutorConnectAPI.DTOs;
 using TutorConnectAPI.Models;
@@ -17,13 +19,18 @@ namespace TutorConnectAPI.Controllers
         private readonly IChatbotService _chatbotService;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<GamificationController> _logger;
+        private readonly IClaudeAIService _claudeAIService;
+        private readonly IConfiguration _configuration;
+
 
         public ChatbotController(IChatbotService chatbotService, ApplicationDbContext context,
-            ILogger<GamificationController> logger)
+            ILogger<GamificationController> logger, IClaudeAIService claudeAIService, IConfiguration configuration)
         {
             _chatbotService = chatbotService;
             _context = context;
             _logger = logger;
+            _claudeAIService = claudeAIService;
+            _configuration = configuration;
         }
 
         [HttpPost("ask")]
@@ -262,51 +269,300 @@ namespace TutorConnectAPI.Controllers
             }
         }
 
-        [HttpPost("minimal")]
-        [Authorize]
-        public async Task<IActionResult> MinimalTest([FromBody] ChatQuestionRequest request)
-        {
-            Console.WriteLine($"MINIMAL TEST - Question: {request.Question}");
 
+
+
+        [HttpPost("test-claude")]
+       
+        public async Task<IActionResult> TestClaude([FromBody] ChatQuestionRequest request)
+        {
             try
             {
-                // Bypass all database operations and return a simple response
-                var response = new ChatResponse
-                {
-                    Answer = $"**This is a test response!**\n\nI received your question: \"{request.Question}\"\n\nThis confirms the chatbot is working at a basic level.",
-                    ConversationId = 999,
-                    MessageId = 999,
-                    Suggestions = new List<QuickSuggestion>
-            {
-                new QuickSuggestion { Text = "Ask about booking", Type = "question" },
-                new QuickSuggestion { Text = "Contact support", Type = "action", Action = "mailto:support@tutorconnect.com" }
-            },
-                    RelevantDocs = new List<RelevantDocument>(),
-                    RequiresHumanSupport = false
-                };
+                _logger.LogInformation("Testing Claude with question: {Question}", request.Question);
 
-                Console.WriteLine($"MINIMAL TEST - Successfully returning response");
-                return Ok(response);
+                var response = await _claudeAIService.GenerateChatResponseAsync(request.Question);
+
+                _logger.LogInformation("Claude response: {Response}", response);
+
+                return Ok(new
+                {
+                    success = !string.IsNullOrEmpty(response),
+                    response = response ?? "Claude returned empty response",
+                    message = !string.IsNullOrEmpty(response) ? "Claude is working!" : "Claude failed to respond",
+                    responseLength = response?.Length ?? 0
+                });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"MINIMAL TEST FAILED: {ex.Message}");
-                return StatusCode(500, new { error = ex.Message });
+                _logger.LogError(ex, "Error testing Claude");
+                return StatusCode(500, new
+                {
+                    error = ex.Message,
+                    innerError = ex.InnerException?.Message
+                });
             }
         }
 
-        [HttpGet("debug-claims")]
-        [Authorize]
-        public IActionResult DebugClaims()
+        // Add this to your ChatbotController.cs
+
+        [HttpPost("test-claude-detailed")]
+   
+        public async Task<IActionResult> TestClaudeDetailed([FromBody] ChatQuestionRequest request)
         {
-            var claims = User.Claims.Select(c => new { c.Type, c.Value }).ToList();
-            return Ok(new
+            try
             {
-                claims,
-                userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                emailClaim = User.FindFirst(ClaimTypes.Email)?.Value,
-                nameClaim = User.FindFirst(ClaimTypes.Name)?.Value
-            });
+                _logger.LogInformation("=== DETAILED CLAUDE TEST STARTED ===");
+
+                // Test 1: Check configuration
+                var apiKey = _configuration["Claude:ApiKey"];
+                var model = _configuration["Claude:Model"];
+
+                var configTest = new
+                {
+                    hasApiKey = !string.IsNullOrEmpty(apiKey),
+                    apiKeyLength = apiKey?.Length ?? 0,
+                    apiKeyPrefix = apiKey?.Substring(0, Math.Min(15, apiKey?.Length ?? 0)),
+                    model = model,
+                    maxTokens = _configuration["Claude:MaxTokens"],
+                    temperature = _configuration["Claude:Temperature"]
+                };
+
+                _logger.LogInformation("Config: {@Config}", configTest);
+
+                // Test 2: Manual HTTP call to Claude
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
+                httpClient.DefaultRequestHeaders.Add("anthropic-version", "2023-06-01");
+
+                var requestBody = new
+                {
+                    model = "claude-3-5-sonnet-20241022",
+                    max_tokens = 1024,
+                    messages = new[]
+                    {
+                new
+                {
+                    role = "user",
+                    content = "Hi! Please respond with just 'Hello!'"
+                }
+            }
+                };
+
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = true
+                };
+
+                var json = JsonSerializer.Serialize(requestBody, jsonOptions);
+                _logger.LogInformation("Request JSON:\n{Json}", json);
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var url = "https://api.anthropic.com/v1/messages";
+                _logger.LogInformation("Calling: {Url}", url);
+
+                var response = await httpClient.PostAsync(url, content);
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var responseHeaders = response.Headers.ToString();
+
+                _logger.LogInformation("Status: {Status}", response.StatusCode);
+                _logger.LogInformation("Response:\n{Response}", responseContent);
+
+                // Test 3: Try with ClaudeAIService
+                string claudeServiceResponse = null;
+                try
+                {
+                    claudeServiceResponse = await _claudeAIService.GenerateChatResponseAsync(request.Question);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "ClaudeAIService failed");
+                }
+
+                return Ok(new
+                {
+                    configTest,
+                    directApiCall = new
+                    {
+                        url,
+                        statusCode = (int)response.StatusCode,
+                        statusName = response.StatusCode.ToString(),
+                        isSuccess = response.IsSuccessStatusCode,
+                        responsePreview = responseContent?.Length > 500
+                            ? responseContent.Substring(0, 500) + "..."
+                            : responseContent,
+                        responseLength = responseContent?.Length ?? 0
+                    },
+                    claudeServiceResult = new
+                    {
+                        response = claudeServiceResponse,
+                        length = claudeServiceResponse?.Length ?? 0
+                    },
+                    timestamp = DateTime.UtcNow
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Detailed test failed");
+                return StatusCode(500, new
+                {
+                    error = ex.Message,
+                    stackTrace = ex.StackTrace,
+                    innerError = ex.InnerException?.Message
+                });
+            }
         }
+
+
+        // Add this endpoint to your ChatbotController to test Claude without DB operations
+
+        [HttpPost("test-claude-simple")]
+        [Authorize]
+        public async Task<IActionResult> TestClaudeSimple([FromBody] ChatQuestionRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("=== SIMPLE CLAUDE TEST ===");
+                _logger.LogInformation("Question: {Question}", request.Question);
+
+                // Build a simple prompt like in ChatbotService
+                var prompt = $@"
+You are TutorBot, an AI assistant for TutorConnect - a tutoring platform connecting students with tutors.
+
+PLATFORM CONTEXT:
+- TutorConnect helps students find tutors for various subjects
+- Users can be Students or Tutors
+- Sessions can be booked, rescheduled, or cancelled
+- Tutors have profiles with ratings and module expertise
+- Students can book sessions and leave reviews
+
+Instructions:
+1. Answer specifically about TutorConnect platform features and processes
+2. Be helpful, friendly, and concise
+3. Provide specific steps or guidance when possible
+4. Use markdown formatting for better readability
+
+USER QUESTION: {request.Question}
+";
+
+                _logger.LogInformation("Calling Claude with prompt length: {Length}", prompt.Length);
+
+                var response = await _claudeAIService.GenerateChatResponseAsync(prompt);
+
+                _logger.LogInformation("Claude response received: {HasResponse}", !string.IsNullOrEmpty(response));
+                _logger.LogInformation("Response length: {Length}", response?.Length ?? 0);
+                _logger.LogInformation("Response content: {Response}", response);
+
+                return Ok(new
+                {
+                    success = !string.IsNullOrEmpty(response),
+                    question = request.Question,
+                    answer = response,
+                    answerLength = response?.Length ?? 0,
+                    timestamp = DateTime.UtcNow
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Simple Claude test failed");
+                return StatusCode(500, new
+                {
+                    error = ex.Message,
+                    stackTrace = ex.StackTrace,
+                    innerError = ex.InnerException?.Message
+                });
+            }
+        }
+
+        // Add this debugging version of the /ask endpoint to your ChatbotController
+
+        [HttpPost("ask-debug")]
+       
+        public async Task<IActionResult> AskDebug([FromBody] ChatQuestionRequest request)
+        {
+            var debugInfo = new List<string>();
+
+            try
+            {
+                debugInfo.Add("1. Starting request");
+                var userId = GetCurrentUserId();
+                debugInfo.Add($"2. User ID: {userId}");
+
+                // Check user exists
+                var user = await _context.Users.FindAsync(userId);
+                debugInfo.Add($"3. User found: {user != null}");
+
+                if (user == null)
+                {
+                    return BadRequest(new { error = "User not found", debug = debugInfo });
+                }
+
+                // Check if conversationId is valid
+                debugInfo.Add($"4. ConversationId: {request.ConversationId}");
+
+                // Try to call the chatbot service with detailed error catching
+                try
+                {
+                    debugInfo.Add("5. Calling chatbot service...");
+                    var response = await _chatbotService.ProcessQuestionAsync(request, userId);
+                    debugInfo.Add("6. Chatbot service completed successfully");
+                    debugInfo.Add($"7. Response length: {response.Answer?.Length ?? 0}");
+
+                    return Ok(new
+                    {
+                        success = true,
+                        response = response,
+                        debug = debugInfo
+                    });
+                }
+                catch (DbUpdateException dbEx)
+                {
+                    debugInfo.Add($"❌ Database update error: {dbEx.Message}");
+                    debugInfo.Add($"❌ Inner: {dbEx.InnerException?.Message}");
+
+                    _logger.LogError(dbEx, "Database error in ProcessQuestionAsync");
+
+                    return StatusCode(500, new
+                    {
+                        error = "Database error",
+                        message = dbEx.Message,
+                        innerMessage = dbEx.InnerException?.Message,
+                        debug = debugInfo
+                    });
+                }
+                catch (Exception serviceEx)
+                {
+                    debugInfo.Add($"❌ Service error: {serviceEx.Message}");
+                    debugInfo.Add($"❌ Type: {serviceEx.GetType().Name}");
+
+                    _logger.LogError(serviceEx, "Error in ProcessQuestionAsync");
+
+                    return StatusCode(500, new
+                    {
+                        error = "Service error",
+                        message = serviceEx.Message,
+                        stackTrace = serviceEx.StackTrace,
+                        debug = debugInfo
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                debugInfo.Add($"❌ Controller error: {ex.Message}");
+
+                _logger.LogError(ex, "Error in AskDebug endpoint");
+
+                return StatusCode(500, new
+                {
+                    error = "Controller error",
+                    message = ex.Message,
+                    stackTrace = ex.StackTrace,
+                    debug = debugInfo
+                });
+            }
+        }
+
     }
 }

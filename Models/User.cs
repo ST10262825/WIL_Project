@@ -31,6 +31,6 @@
             }
         }
         
-        public string ThemePreference { get; set; } = "light"; // Default to light theme
+        
     }
 }

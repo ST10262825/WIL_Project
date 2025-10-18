@@ -28,7 +28,18 @@ builder.Services.AddControllers();
 
 // Gamification services
 builder.Services.AddScoped<IGamificationService, GamificationService>();
+
+//CLAUDE service
+builder.Services.AddScoped<IClaudeAIService, ClaudeAIService>();
+
+//Chatbot service
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
+
+//builder.Services.AddHttpClient<IClaudeAIService, ClaudeAIService>();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 
 
 // ---------------------

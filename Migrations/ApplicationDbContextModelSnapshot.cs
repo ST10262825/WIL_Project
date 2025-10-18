@@ -190,11 +190,9 @@ namespace TutorConnectAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("MessageType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Metadata")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SentAt")
@@ -243,7 +241,6 @@ namespace TutorConnectAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseId"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -252,7 +249,7 @@ namespace TutorConnectAPI.Migrations
 
                     b.HasKey("CourseId");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("TutorConnectAPI.Models.Enrollment", b =>
@@ -328,7 +325,6 @@ namespace TutorConnectAPI.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DocumentId"));
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Content")
@@ -339,18 +335,15 @@ namespace TutorConnectAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DocumentType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.PrimitiveCollection<string>("Embedding")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.PrimitiveCollection<string>("Tags")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -476,11 +469,16 @@ namespace TutorConnectAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ModuleId");
+
+                    b.HasIndex("CourseId");
 
                     b.ToTable("Modules");
                 });
@@ -608,9 +606,8 @@ namespace TutorConnectAPI.Migrations
                     b.Property<string>("Bio")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Course")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("bit");
@@ -626,6 +623,8 @@ namespace TutorConnectAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("StudentId");
+
+                    b.HasIndex("CourseId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -691,6 +690,9 @@ namespace TutorConnectAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Education")
                         .HasColumnType("nvarchar(max)");
 
@@ -738,6 +740,8 @@ namespace TutorConnectAPI.Migrations
 
                     b.HasKey("TutorId");
 
+                    b.HasIndex("CourseId");
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
@@ -782,10 +786,6 @@ namespace TutorConnectAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThemePreference")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -950,7 +950,7 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.User", "User")
                         .WithOne()
                         .HasForeignKey("TutorConnectAPI.Models.GamificationProfile", "UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -961,7 +961,7 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.LearningMaterialFolder", "Folder")
                         .WithMany("Materials")
                         .HasForeignKey("FolderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TutorConnectAPI.Models.Tutor", "Tutor")
                         .WithMany()
@@ -983,12 +983,12 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.LearningMaterialFolder", "ParentFolder")
                         .WithMany("Subfolders")
                         .HasForeignKey("ParentFolderId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("TutorConnectAPI.Models.Tutor", "Tutor")
                         .WithMany()
                         .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.Tutor", null)
@@ -998,6 +998,17 @@ namespace TutorConnectAPI.Migrations
                     b.Navigation("ParentFolder");
 
                     b.Navigation("Tutor");
+                });
+
+            modelBuilder.Entity("TutorConnectAPI.Models.Module", b =>
+                {
+                    b.HasOne("TutorConnectAPI.Models.Course", "Course")
+                        .WithMany("Modules")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("TutorConnectAPI.Models.Review", b =>
@@ -1065,11 +1076,19 @@ namespace TutorConnectAPI.Migrations
 
             modelBuilder.Entity("TutorConnectAPI.Models.Student", b =>
                 {
+                    b.HasOne("TutorConnectAPI.Models.Course", "Course")
+                        .WithMany("Students")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("TutorConnectAPI.Models.User", "User")
                         .WithOne("Student")
                         .HasForeignKey("TutorConnectAPI.Models.Student", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Course");
 
                     b.Navigation("User");
                 });
@@ -1079,7 +1098,7 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.Booking", "Booking")
                         .WithMany()
                         .HasForeignKey("BookingId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TutorConnectAPI.Models.LearningMaterial", "LearningMaterial")
                         .WithMany("StudentAccesses")
@@ -1106,11 +1125,19 @@ namespace TutorConnectAPI.Migrations
 
             modelBuilder.Entity("TutorConnectAPI.Models.Tutor", b =>
                 {
+                    b.HasOne("TutorConnectAPI.Models.Course", "Course")
+                        .WithMany("Tutors")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("TutorConnectAPI.Models.User", "User")
                         .WithOne("Tutor")
                         .HasForeignKey("TutorConnectAPI.Models.Tutor", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Course");
 
                     b.Navigation("User");
                 });
@@ -1139,7 +1166,7 @@ namespace TutorConnectAPI.Migrations
                     b.HasOne("TutorConnectAPI.Models.Achievement", "Achievement")
                         .WithMany()
                         .HasForeignKey("AchievementId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("TutorConnectAPI.Models.GamificationProfile", "GamificationProfile")
@@ -1177,6 +1204,12 @@ namespace TutorConnectAPI.Migrations
             modelBuilder.Entity("TutorConnectAPI.Models.Course", b =>
                 {
                     b.Navigation("Enrollments");
+
+                    b.Navigation("Modules");
+
+                    b.Navigation("Students");
+
+                    b.Navigation("Tutors");
                 });
 
             modelBuilder.Entity("TutorConnectAPI.Models.GamificationProfile", b =>

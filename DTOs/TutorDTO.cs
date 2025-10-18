@@ -14,6 +14,8 @@ namespace TutorConnectAPI.DTOs
         public string? ProfileImageUrl { get; set; }
         public string Bio { get; set; }
         public bool IsBlocked { get; set; }
+        public int CourseId { get; set; } 
+        public string CourseName { get; set; }
 
         public string? AboutMe { get; set; }
         public string? Expertise { get; set; }

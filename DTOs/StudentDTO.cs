@@ -8,6 +8,8 @@
         public string Course { get; set; }    // Student's course/program
         public string? Bio { get; set; }
         public string? ProfileImage { get; set; }
+        public int CourseId { get; set; } 
+        public string CourseName { get; set; }
     }
 }
 

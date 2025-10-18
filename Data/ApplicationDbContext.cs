@@ -31,6 +31,7 @@ namespace TutorConnectAPI.Data
         public DbSet<ChatbotMessage> ChatbotMessages { get; set; }
         public DbSet<KnowledgeBaseDocument> KnowledgeBaseDocuments { get; set; }
         public DbSet<ChatbotSuggestion> ChatbotSuggestions { get; set; }
+        public DbSet<Course> Courses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +51,37 @@ namespace TutorConnectAPI.Data
                     .WithMany(m => m.TutorModules)
                     .HasForeignKey(tm => tm.ModuleId)
                     .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            modelBuilder.Entity<Course>(entity =>
+            {
+                entity.HasKey(c => c.CourseId);
+            });
+
+            modelBuilder.Entity<Module>(entity =>
+            {
+                entity.HasOne(m => m.Course)
+                    .WithMany(c => c.Modules)
+                    .HasForeignKey(m => m.CourseId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Tutor -> Course  
+            modelBuilder.Entity<Tutor>(entity =>
+            {
+                entity.HasOne(t => t.Course)
+                    .WithMany(c => c.Tutors)
+                    .HasForeignKey(t => t.CourseId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Student -> Course
+            modelBuilder.Entity<Student>(entity =>
+            {
+                entity.HasOne(s => s.Course)
+                    .WithMany(c => c.Students)
+                    .HasForeignKey(s => s.CourseId)
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // ----- Session relationships -----
@@ -125,7 +157,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(gp => gp.User)
                     .WithOne()
                     .HasForeignKey<GamificationProfile>(gp => gp.UserId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<UserAchievement>(entity =>
@@ -138,7 +170,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(ua => ua.Achievement)
                     .WithMany()
                     .HasForeignKey(ua => ua.AchievementId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // ----- Virtual Learning Spaces -----
@@ -167,11 +199,11 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(f => f.Tutor)
                     .WithMany()
                     .HasForeignKey(f => f.TutorId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                   .OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(f => f.ParentFolder)
                     .WithMany(f => f.Subfolders)
                     .HasForeignKey(f => f.ParentFolderId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             // ----- LearningMaterials -----
@@ -185,7 +217,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(lm => lm.Folder)
                     .WithMany(f => f.Materials)
                     .HasForeignKey(lm => lm.FolderId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // ----- StudentMaterialAccesses -----
@@ -203,7 +235,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(sma => sma.Booking)
                     .WithMany()
                     .HasForeignKey(sma => sma.BookingId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasIndex(sma => new { sma.StudentId, sma.LearningMaterialId })
                     .IsUnique();

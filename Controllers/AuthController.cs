@@ -34,6 +34,10 @@ namespace TutorConnectAPI.Controllers
         [HttpPost("student-register")]
         public async Task<IActionResult> RegisterStudent(RegisterStudentDTO dto)
         {
+            var courseExists = await _context.Courses.AnyAsync(c => c.CourseId == dto.CourseId);
+            if (!courseExists)
+                return BadRequest("Selected course does not exist");
+
             string normalizedEmail = dto.Email.Trim().ToLower();
 
             // 1. Validate email domain
@@ -71,7 +75,7 @@ namespace TutorConnectAPI.Controllers
             {
                 UserId = user.UserId,
                 Name = dto.Name,
-                Course = dto.Course
+                CourseId = dto.CourseId
             };
 
             _context.Students.Add(student);

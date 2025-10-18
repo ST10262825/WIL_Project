@@ -17,20 +17,24 @@ namespace TutorConnectAPI.Services
     }
 
     // Services/ChatbotService.cs
-    public class ChatbotService : IChatbotService
+   public class ChatbotService : IChatbotService
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly ILogger<ChatbotService> _logger;
+        private readonly IClaudeAIService _claudeAIService;
 
+        // Remove Gemini dependency and add Claude
         public ChatbotService(ApplicationDbContext context, IHttpClientFactory httpClientFactory,
-                             IConfiguration configuration, ILogger<ChatbotService> logger)
+                             IConfiguration configuration, ILogger<ChatbotService> logger, 
+                             IClaudeAIService claudeAIService) // Changed from IGeminiAIService
         {
             _context = context;
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _logger = logger;
+            _claudeAIService = claudeAIService; // Changed from _geminiAIService
         }
 
         public async Task<ChatResponse> ProcessQuestionAsync(ChatQuestionRequest request, int userId)
@@ -221,18 +225,7 @@ namespace TutorConnectAPI.Services
             return conversation;
         }
 
-        // Add this temporary debugging method to your ChatbotService
-        private void LogDetailedError(Exception ex, string methodName)
-        {
-            _logger.LogError(ex, "Error in {MethodName}: {Message}\nStack: {StackTrace}",
-                methodName, ex.Message, ex.StackTrace);
-
-            if (ex.InnerException != null)
-            {
-                _logger.LogError("Inner exception: {InnerMessage}\nInner Stack: {InnerStackTrace}",
-                    ex.InnerException.Message, ex.InnerException.StackTrace);
-            }
-        }
+        
 
         
         private async Task<List<RelevantDocument>> SearchKnowledgeBaseAsync(string question)
@@ -259,84 +252,9 @@ namespace TutorConnectAPI.Services
             return relevantDocs;
         }
 
-        private async Task<ChatResponse> GenerateAIResponseAsync(string question, List<RelevantDocument> relevantDocs, string context, int userId)
-        {
-            // Use OpenAI API or Azure OpenAI to generate responses
-            var httpClient = _httpClientFactory.CreateClient();
+        
 
-            // Build context from relevant documents
-            var contextText = BuildContextFromDocuments(relevantDocs);
-
-            // Get user context (role, current page, etc.)
-            var userContext = await GetUserContextAsync(userId, context);
-
-            var prompt = $"""
-        You are TutorBot, an AI assistant for TutorConnect - a tutoring platform connecting students with tutors.
-
-        USER CONTEXT:
-        {userContext}
-
-        RELEVANT KNOWLEDGE:
-        {contextText}
-
-        USER QUESTION: {question}
-
-        Instructions:
-        1. Answer based on the provided knowledge and TutorConnect platform specifics
-        2. Be helpful, friendly, and concise
-        3. If you don't know something, admit it and suggest contacting support
-        4. Provide specific steps or links when possible
-        5. Suggest related actions or questions that might be helpful
-
-        Format your response in clear, readable markdown. Use bullet points for steps and **bold** for important terms.
-        """;
-
-            var aiResponse = await CallOpenAIAsync(prompt);
-
-            return new ChatResponse
-            {
-                Answer = aiResponse,
-                Suggestions = await GenerateSuggestionsAsync(question, userContext),
-                RelevantDocs = relevantDocs.Take(3).ToList(),
-                RequiresHumanSupport = ShouldEscalateToHuman(question, aiResponse)
-            };
-        }
-
-        private async Task<string> CallOpenAIAsync(string prompt)
-        {
-            var apiKey = _configuration["OpenAI:ApiKey"];
-            if (string.IsNullOrEmpty(apiKey))
-            {
-                // Fallback to rule-based responses if no API key
-                return await GenerateFallbackResponseAsync(prompt);
-            }
-
-            var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
-
-            var requestBody = new
-            {
-                model = "gpt-3.5-turbo",
-                messages = new[]
-                {
-                new { role = "system", content = "You are TutorBot, a helpful AI assistant for TutorConnect platform." },
-                new { role = "user", content = prompt }
-            },
-                max_tokens = 500,
-                temperature = 0.7
-            };
-
-            var response = await client.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", requestBody);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var result = await response.Content.ReadFromJsonAsync<OpenAIResponse>();
-                return result.choices[0].message.content;
-            }
-
-            return await GenerateFallbackResponseAsync(prompt);
-        }
-
+       
 
 
 
@@ -387,25 +305,21 @@ namespace TutorConnectAPI.Services
                 return GenerateAccountResponse(question, lowerQuestion);
             }
 
-            // Priority 3: Payments & Pricing
-            if (ContainsAny(lowerQuestion, new[] { "pay", "payment", "price", "cost", "fee", "refund", "money" }))
-            {
-                return GeneratePaymentResponse(question, lowerQuestion);
-            }
+           
 
-            // Priority 4: Technical Issues
+            // Priority 3: Technical Issues
             if (ContainsAny(lowerQuestion, new[] { "error", "bug", "not working", "technical", "problem", "issue" }))
             {
                 return GenerateTechnicalResponse(question, lowerQuestion);
             }
 
-            // Priority 5: Tutor-specific questions
+            // Priority 4: Tutor-specific questions
             if (ContainsAny(lowerQuestion, new[] { "become tutor", "tutor application", "teach", "tutor profile" }))
             {
                 return GenerateTutorResponse(question, lowerQuestion);
             }
 
-            // Priority 6: Platform Features
+            // Priority 5: Platform Features
             if (ContainsAny(lowerQuestion, new[] { "feature", "how to", "what can", "can i", "is there" }))
             {
                 return GenerateFeatureResponse(question, lowerQuestion);
@@ -506,39 +420,7 @@ namespace TutorConnectAPI.Services
             return response.ToString();
         }
 
-        private string GeneratePaymentResponse(string question, string lowerQuestion)
-        {
-            var response = new StringBuilder();
-
-            response.AppendLine("**💳 Payments & Pricing**");
-            response.AppendLine();
-
-            response.AppendLine("**Accepted Payment Methods:**");
-            response.AppendLine("- 💳 Credit/Debit Cards (Visa, MasterCard, AMEX)");
-            response.AppendLine("- 📱 Digital Wallets (PayPal, Apple Pay, Google Pay)");
-            response.AppendLine("- 🏦 Bank Transfers (for recurring sessions)");
-            response.AppendLine();
-
-            response.AppendLine("**Pricing Structure:**");
-            response.AppendLine("- Session rates set by individual tutors");
-            response.AppendLine("- Prices shown before booking confirmation");
-            response.AppendLine("- No hidden fees or surprise charges");
-            response.AppendLine();
-
-            if (ContainsAny(lowerQuestion, new[] { "refund", "cancel" }))
-            {
-                response.AppendLine("**Refund Policy:**");
-                response.AppendLine("- Full refund if canceled 24+ hours before session");
-                response.AppendLine("- 50% refund if canceled 6-24 hours before");
-                response.AppendLine("- No refund for last-minute cancellations (<6 hours)");
-                response.AppendLine();
-                response.AppendLine("Contact support for exceptional circumstances");
-            }
-
-            response.AppendLine("💎 **Student Discounts**: Ask about our student verification program!");
-
-            return response.ToString();
-        }
+        
 
         private string GenerateTechnicalResponse(string question, string lowerQuestion)
         {
@@ -625,7 +507,7 @@ namespace TutorConnectAPI.Services
             response.AppendLine("- 🎯 **Smart Matching**: Find perfect tutors based on your learning style");
             response.AppendLine("- 📊 **Progress Tracking**: Monitor your learning journey");
             response.AppendLine("- ⭐ **Review System**: Choose tutors with proven track records");
-            response.AppendLine("- 🔒 **Secure Payments**: Safe and transparent pricing");
+            
             response.AppendLine();
 
             response.AppendLine("**For Tutors:**");
@@ -722,10 +604,7 @@ I'm here to help you get the most out of our tutoring platform. Based on your qu
 • Account security and preferences
 • Notification settings
 
-💰 **Payments & Pricing**
-• Understanding our pricing structure
-• Payment methods and security
-• Refund and cancellation policies
+
 
 👨‍🏫 **For Tutors**
 • Application process and requirements
@@ -841,30 +720,7 @@ What would you like to know today?";
             return context.ToString();
         }
 
-        private async Task<List<QuickSuggestion>> GenerateSuggestionsAsync(string question, string userContext)
-        {
-            var suggestions = new List<QuickSuggestion>();
 
-            // Common suggestions based on question content
-            if (question.ToLower().Contains("book") || question.ToLower().Contains("session"))
-            {
-                suggestions.Add(new QuickSuggestion { Text = "How do I find available tutors?", Type = "question" });
-                suggestions.Add(new QuickSuggestion { Text = "What's the cancellation policy?", Type = "question" });
-                suggestions.Add(new QuickSuggestion { Text = "Go to Find Tutors", Type = "action", Action = "/tutors" });
-            }
-
-            if (question.ToLower().Contains("payment") || question.ToLower().Contains("price"))
-            {
-                suggestions.Add(new QuickSuggestion { Text = "View pricing plans", Type = "action", Action = "/pricing" });
-                suggestions.Add(new QuickSuggestion { Text = "Payment methods accepted", Type = "question" });
-            }
-
-            // Add some general suggestions
-            suggestions.Add(new QuickSuggestion { Text = "Contact support", Type = "action", Action = "mailto:support@tutorconnect.com" });
-            suggestions.Add(new QuickSuggestion { Text = "Browse help articles", Type = "action", Action = "/help" });
-
-            return suggestions.Take(4).ToList();
-        }
 
         private bool ShouldEscalateToHuman(string question, string aiResponse)
         {
@@ -913,6 +769,354 @@ What would you like to know today?";
             await _context.SaveChangesAsync();
             return true;
         }
+
+
+
+
+
+        private async Task<string> GenerateEnhancedFallbackResponseAsync(string question)
+        {
+            var lowerQuestion = question.ToLower();
+
+            if (ContainsAny(lowerQuestion, new[] { "book", "schedule", "session" }))
+            {
+                return @"**📅 Booking Made Easy!**
+
+Here's how to book sessions on TutorConnect:
+
+🎯 **Step-by-Step Guide:**
+1. **Browse Tutors** → Visit the 'Find Tutors' page
+2. **Filter & Search** → Use subject, availability, or rating filters  
+3. **View Profiles** → Check tutor expertise, reviews, and schedules
+4. **Select Time** → Choose from real-time availability
+5. **Confirm Booking** → Review details and confirm
+
+💡 **Pro Tips:**
+- Book popular tutors in advance
+- Set up favorite tutors for quick booking
+- Use our AI matching for personalized recommendations
+
+Need help? Our support team is here for you!";
+            }
+
+            if (ContainsAny(lowerQuestion, new[] { "payment", "price", "cost", "refund" }))
+            {
+                return @"**💳 Payment Information**
+
+**Accepted Methods:**
+• 💳 Credit/Debit Cards (Visa, MasterCard, AMEX)
+• 📱 Digital Wallets (PayPal, Apple Pay, Google Pay)
+• 🏦 Bank Transfers (for recurring sessions)
+
+**Pricing:**
+- Session rates set by individual tutors
+- Transparent pricing shown before booking
+- No hidden fees or surprises
+
+**Refund Policy:**
+- 24+ hours: Full refund
+- 6-24 hours: 50% refund  
+- <6 hours: Contact support
+
+🔒 **Secure & Transparent** - Your payments are protected!";
+            }
+
+            return @"**Hello! I'm TutorBot!** 🤖
+
+I'm here to help you get the most out of TutorConnect! While I'm connecting to my advanced knowledge base, here's what I can help with:
+
+📚 **Learning & Sessions**
+• Finding the perfect tutors for your subjects
+• Booking and managing your sessions
+• Understanding our learning tools
+
+💼 **Account & Profile**  
+• Setting up and optimizing your profile
+• Account preferences and settings
+
+💰 **Payments & Support**
+• Payment methods and pricing
+• Technical support and troubleshooting
+
+**Try asking:**
+- 'How do I find a math tutor?'
+- 'What's the cancellation policy?'
+- 'How do I update my profile?'
+
+I'm getting smarter every day! 🚀";
+        }
+
+
+
+
+        // Replace the GenerateClaudeResponseAsync method in your ChatbotService.cs
+
+        private async Task<string> GenerateClaudeResponseAsync(string question, List<RelevantDocument> relevantDocs, string context, int userId)
+        {
+            if (_claudeAIService == null)
+            {
+                _logger.LogWarning("Claude AI Service is not available");
+                return null;
+            }
+
+            try
+            {
+                _logger.LogInformation("=== GENERATING CLAUDE RESPONSE ===");
+                _logger.LogInformation("Question: {Question}", question);
+
+                // Build context from relevant documents
+                var contextText = BuildContextFromDocuments(relevantDocs);
+                _logger.LogInformation("Context built with {DocCount} documents", relevantDocs?.Count ?? 0);
+
+                // Get user context
+                var userContext = await GetUserContextAsync(userId, context);
+                _logger.LogInformation("User context: {UserContext}", userContext);
+
+                // Build a clean, properly formatted prompt
+                var prompt = $@"You are TutorBot, an AI assistant for TutorConnect - a tutoring platform connecting students with tutors.
+
+PLATFORM CONTEXT:
+- TutorConnect helps students find tutors for various subjects
+- Users can be Students or Tutors
+- Sessions can be booked, rescheduled, or cancelled
+- Tutors have profiles with ratings and module expertise
+- Students can book sessions and leave reviews
+
+USER CONTEXT:
+{userContext}
+
+RELEVANT KNOWLEDGE:
+{contextText}
+
+INSTRUCTIONS:
+1. Answer specifically about TutorConnect platform features and processes
+2. Be helpful, friendly, and concise
+3. If the question is not related to TutorConnect, politely redirect
+4. Provide specific steps or guidance when possible
+5. Use markdown formatting for better readability
+6. If you're unsure, suggest contacting support at support@tutorconnect.com
+
+USER QUESTION: {question}
+
+Please provide a helpful response:";
+
+                _logger.LogInformation("Calling Claude AI service with prompt length: {Length}", prompt.Length);
+
+                var response = await _claudeAIService.GenerateChatResponseAsync(prompt);
+
+                if (!string.IsNullOrEmpty(response))
+                {
+                    _logger.LogInformation("✅ Claude response received: {Length} chars", response.Length);
+                    return response;
+                }
+
+                _logger.LogWarning("⚠️ Claude returned empty response");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ Error calling Claude AI service");
+                return null;
+            }
+        }
+
+        // Also replace your GenerateAIResponseAsync to simplify it:
+
+        private async Task<ChatResponse> GenerateAIResponseAsync(string question, List<RelevantDocument> relevantDocs, string context, int userId)
+        {
+            _logger.LogInformation("=== GENERATE AI RESPONSE STARTED ===");
+            _logger.LogInformation("Question: {Question}", question);
+            _logger.LogInformation("User ID: {UserId}", userId);
+            _logger.LogInformation("Relevant docs count: {Count}", relevantDocs?.Count ?? 0);
+
+            try
+            {
+                _logger.LogInformation("Step 1: Trying Claude...");
+
+                // Try Claude first
+                var claudeResponse = await GenerateClaudeResponseAsync(question, relevantDocs, context, userId);
+                _logger.LogInformation("Claude response: {Status}",
+                    string.IsNullOrEmpty(claudeResponse) ? "NULL/EMPTY" : "SUCCESS");
+
+                if (!string.IsNullOrEmpty(claudeResponse))
+                {
+                    _logger.LogInformation("✅ Using Claude response");
+
+                    var suggestions = await GenerateSuggestionsAsync(question, context);
+                    _logger.LogInformation("Generated {Count} suggestions", suggestions?.Count ?? 0);
+
+                    return new ChatResponse
+                    {
+                        Answer = claudeResponse,
+                        Suggestions = suggestions,
+                        RelevantDocs = relevantDocs.Take(3).ToList(),
+                        RequiresHumanSupport = false
+                    };
+                }
+
+                _logger.LogInformation("Step 2: Claude failed, trying OpenAI...");
+
+                // Fallback to OpenAI if Claude fails
+                var openAiResponse = await GenerateOpenAIResponseAsync(question, relevantDocs, context, userId);
+                _logger.LogInformation("OpenAI response: {Status}",
+                    string.IsNullOrEmpty(openAiResponse) ? "NULL/EMPTY" : "SUCCESS");
+
+                if (!string.IsNullOrEmpty(openAiResponse))
+                {
+                    _logger.LogInformation("✅ Using OpenAI response");
+                    return new ChatResponse
+                    {
+                        Answer = openAiResponse,
+                        Suggestions = await GenerateSuggestionsAsync(question, context),
+                        RelevantDocs = relevantDocs.Take(3).ToList(),
+                        RequiresHumanSupport = false
+                    };
+                }
+
+                _logger.LogInformation("Step 3: Both AI services failed, using smart fallback...");
+
+                // Final fallback to smart responses
+                var fallbackResponse = await GenerateSmartFallbackResponseAsync(question, relevantDocs, context, userId);
+                _logger.LogInformation("✅ Using smart fallback response");
+
+                return fallbackResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "❌ GENERATE AI RESPONSE FAILED: {Message}", ex.Message);
+                _logger.LogError("Stack: {Stack}", ex.StackTrace);
+
+                if (ex.InnerException != null)
+                {
+                    _logger.LogError("Inner: {Inner}", ex.InnerException.Message);
+                }
+
+                _logger.LogInformation("Using emergency fallback...");
+                return await GenerateSmartFallbackResponseAsync(question, relevantDocs, context, userId);
+            }
+        }
+
+
+
+        private async Task<string> GenerateOpenAIResponseAsync(string question, List<RelevantDocument> relevantDocs, string context, int userId)
+        {
+            var apiKey = _configuration["OpenAI:ApiKey"];
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                _logger.LogInformation("OpenAI API key not configured");
+                return null;
+            }
+
+            try
+            {
+                var httpClient = _httpClientFactory.CreateClient();
+                var contextText = BuildContextFromDocuments(relevantDocs);
+                var userContext = await GetUserContextAsync(userId, context);
+
+                var prompt = $"""
+                You are TutorBot, an AI assistant for TutorConnect platform.
+                
+                USER CONTEXT: {userContext}
+                RELEVANT INFO: {contextText}
+                QUESTION: {question}
+                
+                Provide helpful, specific information about TutorConnect. Use markdown formatting and be concise.
+                """;
+
+                var requestBody = new
+                {
+                    model = "gpt-3.5-turbo",
+                    messages = new[]
+                    {
+                        new { role = "system", content = "You are TutorBot, a helpful AI assistant for TutorConnect platform." },
+                        new { role = "user", content = prompt }
+                    },
+                    max_tokens = 500,
+                    temperature = 0.7
+                };
+
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+
+                _logger.LogInformation("Calling OpenAI...");
+                var response = await httpClient.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", requestBody);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<OpenAIResponse>();
+                    _logger.LogInformation("OpenAI response received successfully");
+                    return result.choices[0].message.content;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    _logger.LogWarning("OpenAI API error: {StatusCode}", response.StatusCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "OpenAI call failed");
+            }
+
+            return null;
+        }
+
+
+
+
+
+        private async Task<ChatResponse> GenerateSmartFallbackResponseAsync(string question, List<RelevantDocument> relevantDocs, string context, int userId)
+        {
+            var answer = await GenerateEnhancedFallbackResponseAsync(question); // Use enhanced version
+
+            return new ChatResponse
+            {
+                Answer = answer,
+                Suggestions = await GenerateSuggestionsAsync(question, context),
+                RelevantDocs = relevantDocs,
+                RequiresHumanSupport = answer.Contains("contact support") || answer.Contains("I don't know")
+            };
+        }
+
+
+
+        private async Task<List<QuickSuggestion>> GenerateSuggestionsAsync(string question, string context)
+        {
+            var suggestions = new List<QuickSuggestion>();
+            var lowerQuestion = question.ToLower();
+
+            // Common suggestions based on question content
+            if (ContainsAny(lowerQuestion, new[] { "book", "session", "schedule" }))
+            {
+                suggestions.Add(new QuickSuggestion { Text = "How do I find available tutors?", Type = "question" });
+                suggestions.Add(new QuickSuggestion { Text = "What's the cancellation policy?", Type = "question" });
+                suggestions.Add(new QuickSuggestion { Text = "Go to Find Tutors", Type = "action", Action = "/tutors" });
+            }
+
+            if (ContainsAny(lowerQuestion, new[] { "payment", "price", "cost", "refund" }))
+            {
+                suggestions.Add(new QuickSuggestion { Text = "View pricing plans", Type = "action", Action = "/pricing" });
+                suggestions.Add(new QuickSuggestion { Text = "Payment methods accepted", Type = "question" });
+            }
+
+            if (ContainsAny(lowerQuestion, new[] { "tutor", "teach", "become tutor" }))
+            {
+                suggestions.Add(new QuickSuggestion { Text = "Tutor requirements", Type = "question" });
+                suggestions.Add(new QuickSuggestion { Text = "Application process", Type = "question" });
+                suggestions.Add(new QuickSuggestion { Text = "Tutor benefits", Type = "question" });
+            }
+
+            // Add some general suggestions
+            if (suggestions.Count < 3)
+            {
+                suggestions.Add(new QuickSuggestion { Text = "Contact support", Type = "action", Action = "mailto:support@tutorconnect.com" });
+                suggestions.Add(new QuickSuggestion { Text = "Browse help articles", Type = "action", Action = "/help" });
+            }
+
+            return suggestions.Take(4).ToList();
+        }
+
+
+
 
         // Add these helper methods to ChatbotService:
         private async Task<string> GenerateConversationTitleAsync(int conversationId)

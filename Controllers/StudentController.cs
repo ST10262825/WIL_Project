@@ -30,6 +30,7 @@ namespace TutorConnectAPI.Controllers
             {
                 var student = await _context.Students
                     .Include(s => s.User)
+                    .Include(s => s.Course)
                     .FirstOrDefaultAsync(s => s.UserId == userId);
 
                 if (student == null)
@@ -42,6 +43,8 @@ namespace TutorConnectAPI.Controllers
                     Name = student.Name,
                     Bio = student.Bio,
                     ProfileImage = student.ProfileImage,
+                    CourseId = student.CourseId,
+                    CourseName = student.Course?.Title ?? "Not enrolled"
                     // CreatedDate = student.CreatedDate
                 };
 
@@ -560,28 +563,7 @@ namespace TutorConnectAPI.Controllers
             }
         }
 
-
-
-        [HttpPut("toggle-theme")]
-        public async Task<IActionResult> ToggleTheme()
-        {
-            try
-            {
-                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-                var user = await _context.Users.FindAsync(userId);
-
-                if (user == null) return NotFound("User not found.");
-
-                user.ThemePreference = user.ThemePreference == "light" ? "dark" : "light";
-                await _context.SaveChangesAsync();
-
-                return Ok(new { theme = user.ThemePreference });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error updating theme.");
-            }
-        }
+      
 
         [HttpDelete("delete-account/{studentId}")]
         public async Task<IActionResult> DeleteAccount(int studentId)
@@ -617,51 +599,7 @@ namespace TutorConnectAPI.Controllers
         }
 
       
-        [HttpGet("get-current-theme")]
-        public async Task<IActionResult> GetCurrentTheme()
-        {
-            try
-            {
-                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-                var user = await _context.Users
-                    .Where(u => u.UserId == userId)
-                    .Select(u => new { u.ThemePreference })
-                    .FirstOrDefaultAsync();
-
-                if (user == null) return NotFound("User not found.");
-
-                return Ok(new { themePreference = user.ThemePreference });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error getting current theme.");
-            }
-        }
-
-        // Update the ToggleTheme method to accept theme parameter
-        [HttpPost("toggle-theme")]
-        public async Task<IActionResult> ToggleTheme([FromBody] ThemeDTO model)
-        {
-            try
-            {
-                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-                var user = await _context.Users.FindAsync(userId);
-
-                if (user == null) return NotFound("User not found.");
-
-                // Use the provided theme or toggle the current one
-                var newTheme = model?.Theme ?? (user.ThemePreference == "light" ? "dark" : "light");
-
-                user.ThemePreference = newTheme;
-                await _context.SaveChangesAsync();
-
-                return Ok(new { theme = user.ThemePreference });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Error updating theme.");
-            }
-        }
+        
 
         // Add this DTO
         public class ThemeDTO

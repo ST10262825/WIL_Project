@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TutorConnectAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class AllTables : Migration
+    public partial class Everything : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,31 +30,54 @@ namespace TutorConnectAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Course",
+                name: "ChatbotSuggestions",
+                columns: table => new
+                {
+                    SuggestionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UsageCount = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatbotSuggestions", x => x.SuggestionId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
                 columns: table => new
                 {
                     CourseId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Course", x => x.CourseId);
+                    table.PrimaryKey("PK_Courses", x => x.CourseId);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Modules",
+                name: "KnowledgeBaseDocuments",
                 columns: table => new
                 {
-                    ModuleId = table.Column<int>(type: "int", nullable: false)
+                    DocumentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DocumentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Tags = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Embedding = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Modules", x => x.ModuleId);
+                    table.PrimaryKey("PK_KnowledgeBaseDocuments", x => x.DocumentId);
                 });
 
             migrationBuilder.CreateTable(
@@ -73,6 +96,50 @@ namespace TutorConnectAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Modules",
+                columns: table => new
+                {
+                    ModuleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modules", x => x.ModuleId);
+                    table.ForeignKey(
+                        name: "FK_Modules_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatbotConversations",
+                columns: table => new
+                {
+                    ConversationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatbotConversations", x => x.ConversationId);
+                    table.ForeignKey(
+                        name: "FK_ChatbotConversations_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,7 +189,8 @@ namespace TutorConnectAPI.Migrations
                         name: "FK_GamificationProfiles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "UserId");
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -133,7 +201,7 @@ namespace TutorConnectAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Course = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
                     ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsBlocked = table.Column<bool>(type: "bit", nullable: false)
@@ -141,6 +209,12 @@ namespace TutorConnectAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.StudentId);
+                    table.ForeignKey(
+                        name: "FK_Students_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Students_Users_UserId",
                         column: x => x.UserId,
@@ -165,6 +239,7 @@ namespace TutorConnectAPI.Migrations
                     Expertise = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Education = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsBlocked = table.Column<bool>(type: "bit", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
                     AverageRating = table.Column<double>(type: "float", nullable: false),
                     TotalReviews = table.Column<int>(type: "int", nullable: false),
                     RatingCount1 = table.Column<int>(type: "int", nullable: false),
@@ -176,6 +251,12 @@ namespace TutorConnectAPI.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tutors", x => x.TutorId);
+                    table.ForeignKey(
+                        name: "FK_Tutors_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Tutors_Users_UserId",
                         column: x => x.UserId,
@@ -206,6 +287,30 @@ namespace TutorConnectAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatbotMessages",
+                columns: table => new
+                {
+                    MessageId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ConversationId = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsUserMessage = table.Column<bool>(type: "bit", nullable: false),
+                    SentAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MessageType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Metadata = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatbotMessages", x => x.MessageId);
+                    table.ForeignKey(
+                        name: "FK_ChatbotMessages_ChatbotConversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "ChatbotConversations",
+                        principalColumn: "ConversationId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserAchievements",
                 columns: table => new
                 {
@@ -224,7 +329,8 @@ namespace TutorConnectAPI.Migrations
                         name: "FK_UserAchievements_Achievements_AchievementId",
                         column: x => x.AchievementId,
                         principalTable: "Achievements",
-                        principalColumn: "AchievementId");
+                        principalColumn: "AchievementId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserAchievements_GamificationProfiles_GamificationProfileId",
                         column: x => x.GamificationProfileId,
@@ -247,9 +353,9 @@ namespace TutorConnectAPI.Migrations
                 {
                     table.PrimaryKey("PK_Enrollment", x => x.EnrollmentId);
                     table.ForeignKey(
-                        name: "FK_Enrollment_Course_CourseId",
+                        name: "FK_Enrollment_Courses_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "Course",
+                        principalTable: "Courses",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -316,12 +422,14 @@ namespace TutorConnectAPI.Migrations
                         name: "FK_LearningMaterialFolders_LearningMaterialFolders_ParentFolderId",
                         column: x => x.ParentFolderId,
                         principalTable: "LearningMaterialFolders",
-                        principalColumn: "FolderId");
+                        principalColumn: "FolderId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_LearningMaterialFolders_Tutors_TutorId",
                         column: x => x.TutorId,
                         principalTable: "Tutors",
-                        principalColumn: "TutorId");
+                        principalColumn: "TutorId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_LearningMaterialFolders_Tutors_TutorId1",
                         column: x => x.TutorId1,
@@ -469,7 +577,8 @@ namespace TutorConnectAPI.Migrations
                         name: "FK_LearningMaterials_LearningMaterialFolders_FolderId",
                         column: x => x.FolderId,
                         principalTable: "LearningMaterialFolders",
-                        principalColumn: "FolderId");
+                        principalColumn: "FolderId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_LearningMaterials_Tutors_TutorId",
                         column: x => x.TutorId,
@@ -502,7 +611,8 @@ namespace TutorConnectAPI.Migrations
                         name: "FK_StudentMaterialAccesses_Bookings_BookingId",
                         column: x => x.BookingId,
                         principalTable: "Bookings",
-                        principalColumn: "BookingId");
+                        principalColumn: "BookingId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_StudentMaterialAccesses_LearningMaterials_LearningMaterialId",
                         column: x => x.LearningMaterialId,
@@ -534,6 +644,16 @@ namespace TutorConnectAPI.Migrations
                 name: "IX_Bookings_TutorId",
                 table: "Bookings",
                 column: "TutorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatbotConversations_UserId",
+                table: "ChatbotConversations",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatbotMessages_ConversationId",
+                table: "ChatbotMessages",
+                column: "ConversationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatMessages_ReceiverId",
@@ -590,6 +710,11 @@ namespace TutorConnectAPI.Migrations
                 name: "IX_LearningMaterials_TutorId1",
                 table: "LearningMaterials",
                 column: "TutorId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Modules_CourseId",
+                table: "Modules",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_BookingId",
@@ -649,6 +774,11 @@ namespace TutorConnectAPI.Migrations
                 column: "StudentId1");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Students_CourseId",
+                table: "Students",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Students_UserId",
                 table: "Students",
                 column: "UserId",
@@ -658,6 +788,11 @@ namespace TutorConnectAPI.Migrations
                 name: "IX_TutorModules_ModuleId",
                 table: "TutorModules",
                 column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tutors_CourseId",
+                table: "Tutors",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tutors_UserId",
@@ -686,10 +821,19 @@ namespace TutorConnectAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ChatbotMessages");
+
+            migrationBuilder.DropTable(
+                name: "ChatbotSuggestions");
+
+            migrationBuilder.DropTable(
                 name: "ChatMessages");
 
             migrationBuilder.DropTable(
                 name: "Enrollment");
+
+            migrationBuilder.DropTable(
+                name: "KnowledgeBaseDocuments");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -710,7 +854,7 @@ namespace TutorConnectAPI.Migrations
                 name: "UserAchievements");
 
             migrationBuilder.DropTable(
-                name: "Course");
+                name: "ChatbotConversations");
 
             migrationBuilder.DropTable(
                 name: "VirtualLearningSpaces");
@@ -738,6 +882,9 @@ namespace TutorConnectAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tutors");
+
+            migrationBuilder.DropTable(
+                name: "Courses");
 
             migrationBuilder.DropTable(
                 name: "Users");

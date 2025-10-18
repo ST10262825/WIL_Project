@@ -26,6 +26,10 @@ namespace TutorConnectAPI.Controllers
         [HttpPost("create-tutor")]
         public async Task<IActionResult> CreateTutor(CreateTutorDTO dto)
         {
+            var courseExists = await _context.Courses.AnyAsync(c => c.CourseId == dto.CourseId);
+            if (!courseExists)
+                return BadRequest("Selected course does not exist"); 
+
             try
             {
                 Console.WriteLine($"Creating tutor with email: {dto.Email}");
@@ -78,6 +82,7 @@ namespace TutorConnectAPI.Controllers
                     Surname = dto.Surname,
                     Phone = dto.Phone,
                     Bio = dto.Bio,
+                    CourseId = dto.CourseId
                 };
 
                 _context.Tutors.Add(tutor);
@@ -117,6 +122,7 @@ namespace TutorConnectAPI.Controllers
             {
                 var tutors = await _context.Tutors
                     .Include(t => t.User)
+                    .Include(t => t.Course)
                     .Include(t => t.TutorModules)
                         .ThenInclude(tm => tm.Module)
                     .ToListAsync();
@@ -156,6 +162,8 @@ namespace TutorConnectAPI.Controllers
                     AboutMe = t.AboutMe,
                     Expertise = t.Expertise,
                     Education = t.Education,
+                    CourseId = t.CourseId,
+                    CourseName = t.Course?.Title ?? "N/A",
                     Modules = t.TutorModules.Select(tm => new ModuleDTO
                     {
                         ModuleId = tm.ModuleId,
@@ -485,12 +493,13 @@ namespace TutorConnectAPI.Controllers
             {
                 Console.WriteLine($"API: Delete student request for ID: {id}");
 
-                // Include ALL related entities to check for dependencies
+                // Include ALL related entities
                 var student = await _context.Students
                     .Include(s => s.User)
                     .Include(s => s.Bookings)
-                        .ThenInclude(b => b.Review) // Include booking reviews
-                    .Include(s => s.Reviews) // Reviews written by student
+                        .ThenInclude(b => b.Review)
+                    .Include(s => s.Reviews)
+                    .Include(s => s.MaterialAccesses)
                     .FirstOrDefaultAsync(s => s.StudentId == id);
 
                 if (student == null)
@@ -501,7 +510,7 @@ namespace TutorConnectAPI.Controllers
 
                 Console.WriteLine($"Found student: {student.Name}");
 
-                // 1. Check for any ACTIVE bookings (more comprehensive check)
+                // 1. Check for any ACTIVE bookings
                 var hasActiveBookings = await _context.Bookings
                     .AnyAsync(b => b.StudentId == id &&
                                   (b.Status == "Pending" || b.Status == "Confirmed" || b.Status == "Scheduled"));
@@ -533,6 +542,26 @@ namespace TutorConnectAPI.Controllers
 
                 // 3. Remove related entities in correct order to avoid constraint violations
 
+                // Remove gamification profile by querying directly
+                var gamificationProfile = await _context.GamificationProfiles
+                    .FirstOrDefaultAsync(gp => gp.UserId == student.UserId);
+                if (gamificationProfile != null)
+                {
+                    // Remove user achievements first
+                    var userAchievements = await _context.UserAchievements
+                        .Where(ua => ua.GamificationProfileId == gamificationProfile.GamificationProfileId)
+                        .ToListAsync();
+                    if (userAchievements.Any())
+                    {
+                        _context.UserAchievements.RemoveRange(userAchievements);
+                        Console.WriteLine($"Removed {userAchievements.Count} user achievements");
+                    }
+
+                    // Then remove the gamification profile
+                    _context.GamificationProfiles.Remove(gamificationProfile);
+                    Console.WriteLine($"Removed gamification profile for user {student.UserId}");
+                }
+
                 // Remove reviews written BY this student
                 var studentReviews = await _context.Reviews
                     .Where(r => r.StudentId == id)
@@ -551,6 +580,16 @@ namespace TutorConnectAPI.Controllers
                 {
                     _context.ChatMessages.RemoveRange(chatMessages);
                     Console.WriteLine($"Removed {chatMessages.Count} chat messages");
+                }
+
+                // Remove material accesses
+                var materialAccesses = await _context.StudentMaterialAccesses
+                    .Where(sma => sma.StudentId == id)
+                    .ToListAsync();
+                if (materialAccesses.Any())
+                {
+                    _context.StudentMaterialAccesses.RemoveRange(materialAccesses);
+                    Console.WriteLine($"Removed {materialAccesses.Count} material accesses");
                 }
 
                 // Remove completed bookings (without reviews)
@@ -577,9 +616,12 @@ namespace TutorConnectAPI.Controllers
                 _context.Students.Remove(student);
                 Console.WriteLine("Removed student record");
 
-                // Remove user account (this should be last)
-                _context.Users.Remove(student.User);
-                Console.WriteLine("Removed user account");
+                // Remove user account (this should be last after all dependencies are removed)
+                if (student.User != null)
+                {
+                    _context.Users.Remove(student.User);
+                    Console.WriteLine("Removed user account");
+                }
 
                 await _context.SaveChangesAsync();
                 Console.WriteLine($"Student {id} deleted successfully");
@@ -592,6 +634,15 @@ namespace TutorConnectAPI.Controllers
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
 
                 // Provide specific error messages based on constraint
+                if (ex.InnerException?.Message.Contains("FK_GamificationProfiles_Users") == true)
+                {
+                    return BadRequest(new
+                    {
+                        message = "Cannot delete student due to gamification profile dependency. Please try again.",
+                        hasGamificationProfile = true
+                    });
+                }
+
                 if (ex.InnerException?.Message.Contains("FK_Reviews_Students") == true)
                 {
                     return BadRequest(new
@@ -609,6 +660,7 @@ namespace TutorConnectAPI.Controllers
                 return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
             }
         }
+
 
         [HttpPut("block-student/{id}")]
         public async Task<IActionResult> BlockStudent(int id)
@@ -689,15 +741,14 @@ namespace TutorConnectAPI.Controllers
         }
 
 
-
-
-        // ------------------ Modules ------------------
         [HttpGet("modules")]
         public async Task<IActionResult> GetModules()
         {
             try
             {
-                var modules = await _context.Modules.ToListAsync();
+                var modules = await _context.Modules
+                    .Include(m => m.Course) // ADD THIS to include course data
+                    .ToListAsync();
 
                 // Get tutor counts for each module
                 var tutorCounts = await _context.TutorModules
@@ -705,9 +756,8 @@ namespace TutorConnectAPI.Controllers
                     .Select(g => new { ModuleId = g.Key, Count = g.Count() })
                     .ToListAsync();
 
-                // Get booking counts for each module (assuming bookings have module association)
+                // Get booking counts for each module
                 var bookingCounts = await _context.Bookings
-                    .Include(b => b.Module) // If you have this relationship
                     .Where(b => b.ModuleId != null)
                     .GroupBy(b => b.ModuleId)
                     .Select(g => new { ModuleId = g.Key, Count = g.Count() })
@@ -718,6 +768,8 @@ namespace TutorConnectAPI.Controllers
                     ModuleId = m.ModuleId,
                     Code = m.Code,
                     Name = m.Name,
+                    CourseId = m.CourseId, // ADD THIS
+                    CourseName = m.Course?.Title ?? "No Course", // ADD THIS
                     TutorCount = tutorCounts.FirstOrDefault(tc => tc.ModuleId == m.ModuleId)?.Count ?? 0,
                     BookingCount = bookingCounts.FirstOrDefault(bc => bc.ModuleId == m.ModuleId)?.Count ?? 0
                 }).ToList();
@@ -729,8 +781,6 @@ namespace TutorConnectAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
 
 
         [HttpPost("create-module")]
@@ -748,10 +798,16 @@ namespace TutorConnectAPI.Controllers
                 if (existingModule != null)
                     return BadRequest("Module code already exists.");
 
+                // ADD: Check if course exists
+                var courseExists = await _context.Courses.AnyAsync(c => c.CourseId == request.CourseId);
+                if (!courseExists)
+                    return BadRequest("Selected course does not exist.");
+
                 var module = new Module
                 {
                     Code = request.Code.Trim().ToUpper(),
-                    Name = request.Name.Trim()
+                    Name = request.Name.Trim(),
+                    CourseId = request.CourseId // ADD THIS - THIS IS REQUIRED NOW
                 };
 
                 _context.Modules.Add(module);
@@ -764,6 +820,7 @@ namespace TutorConnectAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
 
         [HttpPut("update-module/{id}")]
@@ -785,8 +842,14 @@ namespace TutorConnectAPI.Controllers
                 if (codeExists)
                     return BadRequest("Module code already exists.");
 
+                // ADD: Check if course exists
+                var courseExists = await _context.Courses.AnyAsync(c => c.CourseId == request.CourseId);
+                if (!courseExists)
+                    return BadRequest("Selected course does not exist.");
+
                 module.Code = request.Code.Trim().ToUpper();
                 module.Name = request.Name.Trim();
+                module.CourseId = request.CourseId; // ADD THIS - THIS IS REQUIRED NOW
 
                 _context.Modules.Update(module);
                 await _context.SaveChangesAsync();
@@ -800,48 +863,6 @@ namespace TutorConnectAPI.Controllers
         }
 
 
-
-        [HttpDelete("delete-module/{id}")]
-        public async Task<IActionResult> DeleteModule(int id)
-        {
-            try
-            {
-                var module = await _context.Modules.FindAsync(id);
-                if (module == null)
-                    return NotFound("Module not found.");
-
-                // Check if module is assigned to any tutors
-                var hasTutors = await _context.TutorModules.AnyAsync(tm => tm.ModuleId == id);
-                if (hasTutors)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Cannot delete module. It is currently assigned to one or more tutors.",
-                        hasTutors = true
-                    });
-                }
-
-                // Check if module has any bookings (if your bookings have module association)
-                var hasBookings = await _context.Bookings.AnyAsync(b => b.ModuleId == id);
-                if (hasBookings)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Cannot delete module. It has existing bookings.",
-                        hasBookings = true
-                    });
-                }
-
-                _context.Modules.Remove(module);
-                await _context.SaveChangesAsync();
-
-                return Ok(new { message = "Module deleted successfully." });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
 
         [HttpPost("generate-report")]
         public async Task<IActionResult> GenerateReport([FromBody] ReportFilterDTO filters)

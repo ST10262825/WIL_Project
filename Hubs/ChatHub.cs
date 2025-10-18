@@ -93,8 +93,18 @@ namespace TutorConnectAPI.Hubs
         // Handle user connections
         // ----------------------------
         // Add to ChatHub class
-        
 
+        // Add typing notification support
+        public async Task NotifyTyping(int senderId, int receiverId, bool isTyping)
+        {
+            await Clients.User(receiverId.ToString()).SendAsync("UserTyping", senderId, isTyping);
+        }
+
+        // Add message status updates
+        public async Task UpdateMessageStatus(int messageId, string status)
+        {
+            await Clients.All.SendAsync("MessageStatusChanged", messageId, status);
+        }
         public override async Task OnConnectedAsync()
         {
             var userId = int.Parse(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);

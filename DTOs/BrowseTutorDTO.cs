@@ -8,6 +8,8 @@
         public string AboutMe { get; set; } = string.Empty;
         public string Expertise { get; set; } = string.Empty;
         public string Education { get; set; } = string.Empty;
+        public int CourseId { get; set; } // ADD THIS
+        public string CourseName { get; set; }
 
         public double AverageRating { get; set; }
         public int TotalReviews { get; set; }

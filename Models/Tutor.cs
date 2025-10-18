@@ -13,7 +13,10 @@
         public string? Expertise { get; set; }
         public string? Education { get; set; }
         public bool IsBlocked { get; set; } = false;
-       
+        // Add Course relationship
+        public int CourseId { get; set; }
+        public Course Course { get; set; }
+
         public ICollection<Session> Sessions { get; set; }
         public ICollection<Booking> Bookings { get; set; }
         public ICollection<TutorModule> TutorModules { get; set; }

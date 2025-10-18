@@ -480,6 +480,10 @@ FodyWeavers.xsd
 *.sln.iml
 
 ### VisualStudio Patch ###
-# Additional files built by Visual Studio
+# Additional files built by Visual # Local development secrets (keep out of GitHub)
+appsettings.Development.json
+
+
+
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,windows,macos,linux
