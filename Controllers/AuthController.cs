@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using TutorConnectAPI.Data;
 using TutorConnectAPI.DTOs;
 using TutorConnectAPI.Models;
 using TutorConnectAPI.Services;
-using Microsoft.Extensions.Logging;
 
 namespace TutorConnectAPI.Controllers
 {
@@ -298,5 +299,217 @@ namespace TutorConnectAPI.Controllers
                 return userId;
             return 0;
         }
+
+
+        [HttpPost("update-theme")]
+        public async Task<IActionResult> UpdateThemePreference([FromBody] ThemePreferenceDTO dto)
+        {
+            try
+            {
+                // Alternative approach: Get user by email from token
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    Console.WriteLine($"[DEBUG] No email claim found");
+                    return Unauthorized("User not authenticated");
+                }
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+                if (user == null)
+                    return NotFound("User not found");
+
+                // Validate theme value
+                if (dto.Theme != "light" && dto.Theme != "dark")
+                    return BadRequest("Invalid theme value. Must be 'light' or 'dark'");
+
+                Console.WriteLine($"[API] Updating theme for user {user.UserId} ({user.Email}): {user.ThemePreference} -> {dto.Theme}");
+
+                user.ThemePreference = dto.Theme;
+                await _context.SaveChangesAsync();
+
+                Console.WriteLine($"[API] Theme updated successfully for user {user.UserId}. New theme: {user.ThemePreference}");
+
+                return Ok(new
+                {
+                    message = "Theme preference updated successfully",
+                    theme = user.ThemePreference
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating theme preference");
+                return StatusCode(500, "Error updating theme preference");
+            }
+        }
+
+        [HttpGet("theme-preference")]
+        public async Task<IActionResult> GetThemePreference()
+        {
+            try
+            {
+                // Alternative approach: Get user by email from token
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    Console.WriteLine($"[DEBUG] No email claim found in GetThemePreference");
+                    return Unauthorized("User not authenticated");
+                }
+
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userEmail);
+                if (user == null)
+                    return NotFound("User not found");
+
+                Console.WriteLine($"[API] Getting theme preference for user {user.UserId}: {user.ThemePreference}");
+
+                return Ok(new { theme = user.ThemePreference });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting theme preference");
+                return StatusCode(500, "Error getting theme preference");
+            }
+        }
+
+
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO dto)
+        {
+            try
+            {
+                string normalizedEmail = dto.Email.Trim().ToLower();
+
+                // Check if user exists
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
+
+                if (user == null)
+                {
+                    // Don't reveal that the user doesn't exist for security
+                    return Ok("If an account with that email exists, a password reset link has been sent.");
+                }
+
+                // Check if user is blocked
+                if (user.IsBlocked)
+                {
+                    return BadRequest("Account is blocked. Please contact administrator.");
+                }
+
+                // Check if email is verified
+                if (!user.IsEmailVerified)
+                {
+                    return BadRequest("Please verify your email before resetting password.");
+                }
+
+                // Generate reset token (6-digit code like your verification)
+                string resetToken = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+
+                // Set token and expiration (15 minutes)
+                user.PasswordResetToken = resetToken;
+                user.ResetTokenExpires = DateTime.UtcNow.AddMinutes(15);
+
+                await _context.SaveChangesAsync();
+
+                // Send reset email
+                var body = $"""
+            <h2>Password Reset Request</h2>
+            <p>You requested to reset your password for your TutorConnect account.</p>
+            <p>Here is your reset code:</p>
+            <h3 style="background: #f4f4f4; padding: 10px; border-radius: 5px; display: inline-block;">
+                {resetToken}
+            </h3>
+            <p>This code will expire in 15 minutes.</p>
+            <p>If you didn't request this, please ignore this email.</p>
+            """;
+
+                await _emailService.SendEmailAsync(normalizedEmail, "Reset Your TutorConnect Password", body);
+
+                _logger.LogInformation("Password reset token sent to {Email}", normalizedEmail);
+
+                return Ok("If an account with that email exists, a password reset code has been sent.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in forgot password for email {Email}", dto.Email);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO dto)
+        {
+            try
+            {
+                // Validate new password
+                if (string.IsNullOrWhiteSpace(dto.NewPassword) || dto.NewPassword.Length < 6)
+                {
+                    return BadRequest("Password must be at least 6 characters long.");
+                }
+
+                if (dto.NewPassword != dto.ConfirmPassword)
+                {
+                    return BadRequest("New password and confirmation do not match.");
+                }
+
+                // Find user by valid reset token
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.PasswordResetToken == dto.Token &&
+                                             u.ResetTokenExpires > DateTime.UtcNow);
+
+                if (user == null)
+                {
+                    return BadRequest("Invalid or expired reset token.");
+                }
+
+                // Update password
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+                user.PasswordResetToken = null;
+                user.ResetTokenExpires = null;
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Password reset successfully for user {UserId}", user.UserId);
+
+                // Send confirmation email
+                var body = $"""
+            <h2>Password Changed Successfully</h2>
+            <p>Your TutorConnect password has been successfully reset.</p>
+            <p>If you did not make this change, please contact support immediately.</p>
+            """;
+
+                await _emailService.SendEmailAsync(user.Email, "Password Reset Successful", body);
+
+                return Ok("Password has been reset successfully. You can now log in with your new password.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error resetting password with token {Token}", dto.Token);
+                return StatusCode(500, "An error occurred while resetting your password.");
+            }
+        }
+
+        [HttpPost("validate-reset-token")]
+        public async Task<IActionResult> ValidateResetToken([FromBody] ValidateResetTokenDTO dto)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.PasswordResetToken == dto.Token &&
+                                             u.ResetTokenExpires > DateTime.UtcNow);
+
+                if (user == null)
+                {
+                    return BadRequest("Invalid or expired reset token.");
+                }
+
+                return Ok("Token is valid.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error validating reset token");
+                return StatusCode(500, "Error validating token.");
+            }
+        }
+
     }
 }

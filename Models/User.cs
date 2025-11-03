@@ -11,6 +11,12 @@
         public bool IsEmailVerified { get; set; } = false;
         public string? VerificationToken { get; set; }
 
+        public string? PasswordResetToken { get; set; }
+        public DateTime? ResetTokenExpires { get; set; }
+
+        // ✅ ADD THEME PREFERENCE
+        public string ThemePreference { get; set; } = "light"; // Default to light theme
+
 
         // Navigation properties
         public Student? Student { get; set; }

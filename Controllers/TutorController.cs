@@ -224,6 +224,10 @@ namespace TutorConnectAPI.Controllers
             return Ok(dto);
         }
 
+
+
+
+
         // ✅ Get tutor by UserId (for WebApp login/dashboard) - ADD THIS METHOD
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetTutorByUserId(int userId)
@@ -319,6 +323,45 @@ namespace TutorConnectAPI.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error loading tutors: {ex.Message}");
+            }
+        }
+
+        // Add to your TutorController
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangeTutorPassword([FromBody] ChangePasswordDTO dto)
+        {
+            try
+            {
+                // Get tutor ID from route or user claims
+                var tutorId = int.Parse(User.FindFirst("tutorId")?.Value);
+
+                var tutor = await _context.Tutors
+                    .Include(t => t.User)
+                    .FirstOrDefaultAsync(t => t.TutorId == tutorId);
+
+                if (tutor == null)
+                    return NotFound("Tutor not found.");
+
+                // Verify current password
+                if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, tutor.User.PasswordHash))
+                    return BadRequest("Current password is incorrect.");
+
+                // Validate new password
+                if (string.IsNullOrWhiteSpace(dto.NewPassword) || dto.NewPassword.Length < 6)
+                    return BadRequest("New password must be at least 6 characters long.");
+
+                if (dto.NewPassword != dto.ConfirmPassword)
+                    return BadRequest("New password and confirmation do not match.");
+
+                // Update password
+                tutor.User.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+                await _context.SaveChangesAsync();
+
+                return Ok("Password changed successfully.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error changing password: {ex.Message}");
             }
         }
 

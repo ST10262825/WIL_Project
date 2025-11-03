@@ -599,13 +599,7 @@ namespace TutorConnectAPI.Controllers
         }
 
       
-        
-
-        // Add this DTO
-        public class ThemeDTO
-        {
-            public string Theme { get; set; }
-        }
+       
 
 
     }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TutorConnectAPI.Models;
 
-
 namespace TutorConnectAPI.Data
 {
     public class ApplicationDbContext : DbContext
@@ -9,7 +8,7 @@ namespace TutorConnectAPI.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options) { }
 
-        // DbSets
+        // Your existing DbSets remain the same
         public DbSet<User> Users { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Tutor> Tutors { get; set; }
@@ -33,6 +32,31 @@ namespace TutorConnectAPI.Data
         public DbSet<ChatbotSuggestion> ChatbotSuggestions { get; set; }
         public DbSet<Course> Courses { get; set; }
 
+        // ===========================================================================
+        // 🆕 ADD THIS METHOD FOR AZURE SQL CONNECTION
+        // ===========================================================================
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                // This allows EF Core Tools to work with Azure SQL
+                // It will use the connection string from appsettings.json
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+                    .Build();
+
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    optionsBuilder.UseSqlServer(connectionString);
+                }
+            }
+        }
+
+        // Your existing OnModelCreating method remains exactly the same
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -147,7 +171,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(r => r.Student)
                     .WithMany(s => s.Reviews)
                     .HasForeignKey(r => r.StudentId)
-                    .OnDelete(DeleteBehavior.NoAction); // ✅ Prevent multiple cascade paths
+                    .OnDelete(DeleteBehavior.Restrict); // ✅ Prevent multiple cascade paths
             });
 
             // ----- Gamification -----
@@ -166,7 +190,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(ua => ua.GamificationProfile)
                     .WithMany(gp => gp.Achievements)
                     .HasForeignKey(ua => ua.GamificationProfileId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
                 entity.HasOne(ua => ua.Achievement)
                     .WithMany()
                     .HasForeignKey(ua => ua.AchievementId)
@@ -180,7 +204,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne(vls => vls.User)
                     .WithOne()
                     .HasForeignKey<VirtualLearningSpace>(vls => vls.UserId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<SpaceItem>(entity =>
@@ -189,7 +213,7 @@ namespace TutorConnectAPI.Data
                 entity.HasOne<VirtualLearningSpace>()
                     .WithMany(vls => vls.Items)
                     .HasForeignKey(si => si.SpaceId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // ----- LearningMaterialFolders -----
@@ -197,13 +221,14 @@ namespace TutorConnectAPI.Data
             {
                 entity.HasKey(f => f.FolderId);
                 entity.HasOne(f => f.Tutor)
-                    .WithMany()
+                    .WithMany(t => t.LearningMaterialFolders)
                     .HasForeignKey(f => f.TutorId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 entity.HasOne(f => f.ParentFolder)
                     .WithMany(f => f.Subfolders)
                     .HasForeignKey(f => f.ParentFolderId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    .OnDelete(DeleteBehavior.Restrict); // EF Core will handle deletion
             });
 
             // ----- LearningMaterials -----
@@ -211,9 +236,9 @@ namespace TutorConnectAPI.Data
             {
                 entity.HasKey(lm => lm.LearningMaterialId);
                 entity.HasOne(lm => lm.Tutor)
-                    .WithMany()
+                    .WithMany(t => t.LearningMaterials)
                     .HasForeignKey(lm => lm.TutorId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(lm => lm.Folder)
                     .WithMany(f => f.Materials)
                     .HasForeignKey(lm => lm.FolderId)
@@ -225,13 +250,13 @@ namespace TutorConnectAPI.Data
             {
                 entity.HasKey(sma => sma.AccessId);
                 entity.HasOne(sma => sma.Student)
-                    .WithMany()
+                   .WithMany(s => s.MaterialAccesses)
                     .HasForeignKey(sma => sma.StudentId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
                 entity.HasOne(sma => sma.LearningMaterial)
                     .WithMany(lm => lm.StudentAccesses)
                     .HasForeignKey(sma => sma.LearningMaterialId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                    .OnDelete(DeleteBehavior.Cascade);
                 entity.HasOne(sma => sma.Booking)
                     .WithMany()
                     .HasForeignKey(sma => sma.BookingId)
@@ -249,14 +274,14 @@ namespace TutorConnectAPI.Data
                 .HasIndex(f => f.TutorId);
 
             // ChatbotConversation
-    modelBuilder.Entity<ChatbotConversation>(entity =>
-    {
-        entity.HasKey(cc => cc.ConversationId);
-        entity.HasOne(cc => cc.User)
-            .WithMany()
-            .HasForeignKey(cc => cc.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
-    });
+            modelBuilder.Entity<ChatbotConversation>(entity =>
+            {
+                entity.HasKey(cc => cc.ConversationId);
+                entity.HasOne(cc => cc.User)
+                    .WithMany()
+                    .HasForeignKey(cc => cc.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
             // ChatbotMessage
             modelBuilder.Entity<ChatbotMessage>(entity =>

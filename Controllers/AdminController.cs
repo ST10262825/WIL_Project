@@ -344,6 +344,8 @@ namespace TutorConnectAPI.Controllers
         [HttpDelete("delete-tutor/{id}")]
         public async Task<IActionResult> DeleteTutor(int id)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
             try
             {
                 Console.WriteLine($"Attempting to delete tutor with ID: {id}");
@@ -353,6 +355,9 @@ namespace TutorConnectAPI.Controllers
                     .Include(t => t.TutorModules)
                     .Include(t => t.Reviews)
                     .Include(t => t.Bookings)
+                    .Include(t => t.LearningMaterials)
+                    .Include(t => t.LearningMaterialFolders)
+                    .Include(t => t.Sessions)
                     .FirstOrDefaultAsync(t => t.TutorId == id);
 
                 if (tutor == null)
@@ -373,7 +378,7 @@ namespace TutorConnectAPI.Controllers
                         .AnyAsync(b => b.TutorId == id && b.Status == "Pending");
 
                     var activeBookings = await _context.Bookings
-                        .AnyAsync(b => b.TutorId == id && (b.Status == "Confirmed" || b.Status == "Scheduled"));
+                        .AnyAsync(b => b.TutorId == id && (b.Status == "Confirmed" || b.Status == "Scheduled" || b.Status == "Accepted"));
 
                     if (pendingBookings)
                     {
@@ -399,7 +404,63 @@ namespace TutorConnectAPI.Controllers
                 // Remove related entities first to avoid constraint issues
                 Console.WriteLine("Removing related entities...");
 
-                // Remove chat messages where user is sender or receiver
+                // 1. Delete Learning Materials and their Student Access
+                Console.WriteLine("Deleting learning materials...");
+                var learningMaterials = await _context.LearningMaterials
+                    .Include(lm => lm.StudentAccesses)
+                    .Where(lm => lm.TutorId == id)
+                    .ToListAsync();
+
+                foreach (var material in learningMaterials)
+                {
+                    // Delete physical files
+                    if (System.IO.File.Exists(material.FilePath))
+                    {
+                        System.IO.File.Delete(material.FilePath);
+                        Console.WriteLine($"Deleted physical file: {material.FilePath}");
+                    }
+
+                    // Delete student access records
+                    if (material.StudentAccesses.Any())
+                    {
+                        _context.StudentMaterialAccesses.RemoveRange(material.StudentAccesses);
+                        Console.WriteLine($"Removed {material.StudentAccesses.Count} student access records for material {material.Title}");
+                    }
+                }
+
+                if (learningMaterials.Any())
+                {
+                    _context.LearningMaterials.RemoveRange(learningMaterials);
+                    Console.WriteLine($"Removed {learningMaterials.Count} learning materials");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 2. Delete Learning Material Folders (handle hierarchy)
+                Console.WriteLine("Deleting learning material folders...");
+                var folders = await _context.LearningMaterialFolders
+                    .Where(f => f.TutorId == id)
+                    .ToListAsync();
+
+                if (folders.Any())
+                {
+                    // Delete folders in correct order (subfolders first)
+                    var foldersToDelete = new Stack<LearningMaterialFolder>();
+                    var allFolders = folders.ToList();
+
+                    // First pass: find folders with no parent in the same tutor set (root folders)
+                    var rootFolders = allFolders.Where(f => !allFolders.Any(parent => parent.FolderId == f.ParentFolderId)).ToList();
+
+                    foreach (var folder in rootFolders)
+                    {
+                        DeleteFolderHierarchy(folder, allFolders);
+                    }
+
+                    Console.WriteLine($"Removed {folders.Count} learning material folders");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 3. Remove chat messages where user is sender or receiver
+                Console.WriteLine("Deleting chat messages...");
                 var chatMessages = await _context.ChatMessages
                     .Where(cm => cm.SenderId == tutor.UserId || cm.ReceiverId == tutor.UserId)
                     .ToListAsync();
@@ -408,60 +469,154 @@ namespace TutorConnectAPI.Controllers
                 {
                     _context.ChatMessages.RemoveRange(chatMessages);
                     Console.WriteLine($"Removed {chatMessages.Count} chat messages");
+                    await _context.SaveChangesAsync();
                 }
 
-                // Remove tutor modules
+                // 4. Remove tutor modules
+                Console.WriteLine("Deleting tutor modules...");
                 var tutorModules = await _context.TutorModules
                     .Where(tm => tm.TutorId == id)
                     .ToListAsync();
-                _context.TutorModules.RemoveRange(tutorModules);
-                Console.WriteLine($"Removed {tutorModules.Count} tutor modules");
 
-                // Remove reviews
+                if (tutorModules.Any())
+                {
+                    _context.TutorModules.RemoveRange(tutorModules);
+                    Console.WriteLine($"Removed {tutorModules.Count} tutor modules");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 5. Remove reviews
+                Console.WriteLine("Deleting reviews...");
                 var reviews = await _context.Reviews
                     .Where(r => r.TutorId == id)
                     .ToListAsync();
+
                 if (reviews.Any())
                 {
                     _context.Reviews.RemoveRange(reviews);
                     Console.WriteLine($"Removed {reviews.Count} reviews");
+                    await _context.SaveChangesAsync();
                 }
 
-                // Remove bookings
+                // 6. Remove bookings
+                Console.WriteLine("Deleting bookings...");
                 var bookings = await _context.Bookings
                     .Where(b => b.TutorId == id)
                     .ToListAsync();
+
                 if (bookings.Any())
                 {
                     _context.Bookings.RemoveRange(bookings);
                     Console.WriteLine($"Removed {bookings.Count} bookings");
+                    await _context.SaveChangesAsync();
                 }
 
-                // Remove tutor
-                _context.Tutors.Remove(tutor);
-                Console.WriteLine("Removed tutor");
+                // 7. Remove sessions
+                Console.WriteLine("Deleting sessions...");
+                var sessions = await _context.Sessions
+                    .Where(s => s.TutorId == id)
+                    .ToListAsync();
 
-                // Remove user account (this will be handled by cascade delete if set up properly)
+                if (sessions.Any())
+                {
+                    _context.Sessions.RemoveRange(sessions);
+                    Console.WriteLine($"Removed {sessions.Count} sessions");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 8. Delete Gamification data
+                Console.WriteLine("Deleting gamification data...");
+                var gamificationProfile = await _context.GamificationProfiles
+                    .FirstOrDefaultAsync(gp => gp.UserId == tutor.UserId);
+
+                if (gamificationProfile != null)
+                {
+                    var userAchievements = await _context.UserAchievements
+                        .Where(ua => ua.GamificationProfileId == gamificationProfile.GamificationProfileId)
+                        .ToListAsync();
+
+                    if (userAchievements.Any())
+                    {
+                        _context.UserAchievements.RemoveRange(userAchievements);
+                        Console.WriteLine($"Removed {userAchievements.Count} user achievements");
+                    }
+
+                    _context.GamificationProfiles.Remove(gamificationProfile);
+                    Console.WriteLine("Removed gamification profile");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 9. Delete Virtual Learning Spaces
+                Console.WriteLine("Deleting virtual learning spaces...");
+                var virtualSpaces = await _context.VirtualLearningSpaces
+                    .Where(vls => vls.UserId == tutor.UserId)
+                    .Include(vls => vls.Items)
+                    .ToListAsync();
+
+                foreach (var space in virtualSpaces)
+                {
+                    if (space.Items.Any())
+                    {
+                        _context.SpaceItems.RemoveRange(space.Items);
+                        Console.WriteLine($"Removed {space.Items.Count} space items");
+                    }
+                    _context.VirtualLearningSpaces.Remove(space);
+                }
+
+                if (virtualSpaces.Any())
+                {
+                    Console.WriteLine($"Removed {virtualSpaces.Count} virtual learning spaces");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 10. Delete Chatbot Conversations
+                Console.WriteLine("Deleting chatbot conversations...");
+                var chatbotConversations = await _context.ChatbotConversations
+                    .Where(cc => cc.UserId == tutor.UserId)
+                    .Include(cc => cc.Messages)
+                    .ToListAsync();
+
+                foreach (var conversation in chatbotConversations)
+                {
+                    if (conversation.Messages.Any())
+                    {
+                        _context.ChatbotMessages.RemoveRange(conversation.Messages);
+                        Console.WriteLine($"Removed {conversation.Messages.Count} chatbot messages");
+                    }
+                    _context.ChatbotConversations.Remove(conversation);
+                }
+
+                if (chatbotConversations.Any())
+                {
+                    Console.WriteLine($"Removed {chatbotConversations.Count} chatbot conversations");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 11. Finally delete Tutor and User
+                Console.WriteLine("Deleting tutor and user...");
+                _context.Tutors.Remove(tutor);
                 _context.Users.Remove(tutor.User);
-                Console.WriteLine("Removed user account");
 
                 await _context.SaveChangesAsync();
-                Console.WriteLine("Changes saved successfully");
+                await transaction.CommitAsync();
 
+                Console.WriteLine("Tutor deletion completed successfully");
                 return Ok(new { message = "Tutor deleted successfully." });
             }
             catch (DbUpdateException ex)
             {
+                await transaction.RollbackAsync();
                 Console.WriteLine($"Database error: {ex.InnerException?.Message ?? ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
 
                 // Check if it's a specific constraint violation
-                if (ex.InnerException != null && ex.InnerException.Message.Contains("FK_ChatMessages_Users"))
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("FK_"))
                 {
                     return BadRequest(new
                     {
-                        message = "Cannot delete tutor due to existing chat messages. Please try again or contact system administrator.",
-                        hasChatMessages = true
+                        message = "Cannot delete tutor due to existing related data. Please try again or contact system administrator.",
+                        constraintError = true,
+                        details = ex.InnerException.Message
                     });
                 }
 
@@ -469,11 +624,26 @@ namespace TutorConnectAPI.Controllers
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 Console.WriteLine($"Unexpected error: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
 
                 return StatusCode(500, new { message = $"An unexpected error occurred: {ex.Message}" });
             }
+        }
+
+        // Helper method to delete folder hierarchy recursively
+        private void DeleteFolderHierarchy(LearningMaterialFolder folder, List<LearningMaterialFolder> allFolders)
+        {
+            // First delete all subfolders
+            var subfolders = allFolders.Where(f => f.ParentFolderId == folder.FolderId).ToList();
+            foreach (var subfolder in subfolders)
+            {
+                DeleteFolderHierarchy(subfolder, allFolders);
+            }
+
+            // Then delete the current folder
+            _context.LearningMaterialFolders.Remove(folder);
         }
 
 
@@ -489,6 +659,8 @@ namespace TutorConnectAPI.Controllers
         [HttpDelete("delete-student/{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
             try
             {
                 Console.WriteLine($"API: Delete student request for ID: {id}");
@@ -497,7 +669,6 @@ namespace TutorConnectAPI.Controllers
                 var student = await _context.Students
                     .Include(s => s.User)
                     .Include(s => s.Bookings)
-                        .ThenInclude(b => b.Review)
                     .Include(s => s.Reviews)
                     .Include(s => s.MaterialAccesses)
                     .FirstOrDefaultAsync(s => s.StudentId == id);
@@ -513,7 +684,7 @@ namespace TutorConnectAPI.Controllers
                 // 1. Check for any ACTIVE bookings
                 var hasActiveBookings = await _context.Bookings
                     .AnyAsync(b => b.StudentId == id &&
-                                  (b.Status == "Pending" || b.Status == "Confirmed" || b.Status == "Scheduled"));
+                                  (b.Status == "Pending" || b.Status == "Accepted" || b.Status == "Confirmed" || b.Status == "Scheduled"));
 
                 if (hasActiveBookings)
                 {
@@ -525,24 +696,44 @@ namespace TutorConnectAPI.Controllers
                     });
                 }
 
-                // 2. Check for COMPLETED bookings with reviews
-                var hasCompletedBookingsWithReviews = await _context.Bookings
-                    .Include(b => b.Review)
-                    .AnyAsync(b => b.StudentId == id && b.Status == "Completed" && b.Review != null);
-
-                if (hasCompletedBookingsWithReviews)
-                {
-                    Console.WriteLine($"Student {id} has completed bookings with reviews");
-                    return BadRequest(new
-                    {
-                        message = "Cannot delete student with historical reviews. Please contact administrator.",
-                        hasReviews = true
-                    });
-                }
+                // 2. Get or create a "Deleted User" placeholder student
+                var deletedStudent = await GetOrCreateDeletedStudent();
+                Console.WriteLine($"Using placeholder student ID: {deletedStudent.StudentId} for anonymized reviews");
 
                 // 3. Remove related entities in correct order to avoid constraint violations
 
-                // Remove gamification profile by querying directly
+                // Remove material accesses first
+                Console.WriteLine("Removing material accesses...");
+                var materialAccesses = await _context.StudentMaterialAccesses
+                    .Where(sma => sma.StudentId == id)
+                    .ToListAsync();
+                if (materialAccesses.Any())
+                {
+                    _context.StudentMaterialAccesses.RemoveRange(materialAccesses);
+                    Console.WriteLine($"Removed {materialAccesses.Count} material accesses");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 4. Reassign reviews to the "Deleted User" placeholder instead of deleting them
+                Console.WriteLine("Reassigning reviews to placeholder student...");
+                var studentReviews = await _context.Reviews
+                    .Where(r => r.StudentId == id)
+                    .ToListAsync();
+
+                if (studentReviews.Any())
+                {
+                    foreach (var review in studentReviews)
+                    {
+                        // Reassign to placeholder student instead of setting to null
+                        review.StudentId = deletedStudent.StudentId;
+                        review.Comment = $"[Original student account deleted - {student.Name}] {review.Comment}";
+                    }
+                    Console.WriteLine($"Reassigned {studentReviews.Count} reviews to placeholder student");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 5. Remove gamification profile
+                Console.WriteLine("Removing gamification data...");
                 var gamificationProfile = await _context.GamificationProfiles
                     .FirstOrDefaultAsync(gp => gp.UserId == student.UserId);
                 if (gamificationProfile != null)
@@ -560,19 +751,11 @@ namespace TutorConnectAPI.Controllers
                     // Then remove the gamification profile
                     _context.GamificationProfiles.Remove(gamificationProfile);
                     Console.WriteLine($"Removed gamification profile for user {student.UserId}");
+                    await _context.SaveChangesAsync();
                 }
 
-                // Remove reviews written BY this student
-                var studentReviews = await _context.Reviews
-                    .Where(r => r.StudentId == id)
-                    .ToListAsync();
-                if (studentReviews.Any())
-                {
-                    _context.Reviews.RemoveRange(studentReviews);
-                    Console.WriteLine($"Removed {studentReviews.Count} reviews written by student");
-                }
-
-                // Remove chat messages where student is sender or receiver
+                // 6. Remove chat messages
+                Console.WriteLine("Removing chat messages...");
                 var chatMessages = await _context.ChatMessages
                     .Where(cm => cm.SenderId == student.UserId || cm.ReceiverId == student.UserId)
                     .ToListAsync();
@@ -580,43 +763,74 @@ namespace TutorConnectAPI.Controllers
                 {
                     _context.ChatMessages.RemoveRange(chatMessages);
                     Console.WriteLine($"Removed {chatMessages.Count} chat messages");
+                    await _context.SaveChangesAsync();
                 }
 
-                // Remove material accesses
-                var materialAccesses = await _context.StudentMaterialAccesses
-                    .Where(sma => sma.StudentId == id)
-                    .ToListAsync();
-                if (materialAccesses.Any())
-                {
-                    _context.StudentMaterialAccesses.RemoveRange(materialAccesses);
-                    Console.WriteLine($"Removed {materialAccesses.Count} material accesses");
-                }
-
-                // Remove completed bookings (without reviews)
-                var completedBookings = await _context.Bookings
-                    .Where(b => b.StudentId == id && b.Status == "Completed")
-                    .ToListAsync();
-                if (completedBookings.Any())
-                {
-                    _context.Bookings.RemoveRange(completedBookings);
-                    Console.WriteLine($"Removed {completedBookings.Count} completed bookings");
-                }
-
-                // Remove any other bookings (cancelled, etc.)
-                var otherBookings = await _context.Bookings
+                // 7. Remove bookings (completed ones without reviews)
+                Console.WriteLine("Removing bookings...");
+                var bookings = await _context.Bookings
                     .Where(b => b.StudentId == id)
                     .ToListAsync();
-                if (otherBookings.Any())
+                if (bookings.Any())
                 {
-                    _context.Bookings.RemoveRange(otherBookings);
-                    Console.WriteLine($"Removed {otherBookings.Count} other bookings");
+                    _context.Bookings.RemoveRange(bookings);
+                    Console.WriteLine($"Removed {bookings.Count} bookings");
+                    await _context.SaveChangesAsync();
                 }
 
-                // Remove student record
+                // 8. Remove Virtual Learning Spaces
+                Console.WriteLine("Removing virtual learning spaces...");
+                var virtualSpaces = await _context.VirtualLearningSpaces
+                    .Where(vls => vls.UserId == student.UserId)
+                    .Include(vls => vls.Items)
+                    .ToListAsync();
+
+                foreach (var space in virtualSpaces)
+                {
+                    if (space.Items.Any())
+                    {
+                        _context.SpaceItems.RemoveRange(space.Items);
+                        Console.WriteLine($"Removed {space.Items.Count} space items");
+                    }
+                    _context.VirtualLearningSpaces.Remove(space);
+                }
+
+                if (virtualSpaces.Any())
+                {
+                    Console.WriteLine($"Removed {virtualSpaces.Count} virtual learning spaces");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 9. Remove Chatbot Conversations
+                Console.WriteLine("Removing chatbot conversations...");
+                var chatbotConversations = await _context.ChatbotConversations
+                    .Where(cc => cc.UserId == student.UserId)
+                    .Include(cc => cc.Messages)
+                    .ToListAsync();
+
+                foreach (var conversation in chatbotConversations)
+                {
+                    if (conversation.Messages.Any())
+                    {
+                        _context.ChatbotMessages.RemoveRange(conversation.Messages);
+                        Console.WriteLine($"Removed {conversation.Messages.Count} chatbot messages");
+                    }
+                    _context.ChatbotConversations.Remove(conversation);
+                }
+
+                if (chatbotConversations.Any())
+                {
+                    Console.WriteLine($"Removed {chatbotConversations.Count} chatbot conversations");
+                    await _context.SaveChangesAsync();
+                }
+
+                // 10. Remove student record
+                Console.WriteLine("Removing student record...");
                 _context.Students.Remove(student);
                 Console.WriteLine("Removed student record");
 
-                // Remove user account (this should be last after all dependencies are removed)
+                // 11. Remove user account (this should be last after all dependencies are removed)
+                Console.WriteLine("Removing user account...");
                 if (student.User != null)
                 {
                     _context.Users.Remove(student.User);
@@ -624,43 +838,76 @@ namespace TutorConnectAPI.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                Console.WriteLine($"Student {id} deleted successfully");
+                await transaction.CommitAsync();
 
-                return Ok(new { message = "Student deleted successfully." });
+                Console.WriteLine($"Student {id} deleted successfully");
+                return Ok(new
+                {
+                    message = "Student deleted successfully.",
+                    reviewsPreserved = studentReviews.Count,
+                    hadReviews = studentReviews.Any()
+                });
             }
             catch (DbUpdateException ex)
             {
+                await transaction.RollbackAsync();
                 Console.WriteLine($"Database error deleting student: {ex.InnerException?.Message ?? ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
-
-                // Provide specific error messages based on constraint
-                if (ex.InnerException?.Message.Contains("FK_GamificationProfiles_Users") == true)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Cannot delete student due to gamification profile dependency. Please try again.",
-                        hasGamificationProfile = true
-                    });
-                }
-
-                if (ex.InnerException?.Message.Contains("FK_Reviews_Students") == true)
-                {
-                    return BadRequest(new
-                    {
-                        message = "Cannot delete student due to existing reviews. Please contact administrator.",
-                        hasReviews = true
-                    });
-                }
 
                 return StatusCode(500, new { message = $"Database error: {ex.InnerException?.Message ?? ex.Message}" });
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 Console.WriteLine($"Error deleting student: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
                 return StatusCode(500, new { message = $"An error occurred: {ex.Message}" });
             }
         }
 
+        // Helper method to get or create a "Deleted User" placeholder student
+        private async Task<Student> GetOrCreateDeletedStudent()
+        {
+            const string deletedUserEmail = "deleted.student@tutorconnect.com";
+
+            // Try to find existing deleted user
+            var deletedUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == deletedUserEmail);
+
+            if (deletedUser == null)
+            {
+                // Create new deleted user
+                deletedUser = new User
+                {
+                    Email = deletedUserEmail,
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("placeholder_password"),
+                    Role = "Student",
+                    IsActive = false,
+                    IsEmailVerified = false
+                };
+                _context.Users.Add(deletedUser);
+                await _context.SaveChangesAsync();
+
+                // Create student record for deleted user
+                var deletedStudent = new Student
+                {
+                    UserId = deletedUser.UserId,
+                    Name = "Deleted Student",
+                    CourseId = 1, // Use a default course ID
+                    Bio = "Placeholder account for deleted students' reviews"
+                };
+                _context.Students.Add(deletedStudent);
+                await _context.SaveChangesAsync();
+
+                return deletedStudent;
+            }
+            else
+            {
+                // Return the existing deleted student
+                return await _context.Students
+                    .FirstOrDefaultAsync(s => s.UserId == deletedUser.UserId);
+            }
+        }
 
         [HttpPut("block-student/{id}")]
         public async Task<IActionResult> BlockStudent(int id)
@@ -862,6 +1109,117 @@ namespace TutorConnectAPI.Controllers
             }
         }
 
+
+        [HttpDelete("delete-module/{id}")]
+        public async Task<IActionResult> DeleteModule(int id, [FromQuery] bool forceDelete = false)
+        {
+            try
+            {
+                var module = await _context.Modules
+                    .Include(m => m.TutorModules)
+                    .Include(m => m.Sessions)
+                    .Include(m => m.Bookings)
+                    .FirstOrDefaultAsync(m => m.ModuleId == id);
+
+                if (module == null)
+                    return NotFound(new { message = "Module not found." });
+
+                // Check for associated entities
+                var tutorModuleCount = module.TutorModules?.Count ?? 0;
+                var sessionCount = module.Sessions?.Count ?? 0;
+                var bookingCount = module.Bookings?.Count ?? 0;
+
+                var hasAssociations = tutorModuleCount > 0 || sessionCount > 0 || bookingCount > 0;
+
+                // If not forced and there are associations, return warning
+                if (!forceDelete && hasAssociations)
+                {
+                    return Ok(new
+                    {
+                        message = "Warning: This module has associated data",
+                        requiresConfirmation = true,
+                        associations = new
+                        {
+                            tutors = tutorModuleCount,
+                            sessions = sessionCount,
+                            bookings = bookingCount
+                        },
+                        warning = $"This module is used by {tutorModuleCount} tutors, has {sessionCount} sessions, and {bookingCount} bookings.",
+                        confirmationRequired = "Add ?forceDelete=true to confirm deletion despite associated data",
+                        actionRequired = "Consider reassigning or deleting associated data first"
+                    });
+                }
+
+                // If forced or no associations, proceed with deletion
+                using var transaction = await _context.Database.BeginTransactionAsync();
+
+                try
+                {
+                    Console.WriteLine($"Deleting module: {module.Name} ({module.Code})");
+
+                    // 1. Remove TutorModules associations
+                    if (tutorModuleCount > 0)
+                    {
+                        _context.TutorModules.RemoveRange(module.TutorModules);
+                        Console.WriteLine($"Removed {tutorModuleCount} tutor-module associations");
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // 2. Remove Sessions
+                    if (sessionCount > 0)
+                    {
+                        _context.Sessions.RemoveRange(module.Sessions);
+                        Console.WriteLine($"Removed {sessionCount} sessions");
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // 3. Handle Bookings - either delete or set to null based on business rules
+                    if (bookingCount > 0)
+                    {
+                        // Option A: Delete bookings (more destructive)
+                        _context.Bookings.RemoveRange(module.Bookings);
+                        Console.WriteLine($"Removed {bookingCount} bookings");
+
+                        // Option B: Set ModuleId to null (preserves booking history)
+                        // foreach (var booking in module.Bookings)
+                        // {
+                        //     booking.ModuleId = null;
+                        // }
+                        // Console.WriteLine($"Set ModuleId to null for {bookingCount} bookings");
+
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // 4. Delete the module
+                    _context.Modules.Remove(module);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+
+                    return Ok(new
+                    {
+                        message = "Module deleted successfully",
+                        deletedData = new
+                        {
+                            module = $"{module.Code} - {module.Name}",
+                            tutorAssociations = tutorModuleCount,
+                            sessions = sessionCount,
+                            bookings = bookingCount
+                        }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    Console.WriteLine($"Error during module deletion: {ex.Message}");
+                    return StatusCode(500, new { message = "Error deleting module", error = ex.Message });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in DeleteModule: {ex.Message}");
+                return StatusCode(500, new { message = "An error occurred", error = ex.Message });
+            }
+        }
 
 
         [HttpPost("generate-report")]
@@ -2416,34 +2774,7 @@ namespace TutorConnectAPI.Controllers
             document.Add(message);
         }
 
-        private void AddSummarySection(Document document, SummaryDTO? summary)
-        {
-            if (summary == null) return;
-
-            var summaryHeader = new Paragraph("REPORT SUMMARY",
-                new Font(FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12, BrandColors.Dark)));
-            summaryHeader.SpacingBefore = 30f;
-            summaryHeader.SpacingAfter = 10f;
-            document.Add(summaryHeader);
-
-            var summaryTable = new PdfPTable(2);
-            summaryTable.WidthPercentage = 50;
-            summaryTable.HorizontalAlignment = Element.ALIGN_LEFT;
-
-            if (summary.TotalRecords > 0)
-                AddSummaryRow(summaryTable, "Total Records:", summary.TotalRecords.ToString());
-
-            if (summary.ActiveUsers > 0)
-                AddSummaryRow(summaryTable, "Active Users:", summary.ActiveUsers.ToString());
-
-            if (summary.AverageRating > 0)
-                AddSummaryRow(summaryTable, "Average Rating:", Math.Round(summary.AverageRating, 2).ToString());
-
-            if (summary.TotalRevenue > 0)
-                AddSummaryRow(summaryTable, "Total Revenue:", $"${summary.TotalRevenue:F2}");
-
-            document.Add(summaryTable);
-        }
+        
 
         private void AddSummaryRow(PdfPTable table, string label, string value)
         {

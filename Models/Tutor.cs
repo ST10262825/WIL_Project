@@ -36,5 +36,7 @@
         public int RatingCount5 { get; set; } = 0;
 
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+
     }
 }
