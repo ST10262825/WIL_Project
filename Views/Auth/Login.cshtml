@@ -63,7 +63,11 @@
                         <div class="mb-3 form-check">
                             <input asp-for="RememberMe" class="form-check-input" id="rememberMe">
                             <label class="form-check-label" for="rememberMe">Remember me</label>
-                            <a href="#" class="float-end" style="color: #3BB2B8;">Forgot password?</a>
+                            <div class="text-center mt-3">
+                                <a href="/Auth/ForgotPassword" class="text-decoration-none">
+                                    <i class="fas fa-key me-1"></i>Forgot your password?
+                                </a>
+                            </div>
                         </div>
 
                         <button type="submit" class="btn w-100 mb-3" style="background-color: #0B2E3D; color: white; border-radius: 30px;">

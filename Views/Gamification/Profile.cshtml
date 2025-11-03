@@ -8,12 +8,12 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
-                <h2 style="color: #0B2E3D;">🎮 My Learning Journey</h2>
+                <h2 class="page-title">🎮 My Learning Journey</h2>
                 <div class="btn-group">
-                    <a href="@Url.Action("Achievements")" class="btn btn-outline-primary">
+                    <a href="@Url.Action("Achievements")" class="btn btn-outline-primary btn-view-achievements">
                         <i class="fas fa-trophy me-2"></i>View All Achievements
                     </a>
-                    <a href="@Url.Action("MyBookings", "Booking")" class="btn" style="background-color: #42E695; color: #0B2E3D;">
+                    <a href="@Url.Action("MyBookings", "Booking")" class="btn btn-my-bookings">
                         <i class="fas fa-calendar me-2"></i>My Bookings
                     </a>
                 </div>
@@ -24,43 +24,42 @@
     <!-- Stats Overview -->
     <div class="row mb-4">
         <div class="col-md-3 mb-3">
-            <div class="card text-center border-0 shadow-sm">
+            <div class="card text-center border-0 shadow-sm stat-card">
                 <div class="card-body">
-                    <div class="level-badge mx-auto mb-3"
-                         style="width: 80px; height: 80px; background: linear-gradient(135deg, #42E695, #3BB2B8); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; color: white;">
+                    <div class="level-badge mx-auto mb-3">
                         @Model.Profile.Level
                     </div>
-                    <h5 class="card-title" style="color: #0B2E3D;">Level @Model.Profile.Level</h5>
+                    <h5 class="card-title stat-title">Level @Model.Profile.Level</h5>
                     <p class="card-text text-muted">@Model.Profile.CurrentRank</p>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 mb-3">
-            <div class="card text-center border-0 shadow-sm">
+            <div class="card text-center border-0 shadow-sm stat-card">
                 <div class="card-body">
-                    <i class="fas fa-star fa-2x mb-3" style="color: #FFD700;"></i>
-                    <h3 class="card-title" style="color: #0B2E3D;">@Model.Profile.ExperiencePoints</h3>
+                    <i class="fas fa-star fa-2x mb-3 icon-star"></i>
+                    <h3 class="card-title stat-title">@Model.Profile.ExperiencePoints</h3>
                     <p class="card-text text-muted">Total XP</p>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 mb-3">
-            <div class="card text-center border-0 shadow-sm">
+            <div class="card text-center border-0 shadow-sm stat-card">
                 <div class="card-body">
-                    <i class="fas fa-fire fa-2x mb-3" style="color: #FF6B35;"></i>
-                    <h3 class="card-title" style="color: #0B2E3D;">@Model.Profile.StreakCount</h3>
+                    <i class="fas fa-fire fa-2x mb-3 icon-fire"></i>
+                    <h3 class="card-title stat-title">@Model.Profile.StreakCount</h3>
                     <p class="card-text text-muted">Day Streak</p>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3 mb-3">
-            <div class="card text-center border-0 shadow-sm">
+            <div class="card text-center border-0 shadow-sm stat-card">
                 <div class="card-body">
-                    <i class="fas fa-trophy fa-2x mb-3" style="color: #3BB2B8;"></i>
-                    <h3 class="card-title" style="color: #0B2E3D;">@Model.Profile.Achievements.Count(a => a.IsCompleted)</h3>
+                    <i class="fas fa-trophy fa-2x mb-3 icon-trophy"></i>
+                    <h3 class="card-title stat-title">@Model.Profile.Achievements.Count(a => a.IsCompleted)</h3>
                     <p class="card-text text-muted">Achievements</p>
                 </div>
             </div>
@@ -71,7 +70,7 @@
     <div class="row mb-4">
         <div class="col-md-8 mb-4">
             <div class="card border-0 shadow-sm h-100">
-                <div class="card-header" style="background: linear-gradient(90deg, #42E695, #3BB2B8); color: white;">
+                <div class="card-header card-header-gradient">
                     <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>XP Breakdown</h5>
                 </div>
                 <div class="card-body">
@@ -91,7 +90,7 @@
 
         <div class="col-md-4 mb-4">
             <div class="card border-0 shadow-sm h-100">
-                <div class="card-header" style="background: #0B2E3D; color: white;">
+                <div class="card-header card-header-dark">
                     <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Progress to Next Level</h5>
                 </div>
                 <div class="card-body">
@@ -101,11 +100,11 @@
                                 <span class="progress-value">@((Model.Profile.LevelProgress * 100).ToString("F0"))%</span>
                             </div>
                         </div>
-                        <h5 style="color: #0B2E3D;">Level @Model.Profile.Level → @(Model.Profile.Level + 1)</h5>
+                        <h5 class="progress-title">Level @Model.Profile.Level → @(Model.Profile.Level + 1)</h5>
                     </div>
-                    <div class="progress" style="height: 12px; border-radius: 10px;">
-                        <div class="progress-bar"
-                             style="width: @(Model.Profile.LevelProgress * 100)%; background: linear-gradient(90deg, #42E695, #3BB2B8);"
+                    <div class="progress custom-progress-bar">
+                        <div class="progress-bar progress-bar-gradient"
+                             style="width: @(Model.Profile.LevelProgress * 100)%;"
                              role="progressbar"
                              aria-valuenow="@(Model.Profile.LevelProgress * 100)"
                              aria-valuemin="0"
@@ -127,7 +126,7 @@
         <!-- Recent Achievements -->
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-sm h-100">
-                <div class="card-header" style="background: #0B2E3D; color: white;">
+                <div class="card-header card-header-dark">
                     <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Recent Achievements</h5>
                 </div>
                 <div class="card-body">
@@ -137,10 +136,10 @@
                         {
                             <div class="d-flex align-items-center mb-3 p-2 rounded achievement-item">
                                 <div class="flex-shrink-0">
-                                    <i class="fas fa-trophy fa-lg me-3" style="color: #FFD700;"></i>
+                                    <i class="fas fa-trophy fa-lg me-3 achievement-trophy"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-1" style="color: #0B2E3D;">@achievement.Name</h6>
+                                    <h6 class="mb-1 achievement-name">@achievement.Name</h6>
                                     <p class="mb-0 small text-muted">@achievement.Description</p>
                                     <small class="text-muted">Earned: @achievement.EarnedAt.ToString("MMM dd, yyyy")</small>
                                 </div>
@@ -152,10 +151,10 @@
                     }
                     else
                     {
-                        <div class="text-center text-muted py-4">
-                            <i class="fas fa-trophy fa-2x mb-3" style="color: #ccc;"></i>
+                        <div class="text-center text-muted py-4 empty-state">
+                            <i class="fas fa-trophy fa-2x mb-3 empty-icon"></i>
                             <p>No achievements earned yet. Complete sessions to earn your first achievement!</p>
-                            <a href="@Url.Action("MyBookings", "Booking")" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D;">
+                            <a href="@Url.Action("MyBookings", "Booking")" class="btn btn-sm btn-book-session">
                                 Book a Session
                             </a>
                         </div>
@@ -167,87 +166,51 @@
         <!-- XP Activity Timeline -->
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-sm h-100">
-                <div class="card-header" style="background: #3BB2B8; color: white;">
+                <div class="card-header card-header-teal">
                     <h5 class="mb-0"><i class="fas fa-history me-2"></i>Recent XP Activity</h5>
                 </div>
                 <div class="card-body">
                     <div id="xpTimeline">
-                        <!-- Sample timeline items - replace with actual data from your API -->
-                        <div class="timeline-item">
-                            <div class="timeline-marker bg-success"></div>
-                            <div class="timeline-content">
-                                <div class="d-flex justify-content-between">
-                                    <span class="fw-bold">Session Completed</span>
-                                    <span class="text-success">+50 XP</span>
-                                </div>
-                                <small class="text-muted">Mathematics with John Doe</small>
-                                <small class="text-muted d-block">Today, 2:30 PM</small>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker bg-warning"></div>
-                            <div class="timeline-content">
-                                <div class="d-flex justify-content-between">
-                                    <span class="fw-bold">Achievement Unlocked</span>
-                                    <span class="text-warning">+100 XP</span>
-                                </div>
-                                <small class="text-muted">First Session</small>
-                                <small class="text-muted d-block">Yesterday, 10:15 AM</small>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker bg-info"></div>
-                            <div class="timeline-content">
-                                <div class="d-flex justify-content-between">
-                                    <span class="fw-bold">Daily Login</span>
-                                    <span class="text-info">+10 XP</span>
-                                </div>
-                                <small class="text-muted">Login streak: @Model.Profile.StreakCount days</small>
-                                <small class="text-muted d-block">2 days ago</small>
-                            </div>
-                        </div>
+                        <!-- Timeline items populated by JavaScript -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
     <!-- Quick Actions -->
     <div class="row mt-4">
         <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center">
-                    <h5 style="color: #0B2E3D;">🚀 Level Up Faster!</h5>
+                    <h5 class="quick-actions-title">🚀 Level Up Faster!</h5>
                     <p class="text-muted">Here's how you can earn more XP and achievements:</p>
                     <div class="row">
                         <div class="col-md-3 mb-2">
-                            <div class="p-3 rounded" style="background: #E3F2FD;">
-                                <i class="fas fa-calendar-check fa-lg mb-2" style="color: #42E695;"></i>
-                                <h6>Complete Sessions</h6>
+                            <div class="p-3 rounded action-card action-card-blue">
+                                <i class="fas fa-calendar-check fa-lg mb-2 action-icon-green"></i>
+                                <h6 class="action-title">Complete Sessions</h6>
                                 <small class="text-muted">+50 XP per session</small>
                             </div>
                         </div>
                         <div class="col-md-3 mb-2">
-                            <div class="p-3 rounded" style="background: #E8F5E8;">
-                                <i class="fas fa-sign-in-alt fa-lg mb-2" style="color: #3BB2B8;"></i>
-                                <h6>Daily Login</h6>
+                            <div class="p-3 rounded action-card action-card-green">
+                                <i class="fas fa-sign-in-alt fa-lg mb-2 action-icon-teal"></i>
+                                <h6 class="action-title">Daily Login</h6>
                                 <small class="text-muted">+10 XP every day</small>
                             </div>
                         </div>
                         <div class="col-md-3 mb-2">
-                            <div class="p-3 rounded" style="background: #FFF3CD;">
-                                <i class="fas fa-tasks fa-lg mb-2" style="color: #FFD700;"></i>
-                                <h6>Unlock Achievements</h6>
+                            <div class="p-3 rounded action-card action-card-yellow">
+                                <i class="fas fa-tasks fa-lg mb-2 action-icon-gold"></i>
+                                <h6 class="action-title">Unlock Achievements</h6>
                                 <small class="text-muted">100-1000 XP each</small>
                             </div>
                         </div>
                         <div class="col-md-3 mb-2">
-                            <div class="p-3 rounded" style="background: #FFE8E8;">
-                                <i class="fas fa-users fa-lg mb-2" style="color: #FF6B35;"></i>
-                                <h6>Help Students</h6>
+                            <div class="p-3 rounded action-card action-card-red">
+                                <i class="fas fa-users fa-lg mb-2 action-icon-orange"></i>
+                                <h6 class="action-title">Help Students</h6>
                                 <small class="text-muted">Bonus XP for great reviews</small>
                             </div>
                         </div>
@@ -262,28 +225,195 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+    /* ===== THEME VARIABLES ===== */
+    :root, [data-theme="light"] {
+        --page-title-color: #0B2E3D;
+        --stat-title-color: #0B2E3D;
+        --stat-card-bg: #ffffff;
+        --level-badge-gradient: linear-gradient(135deg, #42E695, #3BB2B8);
+        --progress-gradient: linear-gradient(90deg, #42E695, #3BB2B8);
+        --card-header-gradient-bg: linear-gradient(90deg, #42E695, #3BB2B8);
+        --card-header-dark-bg: #0B2E3D;
+        --card-header-teal-bg: #3BB2B8;
+        --icon-star-color: #FFD700;
+        --icon-fire-color: #FF6B35;
+        --icon-trophy-color: #3BB2B8;
+        --achievement-trophy-color: #FFD700;
+        --achievement-name-color: #0B2E3D;
+        --achievement-item-bg: transparent;
+        --achievement-item-hover-bg: #f8f9fa;
+        --achievement-item-hover-border: #FFD700;
+        --progress-value-color: #0B2E3D;
+        --progress-circle-bg: #ffffff;
+        --progress-title-color: #0B2E3D;
+        --progress-bg: #e9ecef;
+        --timeline-border: #e9ecef;
+        --timeline-content-bg: transparent;
+        --legend-item-bg: #f8f9fa;
+        --legend-value-color: #0B2E3D;
+        --quick-actions-title-color: #0B2E3D;
+        --action-title-color: #212529;
+        --action-card-blue-bg: #E3F2FD;
+        --action-card-green-bg: #E8F5E8;
+        --action-card-yellow-bg: #FFF3CD;
+        --action-card-red-bg: #FFE8E8;
+        --action-icon-green-color: #42E695;
+        --action-icon-teal-color: #3BB2B8;
+        --action-icon-gold-color: #FFD700;
+        --action-icon-orange-color: #FF6B35;
+        --btn-my-bookings-bg: #42E695;
+        --btn-my-bookings-text: #0B2E3D;
+        --btn-my-bookings-hover: #38d482;
+        --empty-icon-color: #cccccc;
+    }
+
+    [data-theme="dark"] {
+        --page-title-color: #ffffff;
+        --stat-title-color: #ffffff;
+        --stat-card-bg: #1e1e1e;
+        --level-badge-gradient: linear-gradient(135deg, #5FEBA0, #5DD5DB);
+        --progress-gradient: linear-gradient(90deg, #5FEBA0, #5DD5DB);
+        --card-header-gradient-bg: linear-gradient(90deg, #5FEBA0, #5DD5DB);
+        --card-header-dark-bg: #2a4a5a;
+        --card-header-teal-bg: #2d8a8f;
+        --icon-star-color: #FFD700;
+        --icon-fire-color: #ff8c5a;
+        --icon-trophy-color: #5DD5DB;
+        --achievement-trophy-color: #FFD700;
+        --achievement-name-color: #ffffff;
+        --achievement-item-bg: transparent;
+        --achievement-item-hover-bg: #2d2d2d;
+        --achievement-item-hover-border: #FFD700;
+        --progress-value-color: #ffffff;
+        --progress-circle-bg: #1e1e1e;
+        --progress-title-color: #ffffff;
+        --progress-bg: #404040;
+        --timeline-border: #404040;
+        --timeline-content-bg: transparent;
+        --legend-item-bg: #2d2d2d;
+        --legend-value-color: #ffffff;
+        --quick-actions-title-color: #ffffff;
+        --action-title-color: #ffffff;
+        --action-card-blue-bg: #1a2e3f;
+        --action-card-green-bg: #1f3a2d;
+        --action-card-yellow-bg: #3a3420;
+        --action-card-red-bg: #3a2020;
+        --action-icon-green-color: #5FEBA0;
+        --action-icon-teal-color: #5DD5DB;
+        --action-icon-gold-color: #FFD700;
+        --action-icon-orange-color: #ff8c5a;
+        --btn-my-bookings-bg: #5FEBA0;
+        --btn-my-bookings-text: #121212;
+        --btn-my-bookings-hover: #75eead;
+        --empty-icon-color: #404040;
+    }
+
+    /* ===== GENERAL ===== */
+    .page-title {
+        color: var(--page-title-color);
+    }
+
     .card {
         transition: transform 0.2s ease-in-out;
+        background-color: var(--card-bg);
+        color: var(--text-primary);
     }
 
         .card:hover {
             transform: translateY(-2px);
         }
 
+    /* ===== BUTTONS ===== */
+    .btn-view-achievements {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+        .btn-view-achievements:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+    .btn-my-bookings {
+        background-color: var(--btn-my-bookings-bg);
+        color: var(--btn-my-bookings-text);
+        border: none;
+    }
+
+        .btn-my-bookings:hover {
+            background-color: var(--btn-my-bookings-hover);
+            color: var(--btn-my-bookings-text);
+        }
+
+    .btn-book-session {
+        background-color: var(--btn-my-bookings-bg);
+        color: var(--btn-my-bookings-text);
+    }
+
+    /* ===== STATS CARDS ===== */
+    .stat-card {
+        background-color: var(--stat-card-bg);
+    }
+
+    .stat-title {
+        color: var(--stat-title-color);
+    }
+
     .level-badge {
+        width: 80px;
+        height: 80px;
+        background: var(--level-badge-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        color: white;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 
-    .progress {
+    .icon-star {
+        color: var(--icon-star-color);
+    }
+
+    .icon-fire {
+        color: var(--icon-fire-color);
+    }
+
+    .icon-trophy {
+        color: var(--icon-trophy-color);
+    }
+
+    /* ===== CARD HEADERS ===== */
+    .card-header-gradient {
+        background: var(--card-header-gradient-bg);
+        color: white;
+    }
+
+    .card-header-dark {
+        background: var(--card-header-dark-bg);
+        color: white;
+    }
+
+    .card-header-teal {
+        background: var(--card-header-teal-bg);
+        color: white;
+    }
+
+    /* ===== PROGRESS ===== */
+    .custom-progress-bar {
+        height: 12px;
         border-radius: 10px;
+        background-color: var(--progress-bg);
         overflow: hidden;
     }
 
-    .progress-bar {
+    .progress-bar-gradient {
+        background: var(--progress-gradient);
         border-radius: 10px;
     }
 
-    /* Progress Circle */
     .progress-circle {
         width: 100px;
         height: 100px;
@@ -300,18 +430,22 @@
             position: absolute;
             width: 80px;
             height: 80px;
-            background: white;
+            background: var(--progress-circle-bg);
             border-radius: 50%;
         }
 
     .progress-value {
         position: relative;
         font-weight: bold;
-        color: #0B2E3D;
+        color: var(--progress-value-color);
         font-size: 1.2rem;
     }
 
-    /* Timeline */
+    .progress-title {
+        color: var(--progress-title-color);
+    }
+
+    /* ===== TIMELINE ===== */
     .timeline-item {
         display: flex;
         margin-bottom: 1.5rem;
@@ -330,27 +464,37 @@
     .timeline-content {
         flex: 1;
         padding-bottom: 1.5rem;
-        border-left: 2px solid #e9ecef;
+        border-left: 2px solid var(--timeline-border);
         padding-left: 1rem;
+        background-color: var(--timeline-content-bg);
     }
 
     .timeline-item:last-child .timeline-content {
         border-left: 2px solid transparent;
     }
 
-    /* Achievement Items */
+    /* ===== ACHIEVEMENTS ===== */
     .achievement-item {
         transition: all 0.3s ease;
         border-left: 3px solid transparent;
+        background-color: var(--achievement-item-bg);
     }
 
         .achievement-item:hover {
-            background: #f8f9fa;
-            border-left-color: #FFD700;
+            background: var(--achievement-item-hover-bg);
+            border-left-color: var(--achievement-item-hover-border);
             transform: translateX(5px);
         }
 
-    /* XP Legend */
+    .achievement-trophy {
+        color: var(--achievement-trophy-color);
+    }
+
+    .achievement-name {
+        color: var(--achievement-name-color);
+    }
+
+    /* ===== XP LEGEND ===== */
     .xp-legend {
         padding: 1rem;
     }
@@ -361,7 +505,7 @@
         margin-bottom: 0.5rem;
         padding: 0.5rem;
         border-radius: 5px;
-        background: #f8f9fa;
+        background: var(--legend-item-bg);
     }
 
     .legend-color {
@@ -374,39 +518,121 @@
     .legend-text {
         flex: 1;
         font-size: 0.9rem;
+        color: var(--text-primary);
     }
 
     .legend-value {
         font-weight: bold;
-        color: #0B2E3D;
+        color: var(--legend-value-color);
+    }
+
+    /* ===== QUICK ACTIONS ===== */
+    .quick-actions-title {
+        color: var(--quick-actions-title-color);
+    }
+
+    .action-card {
+        transition: transform 0.2s ease;
+    }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+        }
+
+    .action-card-blue {
+        background: var(--action-card-blue-bg);
+    }
+
+    .action-card-green {
+        background: var(--action-card-green-bg);
+    }
+
+    .action-card-yellow {
+        background: var(--action-card-yellow-bg);
+    }
+
+    .action-card-red {
+        background: var(--action-card-red-bg);
+    }
+
+    .action-title {
+        color: var(--action-title-color);
+    }
+
+    .action-icon-green {
+        color: var(--action-icon-green-color);
+    }
+
+    .action-icon-teal {
+        color: var(--action-icon-teal-color);
+    }
+
+    .action-icon-gold {
+        color: var(--action-icon-gold-color);
+    }
+
+    .action-icon-orange {
+        color: var(--action-icon-orange-color);
+    }
+
+    /* ===== EMPTY STATES ===== */
+    .empty-state {
+        color: var(--text-muted);
+    }
+
+    .empty-icon {
+        color: var(--empty-icon-color);
+    }
+
+    /* ===== BADGES ===== */
+    .badge.bg-success {
+        background-color: var(--badge-success-bg) !important;
+    }
+
+    .badge.bg-warning {
+        background-color: var(--badge-warning-bg) !important;
+        color: var(--badge-warning-text) !important;
+    }
+
+    .badge.bg-info {
+        background-color: var(--badge-info-bg) !important;
+    }
+
+    .badge.bg-primary {
+        background-color: var(--badge-primary-bg) !important;
+    }
+
+    .badge.bg-secondary {
+        background-color: var(--badge-secondary-bg) !important;
+    }
+
+    /* ===== UTILITIES ===== */
+    .text-muted {
+        color: var(--text-muted) !important;
+    }
+
+    .text-success {
+        color: var(--badge-success-bg) !important;
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // TEMPORARY FIX: Load data via API calls instead of from Model
         loadXPData();
         animateProgressCircle();
     });
 
     async function loadXPData() {
         try {
-            // Load XP Breakdown from API
             const breakdownResponse = await fetch('/api/gamification/xp-breakdown');
             if (!breakdownResponse.ok) {
                 throw new Error('Failed to fetch XP breakdown');
             }
             const xpData = await breakdownResponse.json();
-
-            // Create chart with real data
             createXPChart(xpData);
-
-            // Load recent activity
             await loadRecentActivity();
-
         } catch (error) {
             console.error('Error loading XP data:', error);
-            // Fallback to sample data if API fails
             const fallbackData = {
                 sessions: 1500,
                 achievements: 800,
@@ -421,24 +647,22 @@
     }
 
     async function loadRecentActivity() {
-         try {
-             const activityResponse = await fetch('/api/gamification/recent-xp-activity');
-             if (!activityResponse.ok) {
-                 throw new Error('Failed to fetch recent activity');
-             }
-             const activities = await activityResponse.json();
-             updateActivityTimeline(activities);
-         } catch (error) {
-             console.error('Error loading recent activity:', error);
-             // Show sample activities if API fails
-             showSampleActivities();
-         }
-     }
+        try {
+            const activityResponse = await fetch('/api/gamification/recent-xp-activity');
+            if (!activityResponse.ok) {
+                throw new Error('Failed to fetch recent activity');
+            }
+            const activities = await activityResponse.json();
+            updateActivityTimeline(activities);
+        } catch (error) {
+            console.error('Error loading recent activity:', error);
+            showSampleActivities();
+        }
+    }
 
     function createXPChart(xpData) {
         const ctx = document.getElementById('xpBreakdownChart').getContext('2d');
 
-        // Use the data structure from your API
         const chartData = {
             sessions: xpData.sessions || 0,
             achievements: xpData.achievements || 0,
@@ -449,7 +673,6 @@
 
         const totalXP = xpData.total || Object.values(chartData).reduce((a, b) => a + b, 0);
 
-        // Destroy existing chart if it exists
         if (window.xpBreakdownChart instanceof Chart) {
             window.xpBreakdownChart.destroy();
         }
@@ -461,11 +684,11 @@
                 datasets: [{
                     data: Object.values(chartData),
                     backgroundColor: [
-                        '#42E695',  // Sessions - Green
-                        '#FFD700',  // Achievements - Gold
-                        '#3BB2B8',  // Daily Login - Teal
-                        '#FF6B35',  // Bonuses - Orange
-                        '#0B2E3D'   // Other - Dark Blue
+                        '#42E695',
+                        '#FFD700',
+                        '#3BB2B8',
+                        '#FF6B35',
+                        '#0B2E3D'
                     ],
                     borderWidth: 2,
                     borderColor: '#fff'
@@ -493,13 +716,12 @@
             }
         });
 
-        // Create custom legend with real data
         createXPLegend(chartData, totalXP);
     }
 
     function createXPLegend(xpData, totalXP) {
         const legendContainer = document.getElementById('xpLegend');
-        legendContainer.innerHTML = ''; // Clear existing content
+        legendContainer.innerHTML = '';
 
         const colors = ['#42E695', '#FFD700', '#3BB2B8', '#FF6B35', '#0B2E3D'];
         const labels = ['Sessions', 'Achievements', 'Daily Login', 'Bonuses', 'Other'];
@@ -521,7 +743,6 @@
             legendContainer.appendChild(legendItem);
         });
 
-        // Add total XP
         const totalItem = document.createElement('div');
         totalItem.className = 'legend-item';
         totalItem.style.background = 'linear-gradient(135deg, #42E695, #3BB2B8)';
@@ -542,7 +763,7 @@
         if (!activities || activities.length === 0) {
             timelineContainer.innerHTML = `
                 <div class="text-center text-muted py-4">
-                    <i class="fas fa-history fa-2x mb-3" style="color: #ccc;"></i>
+                    <i class="fas fa-history fa-2x mb-3" style="color: var(--empty-icon-color);"></i>
                     <p>No recent activity found</p>
                 </div>
             `;
@@ -559,7 +780,7 @@
                             <span class="text-success">+${activity.points} XP</span>
                         </div>
                         <small class="text-muted">${activity.description}</small>
-                        <small class="text-muted d-block">${formatTime(activity.testamp)}</small>
+                        <small class="text-muted d-block">${formatTime(activity.timestamp)}</small>
                     </div>
                 </div>
             `;
@@ -576,21 +797,21 @@
                 type: 'Session',
                 description: 'Completed Mathematics session',
                 points: 50,
-                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+                timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
                 color: 'bg-success'
             },
             {
                 type: 'Achievement',
                 description: 'Unlocked "First Session"',
                 points: 100,
-                timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+                timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
                 color: 'bg-warning'
             },
             {
                 type: 'DailyLogin',
                 description: 'Daily login bonus',
                 points: 10,
-                timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000), // 2 days ago
+                timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000),
                 color: 'bg-info'
             }
         ];
@@ -666,10 +887,8 @@
         progressCircle.style.background = `conic-gradient(#42E695 0%, #3BB2B8 ${progress}%, #e9ecef ${progress}% 100%)`;
     }
 
-    // Refresh data every 30 seconds (optional)
     setInterval(loadXPData, 30000);
 </script>
-
 
 @functions {
     private int GetAchievementPoints(string achievementName, List<Achievement> allAchievements)

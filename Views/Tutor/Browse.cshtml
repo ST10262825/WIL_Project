@@ -5,23 +5,21 @@
 @{
     ViewData["Title"] = "Browse Tutors";
 
-    // Get user role from claims
     var userRole = HttpContextAccessor.HttpContext?.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
     var isStudent = userRole == "Student";
     var isAdmin = userRole == "Admin";
     var isTutor = userRole == "Tutor";
 
-    // Get courses for admin filter (you'll need to pass this from controller)
     var courses = ViewBag.Courses as List<CourseDTO> ?? new List<CourseDTO>();
 }
 
 <div class="container mt-5">
-    <h2 class="mb-4" style="color: #0B2E3D;">Find Your Perfect Tutor</h2>
+    <h2 class="mb-4 page-title">Find Your Perfect Tutor</h2>
 
     <!-- Course-based filtering info -->
     @if (isStudent)
     {
-        <div class="alert alert-info mb-4">
+        <div class="alert alert-info mb-4 course-alert">
             <i class="fas fa-graduation-cap me-2"></i>
             <strong>Course-based Matching:</strong> You're viewing tutors from your course:
             <span class="fw-bold">@ViewBag.StudentCourse</span>
@@ -31,7 +29,7 @@
     <!-- Filter Form -->
     <div class="row mb-4">
         <div class="col-md-12">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-sm filter-card">
                 <div class="card-body p-4">
                     <form class="row g-3" method="get" asp-action="Browse" asp-controller="Tutor">
                         <div class="col-md-3">
@@ -50,7 +48,6 @@
                             </select>
                         </div>
 
-                        <!-- ADD COURSE FILTER FOR ADMINS -->
                         @if (isAdmin && courses.Any())
                         {
                             <div class="col-md-3">
@@ -68,17 +65,16 @@
                         }
                         else
                         {
-                            <!-- Hidden column to maintain layout -->
                             <div class="col-md-3"></div>
                         }
 
                         <div class="col-md-1 d-flex align-items-end">
-                            <button type="submit" class="btn w-100" style="background-color: #3BB2B8; color: white; border-radius: 30px;">
+                            <button type="submit" class="btn w-100 btn-search">
                                 <i class="fas fa-search me-1"></i> Search
                             </button>
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
-                            <a href="@Url.Action("Browse")" class="btn btn-outline-secondary w-100" style="border-radius: 30px;">
+                            <a href="@Url.Action("Browse")" class="btn btn-outline-secondary w-100 btn-clear">
                                 <i class="fas fa-times me-1"></i> Clear
                             </a>
                         </div>
@@ -91,7 +87,7 @@
     <!-- Role-based message for non-students -->
     @if (!isStudent && User.Identity.IsAuthenticated)
     {
-        <div class="alert alert-info mb-4">
+        <div class="alert alert-info mb-4 role-alert">
             <i class="fas fa-info-circle me-2"></i>
             @if (isAdmin)
             {
@@ -106,7 +102,7 @@
 
     <!-- Loading Indicator -->
     <div id="loadingIndicator" class="text-center py-4 d-none">
-        <div class="spinner-border text-primary" role="status">
+        <div class="spinner-border spinner-custom" role="status">
             <span class="visually-hidden">Loading tutors...</span>
         </div>
         <p class="mt-2 text-muted">Finding tutors in your course...</p>
@@ -115,7 +111,7 @@
     <!-- Results Count -->
     @if (!string.IsNullOrEmpty(Context.Request.Query["searchString"]) || !string.IsNullOrEmpty(Context.Request.Query["subject"]) || !string.IsNullOrEmpty(Context.Request.Query["courseId"]))
     {
-        <div class="alert alert-info mb-4">
+        <div class="alert alert-info mb-4 results-alert">
             <i class="fas fa-info-circle me-2"></i>
             Found @Model.Count tutor@(Model.Count != 1 ? "s" : "")
 
@@ -151,19 +147,18 @@
                 @foreach (var tutor in Model)
                 {
                     <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <div style="height: 8px; background: linear-gradient(90deg, #42E695, #3BB2B8);"></div>
+                        <div class="card h-100 border-0 shadow-sm tutor-card">
+                            <div class="card-accent"></div>
                             <div class="card-body">
                                 <div class="d-flex mb-3">
-                                    <img src="@tutor.ProfileImageUrl" alt="Tutor" class="rounded-circle" style="width: 70px; height: 70px; object-fit: cover; border: 3px solid #42E695;">
+                                    <img src="@tutor.ProfileImageUrl" alt="Tutor" class="tutor-avatar">
                                     <div class="ms-3">
-                                        <h5 style="color: #0B2E3D;">@tutor.FullName</h5>
+                                        <h5 class="tutor-name">@tutor.FullName</h5>
 
-                                        <!-- ENHANCED COURSE INFO DISPLAY -->
                                         @if (!string.IsNullOrEmpty(tutor.CourseName))
                                         {
                                             <div class="mb-2">
-                                                <span class="badge" style="background-color: #0B2E3D; color: white;">
+                                                <span class="badge course-badge">
                                                     <i class="fas fa-graduation-cap me-1"></i>@tutor.CourseName
                                                 </span>
                                             </div>
@@ -171,16 +166,16 @@
 
                                         @foreach (var subject in tutor.Subjects.Take(3))
                                         {
-                                            <span class="badge me-1" style="background-color: #3BB2B8;">@subject</span>
+                                            <span class="badge me-1 subject-badge">@subject</span>
                                         }
                                         @if (tutor.Subjects.Count > 3)
                                         {
-                                            <span class="badge bg-secondary">+@(tutor.Subjects.Count - 3) more</span>
+                                            <span class="badge more-badge">+@(tutor.Subjects.Count - 3) more</span>
                                         }
                                 </div>
                             </div>
 
-                            <p class="small text-muted mb-3">
+                            <p class="small text-muted tutor-bio mb-3">
                                 @(string.IsNullOrEmpty(tutor.AboutMe)
                                                             ? ""
                                                             : (tutor.AboutMe.Length > 100 ? tutor.AboutMe.Substring(0, 100) + "..." : tutor.AboutMe))
@@ -189,12 +184,12 @@
                                 <!-- Ratings Display -->
                                 <div class="mb-3">
                                     <div class="d-flex align-items-center justify-content-center mb-2">
-                                        <div class="display-4 fw-bold text-primary me-2">@tutor.AverageRating.ToString("0.0")</div>
+                                        <div class="rating-number me-2">@tutor.AverageRating.ToString("0.0")</div>
                                         <div>
                                             <div class="star-rating">
                                         @for (int i = 1; i <= 5; i++)
                                                 {
-                                                    <i class="fas fa-star @(i <= Math.Round(tutor.AverageRating) ? "text-warning" : "text-muted")"></i>
+                                                    <i class="fas fa-star @(i <= Math.Round(tutor.AverageRating) ? "star-filled" : "star-empty")"></i>
                                                 }
                                             </div>
                                             <small class="text-muted">@tutor.TotalReviews review@(tutor.TotalReviews != 1 ? "s" : "")</small>
@@ -205,31 +200,28 @@
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     @if (tutor.IsVerified)
                                     {
-                                        <span class="badge rounded-pill" style="background-color: #42E695; color: #0B2E3D;">
+                                        <span class="badge rounded-pill verified-badge">
                                             <i class="fas fa-check-circle me-1"></i> Verified
                                         </span>
                                     }
                                 </div>
 
                                 <div class="d-flex justify-content-between">
-                                    <a href="/Tutor/Profile/@tutor.TutorId" class="btn btn-sm" style="background-color: #0B2E3D; color: white; border-radius: 30px;">View Profile</a>
+                                    <a href="/Tutor/Profile/@tutor.TutorId" class="btn btn-sm btn-view-profile">View Profile</a>
 
                                     @if (isStudent)
                                     {
-                                        <!-- Students can book sessions -->
-                                        <a href="/Booking/Create/@tutor.TutorId" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">Book Session</a>
+                                        <a href="/Booking/Create/@tutor.TutorId" class="btn btn-sm btn-book-session">Book Session</a>
                                     }
                                     else if (User.Identity.IsAuthenticated)
                                     {
-                                        <!-- Disabled button for non-students (Admin/Tutor) -->
-                                        <button class="btn btn-sm" style="background-color: #cccccc; color: #666666; border-radius: 30px;" disabled title="Only students can book sessions">
+                                        <button class="btn btn-sm btn-disabled" disabled title="Only students can book sessions">
                                             Book Session
                                         </button>
                                     }
                                     else
                                     {
-                                        <!-- Not logged in users -->
-                                        <a href="/Account/Login" class="btn btn-sm" style="background-color: #42E695; color: #0B2E3D; font-weight: bold; border-radius: 30px;">Login to Book</a>
+                                        <a href="/Auth/Login" class="btn btn-sm btn-book-session">Login to Book</a>
                                     }
                                 </div>
                             </div>
@@ -241,10 +233,10 @@
     }
     else if (!string.IsNullOrEmpty(Context.Request.Query["searchString"]) || !string.IsNullOrEmpty(Context.Request.Query["subject"]) || !string.IsNullOrEmpty(Context.Request.Query["courseId"]))
     {
-        <div class="text-center py-5">
-            <i class="fas fa-search fa-3x text-muted mb-3"></i>
-            <h4 class="text-muted">No tutors found</h4>
-            <p class="text-muted">
+        <div class="text-center py-5 empty-state">
+            <i class="fas fa-search fa-3x mb-3 empty-icon"></i>
+            <h4 class="empty-title">No tutors found</h4>
+            <p class="empty-text">
                 @if (isAdmin && !string.IsNullOrEmpty(Context.Request.Query["courseId"]))
                 {
                     var selectedCourse = courses.FirstOrDefault(c => c.CourseId.ToString() == Context.Request.Query["courseId"]);
@@ -261,16 +253,16 @@
                 {
                     <span>No tutors match your search criteria.</span>
                 }
-                Try adjusting your search or <a href="@Url.Action("Browse")">browse all available tutors</a>.
+                Try adjusting your search or <a href="@Url.Action("Browse")" class="empty-link">browse all available tutors</a>.
             </p>
         </div>
     }
     else
     {
-        <div class="text-center py-5">
-            <i class="fas fa-chalkboard-teacher fa-3x text-muted mb-3"></i>
-            <h4 class="text-muted">No tutors available</h4>
-            <p class="text-muted">
+        <div class="text-center py-5 empty-state">
+            <i class="fas fa-chalkboard-teacher fa-3x mb-3 empty-icon"></i>
+            <h4 class="empty-title">No tutors available</h4>
+            <p class="empty-text">
                 @if (isStudent)
                 {
                     <span>There are currently no tutors available for <strong>@ViewBag.StudentCourse</strong>.</span>
@@ -287,32 +279,291 @@
 
 @section Styles {
     <style>
-        .star-rating {
-            font-size: 0.9rem;
+        /* ===== THEME VARIABLES ===== */
+        :root, [data-theme="light"] {
+            --page-title-color: #0B2E3D;
+            --tutor-name-color: #0B2E3D;
+            --course-badge-bg: #0B2E3D;
+            --course-badge-text: #ffffff;
+            --subject-badge-bg: #3BB2B8;
+            --subject-badge-text: #ffffff;
+            --verified-badge-bg: #42E695;
+            --verified-badge-text: #0B2E3D;
+            --btn-view-bg: #0B2E3D;
+            --btn-view-text: #ffffff;
+            --btn-view-hover: #08232e;
+            --btn-book-bg: #42E695;
+            --btn-book-text: #0B2E3D;
+            --btn-book-hover: #38d482;
+            --btn-search-bg: #3BB2B8;
+            --btn-search-text: #ffffff;
+            --btn-search-hover: #2d9da3;
+            --btn-disabled-bg: #cccccc;
+            --btn-disabled-text: #666666;
+            --card-accent-gradient: linear-gradient(90deg, #42E695, #3BB2B8);
+            --tutor-avatar-border: #42E695;
+            --rating-number-color: #0d6efd;
+            --star-filled: #ffc107;
+            --star-empty: #6c757d;
+            --empty-icon-color: #6c757d;
+            --empty-title-color: #6c757d;
+            --empty-text-color: #6c757d;
+            --more-badge-bg: #6c757d;
+            --spinner-color: #0d6efd;
         }
 
+        [data-theme="dark"] {
+            --page-title-color: #ffffff;
+            --tutor-name-color: #ffffff;
+            --course-badge-bg: #8BB4C8;
+            --course-badge-text: #121212;
+            --subject-badge-bg: #5DD5DB;
+            --subject-badge-text: #121212;
+            --verified-badge-bg: #5FEBA0;
+            --verified-badge-text: #121212;
+            --btn-view-bg: #8BB4C8;
+            --btn-view-text: #121212;
+            --btn-view-hover: #a3c4d7;
+            --btn-book-bg: #5FEBA0;
+            --btn-book-text: #121212;
+            --btn-book-hover: #75eead;
+            --btn-search-bg: #5DD5DB;
+            --btn-search-text: #121212;
+            --btn-search-hover: #75e0e5;
+            --btn-disabled-bg: #404040;
+            --btn-disabled-text: #8a8a8a;
+            --card-accent-gradient: linear-gradient(90deg, #5FEBA0, #5DD5DB);
+            --tutor-avatar-border: #5FEBA0;
+            --rating-number-color: #4299e1;
+            --star-filled: #ed8936;
+            --star-empty: #718096;
+            --empty-icon-color: #8a8a8a;
+            --empty-title-color: #b0b0b0;
+            --empty-text-color: #8a8a8a;
+            --more-badge-bg: #718096;
+            --spinner-color: #4299e1;
+        }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            color: var(--page-title-color);
+        }
+
+        /* ===== FILTER CARD ===== */
+        .filter-card {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+            .filter-card .form-label {
+                color: var(--text-primary);
+            }
+
+            .filter-card .form-control,
+            .filter-card .form-select {
+                background-color: var(--input-bg);
+                border-color: var(--input-border);
+                color: var(--text-primary);
+            }
+
+                .filter-card .form-control:focus,
+                .filter-card .form-select:focus {
+                    background-color: var(--input-bg);
+                    border-color: var(--input-focus-border);
+                    color: var(--text-primary);
+                }
+
+        /* ===== BUTTONS ===== */
+        .btn-search {
+            background-color: var(--btn-search-bg);
+            color: var(--btn-search-text);
+            border-radius: 30px;
+            border: none;
+            transition: all 0.3s;
+        }
+
+            .btn-search:hover {
+                background-color: var(--btn-search-hover);
+                color: var(--btn-search-text);
+            }
+
+        .btn-clear {
+            border-radius: 30px;
+            color: var(--text-secondary);
+            border-color: var(--border-strong);
+        }
+
+            .btn-clear:hover {
+                background-color: var(--hover-bg);
+                color: var(--text-primary);
+                border-color: var(--border-strong);
+            }
+
+        .btn-view-profile {
+            background-color: var(--btn-view-bg);
+            color: var(--btn-view-text);
+            border-radius: 30px;
+            border: none;
+            transition: all 0.3s;
+        }
+
+            .btn-view-profile:hover {
+                background-color: var(--btn-view-hover);
+                color: var(--btn-view-text);
+            }
+
+        .btn-book-session {
+            background-color: var(--btn-book-bg);
+            color: var(--btn-book-text);
+            font-weight: bold;
+            border-radius: 30px;
+            border: none;
+            transition: all 0.3s;
+        }
+
+            .btn-book-session:hover {
+                background-color: var(--btn-book-hover);
+                color: var(--btn-book-text);
+            }
+
+        .btn-disabled {
+            background-color: var(--btn-disabled-bg);
+            color: var(--btn-disabled-text);
+            border-radius: 30px;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        /* ===== TUTOR CARDS ===== */
+        .tutor-card {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .tutor-card:hover {
+                transform: translateY(-2px);
+            }
+
+        .card-accent {
+            height: 8px;
+            background: var(--card-accent-gradient);
+        }
+
+        .tutor-avatar {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--tutor-avatar-border);
+        }
+
+        .tutor-name {
+            color: var(--tutor-name-color);
+        }
+
+        .tutor-bio {
+            color: var(--text-muted) !important;
+        }
+
+        /* ===== BADGES ===== */
         .badge {
             font-size: 0.75rem;
             padding: 0.35em 0.65em;
         }
 
-        .card {
-            transition: transform 0.2s ease-in-out;
+        .course-badge {
+            background-color: var(--course-badge-bg);
+            color: var(--course-badge-text);
+            font-weight: 500;
+            border: 1px solid var(--course-badge-bg);
         }
 
-            .card:hover {
-                transform: translateY(-2px);
+        .subject-badge {
+            background-color: var(--subject-badge-bg);
+            color: var(--subject-badge-text);
+        }
+
+        .verified-badge {
+            background-color: var(--verified-badge-bg);
+            color: var(--verified-badge-text);
+        }
+
+        .more-badge {
+            background-color: var(--more-badge-bg);
+            color: #ffffff;
+        }
+
+        /* ===== RATINGS ===== */
+        .rating-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--rating-number-color);
+        }
+
+        .star-rating {
+            font-size: 0.9rem;
+        }
+
+        .star-filled {
+            color: var(--star-filled);
+        }
+
+        .star-empty {
+            color: var(--star-empty);
+        }
+
+        /* ===== ALERTS ===== */
+        .course-alert,
+        .role-alert,
+        .results-alert {
+            background-color: var(--info-light);
+            border-color: var(--info-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .course-alert,
+        [data-theme="dark"] .role-alert,
+        [data-theme="dark"] .results-alert {
+            background-color: #1e2f3a;
+            border-color: var(--info-color);
+            color: var(--info-color);
+        }
+
+        /* ===== EMPTY STATES ===== */
+        .empty-state {
+            color: var(--empty-text-color);
+        }
+
+        .empty-icon {
+            color: var(--empty-icon-color);
+        }
+
+        .empty-title {
+            color: var(--empty-title-color);
+        }
+
+        .empty-text {
+            color: var(--empty-text-color);
+        }
+
+        .empty-link {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+            .empty-link:hover {
+                color: var(--primary-hover);
             }
 
-        .btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.6;
+        /* ===== LOADING SPINNER ===== */
+        .spinner-custom {
+            color: var(--spinner-color);
         }
 
-        /* Enhanced course badge styling */
-        .badge[style*="background-color: #0B2E3D"] {
-            font-weight: 500;
-            border: 1px solid #0B2E3D;
+        /* ===== UTILITY ===== */
+        .text-muted {
+            color: var(--text-muted) !important;
         }
     </style>
 }
@@ -320,7 +571,6 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Show loading indicator on form submission
             const form = document.querySelector('form');
             const loadingIndicator = document.getElementById('loadingIndicator');
             const tutorsContainer = document.getElementById('tutorsContainer');
@@ -334,7 +584,6 @@
                 });
             }
 
-            // Hide loading indicator when page loads (in case of back navigation)
             if (loadingIndicator) {
                 loadingIndicator.classList.add('d-none');
             }
@@ -342,7 +591,6 @@
                 tutorsContainer.style.opacity = '1';
             }
 
-            // Auto-focus search input
             const searchInput = document.querySelector('input[name="searchString"]');
             if (searchInput && !searchInput.value) {
                 searchInput.focus();

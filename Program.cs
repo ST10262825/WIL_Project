@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using TutorConnect.WebApp.Services;
 
 namespace TutorConnect.WebApp
@@ -21,6 +21,8 @@ namespace TutorConnect.WebApp
 
             builder.Services.AddScoped<ApiService>();
             builder.Services.AddHttpContextAccessor();
+            // Add this if using View Component approach
+            builder.Services.AddScoped<ThemeService>();
 
             // Add authentication using cookies
             builder.Services.AddAuthentication("Cookies")

@@ -77,11 +77,7 @@ namespace TutorConnect.WebApp.Services
         // Chat-related methods
         // ==========================
 
-       
-        
-
-       
-
+ 
         public async Task<int> GetUnreadCountAsync()
         {
             AddAuthHeader();
@@ -821,8 +817,31 @@ namespace TutorConnect.WebApp.Services
         public async Task<int> GetUnreadMessagesCountAsync(int userId)
         {
             AddAuthHeader();
-            // Ensure the URL matches your API route exactly
-            return await _client.GetFromJsonAsync<int>($"api/chat/unread-count/{userId}");
+            try
+            {
+                // Ensure the URL matches your actual API route
+                var response = await _client.GetAsync($"api/chat/unread-count/{userId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<int>();
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    Console.WriteLine($"[ApiService] Unauthorized accessing chat endpoint for user {userId}");
+                    return 0; // Return 0 instead of throwing exception
+                }
+                else
+                {
+                    Console.WriteLine($"[ApiService] Failed to get unread count: {response.StatusCode}");
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ApiService] Error getting unread count: {ex.Message}");
+                return 0; // Return 0 instead of crashing
+            }
         }
 
 
@@ -953,6 +972,96 @@ namespace TutorConnect.WebApp.Services
                 return new TutorRatingDTO();
             }
         }
+
+
+        public async Task<bool> ChangeTutorPasswordAsync(ChangePasswordDTO dto)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[WebApp] Changing tutor password...");
+
+                var response = await _client.PutAsJsonAsync("api/tutor/change-password", dto);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException(errorContent);
+                }
+
+                Console.WriteLine($"[WebApp] ✅ Tutor password changed successfully");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[WebApp] ❌ Error changing tutor password: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> ForgotPasswordAsync(string email)
+        {
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/auth/forgot-password", new { Email = email });
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException(errorContent);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in forgot password: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> ResetPasswordAsync(string token, string newPassword, string confirmPassword)
+        {
+            try
+            {
+                var dto = new ResetPasswordDTO
+                {
+                    Token = token,
+                    NewPassword = newPassword,
+                    ConfirmPassword = confirmPassword
+                };
+
+                var response = await _client.PostAsJsonAsync("api/auth/reset-password", dto);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    throw new HttpRequestException(errorContent);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error resetting password: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> ValidateResetTokenAsync(string token)
+        {
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/auth/validate-reset-token", new { Token = token });
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error validating reset token: {ex.Message}");
+                return false;
+            }
+        }
+
 
         // Create a small class to map the API response
         public class ReviewedResponse
@@ -2060,6 +2169,69 @@ private string GetExportFileName(ReportFilterDTO filters)
                 return new List<StudentDTO>();
             }
         }
+
+
+        // Add these methods to your existing ApiService
+
+        public async Task<bool> UpdateThemePreferenceAsync(string theme)
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[ApiService] Updating theme preference to: {theme}");
+
+                var response = await _client.PostAsJsonAsync("api/auth/update-theme", new { theme });
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"[ApiService] Theme preference updated successfully");
+                    return true;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[ApiService] Failed to update theme: {errorContent}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ApiService] Error updating theme: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<string> GetThemePreferenceAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                Console.WriteLine($"[ApiService] Getting theme preference");
+
+                var response = await _client.GetAsync("api/auth/theme-preference");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+                    var theme = result?["theme"] ?? "light";
+                    Console.WriteLine($"[ApiService] Retrieved theme: {theme}");
+                    return theme;
+                }
+                else
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[ApiService] Failed to get theme preference: {errorContent}, using default");
+                    return "light";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ApiService] Error getting theme preference: {ex.Message}");
+                return "light";
+            }
+        }
+
+        
 
         public class CreateModuleRequest
         {

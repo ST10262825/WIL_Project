@@ -3,57 +3,41 @@
 }
 
 <!-- Hero Section -->
-<section class="hero-section" style="
-    background: linear-gradient(135deg, #0B2E3D 0%, #3BB2B8 100%);
-    padding: 100px 0;
-    color: white;
-    position: relative;
-    overflow: hidden;
-">
+<section class="hero-section">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                <h1 class="display-3 fw-bold mb-4" style="line-height: 1.2;">
-                    Unlock Your <span style="color: #42E695;">Potential</span> with Expert Tutors
+                <h1 class="display-3 fw-bold mb-4 hero-title">
+                    Unlock Your <span class="hero-highlight">Potential</span> with Expert Tutors
                 </h1>
-                <p class="lead mb-4" style="font-size: 1.3rem; opacity: 0.9;">
+                <p class="lead mb-4 hero-subtitle">
                     Connect with certified tutors for personalized 1-on-1 sessions.
                     Achieve academic excellence at your own pace.
                 </p>
                 <div class="d-flex flex-wrap gap-3">
-                    <a href="/Tutor/Browse" class="btn btn-lg" style="
-                        background: #42E695;
-                        color: #0B2E3D;
-                        font-weight: bold;
-                        border-radius: 50px;
-                        padding: 15px 35px;
-                        border: none;
-                        transition: all 0.3s ease;
-                        box-shadow: 0 4px 15px rgba(66, 230, 149, 0.3);
-                    ">
+                    <a href="/Tutor/Browse" class="btn btn-lg btn-hero-primary">
                         <i class="fas fa-search me-2"></i>Find Tutors
                     </a>
-                   
                 </div>
 
                 <!-- Stats Row -->
                 <div class="row mt-5 pt-3">
                     <div class="col-4">
-                        <div class="text-center">
-                            <h3 class="fw-bold mb-1" style="color: #42E695;">20+</h3>
-                            <small>Expert Tutors</small>
+                        <div class="text-center hero-stat">
+                            <h3 class="fw-bold mb-1 stat-number">20+</h3>
+                            <small class="stat-label">Expert Tutors</small>
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="text-center">
-                            <h3 class="fw-bold mb-1" style="color: #42E695;">5K+</h3>
-                            <small>Students Helped</small>
+                        <div class="text-center hero-stat">
+                            <h3 class="fw-bold mb-1 stat-number">5K+</h3>
+                            <small class="stat-label">Students Helped</small>
                         </div>
                     </div>
                     <div class="col-4">
-                        <div class="text-center">
-                            <h3 class="fw-bold mb-1" style="color: #42E695;">95%</h3>
-                            <small>Success Rate</small>
+                        <div class="text-center hero-stat">
+                            <h3 class="fw-bold mb-1 stat-number">95%</h3>
+                            <small class="stat-label">Success Rate</small>
                         </div>
                     </div>
                 </div>
@@ -61,152 +45,66 @@
 
             <div class="col-lg-6 mt-5 mt-lg-0">
                 <div class="position-relative">
-                    <div style="
-                        background: linear-gradient(135deg, #42E695, #3BB2B8);
-                        height: 8px;
-                        width: 100%;
-                        position: absolute;
-                        top: -10px;
-                        left: 0;
-                        z-index: 2;
-                        border-radius: 10px 10px 0 0;
-                    "></div>
-                    <img src="/images/Logo.jpg" alt="Tutoring Session" class="img-fluid rounded-3" style="
-                        width: 100%;
-                        height: 300px;
-                        object-fit: cover;
-                        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-                        transform: perspective(1000px) rotateY(-5deg);
-                        transition: transform 0.3s ease;
-                    " onmouseover="this.style.transform='perspective(1000px) rotateY(0deg)'"
-                         onmouseout="this.style.transform='perspective(1000px) rotateY(-5deg)'">
+                    <div class="hero-image-accent"></div>
+                    <img src="/images/Logo.jpg" alt="Tutoring Session" class="img-fluid rounded-3 hero-image">
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Wave Decoration -->
-    <div style="
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        overflow: hidden;
-        line-height: 0;
-    ">
-        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" style="
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 80px;
-        ">
-            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="#ffffff"></path>
-            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="#ffffff"></path>
-            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#ffffff"></path>
+    <div class="hero-wave">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="wave-fill"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="wave-fill"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="wave-fill"></path>
         </svg>
     </div>
 </section>
 
 <!-- How It Works Section -->
-<section class="py-5" style="background: #f8f9fa;">
+<section class="py-5 section-how-it-works">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold" style="color: #0B2E3D;">How TutorConnect Works</h2>
+            <h2 class="display-5 fw-bold section-title">How TutorConnect Works</h2>
             <p class="lead text-muted">Get started in just three simple steps</p>
         </div>
 
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-hover" style="
-                    transition: all 0.3s ease;
-                    border-radius: 20px;
-                    overflow: hidden;
-                " onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)'"
-                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'">
+                <div class="card h-100 border-0 step-card">
                     <div class="card-body text-center p-4">
-                        <div class="number-badge mb-4" style="
-                            width: 60px;
-                            height: 60px;
-                            border-radius: 50%;
-                            background: linear-gradient(135deg, #3BB2B8, #42E695);
-                            color: white;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 1.5rem;
-                            font-weight: bold;
-                            margin: 0 auto;
-                        ">
-                            1
-                        </div>
-                        <div class="icon-wrapper mb-4" style="font-size: 3rem; color: #3BB2B8;">
+                        <div class="number-badge number-badge-1 mb-4">1</div>
+                        <div class="icon-wrapper icon-teal mb-4">
                             <i class="fas fa-search"></i>
                         </div>
-                        <h4 style="color: #0B2E3D;">Find Your Tutor</h4>
+                        <h4 class="step-title">Find Your Tutor</h4>
                         <p class="text-muted">Browse through verified tutor profiles, read reviews, and compare qualifications to find your perfect match.</p>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-hover" style="
-                    transition: all 0.3s ease;
-                    border-radius: 20px;
-                    overflow: hidden;
-                " onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)'"
-                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'">
+                <div class="card h-100 border-0 step-card">
                     <div class="card-body text-center p-4">
-                        <div class="number-badge mb-4" style="
-                            width: 60px;
-                            height: 60px;
-                            border-radius: 50%;
-                            background: linear-gradient(135deg, #42E695, #3BB2B8);
-                            color: white;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 1.5rem;
-                            font-weight: bold;
-                            margin: 0 auto;
-                        ">
-                            2
-                        </div>
-                        <div class="icon-wrapper mb-4" style="font-size: 3rem; color: #42E695;">
+                        <div class="number-badge number-badge-2 mb-4">2</div>
+                        <div class="icon-wrapper icon-green mb-4">
                             <i class="fas fa-calendar-check"></i>
                         </div>
-                        <h4 style="color: #0B2E3D;">Book a Session</h4>
+                        <h4 class="step-title">Book a Session</h4>
                         <p class="text-muted">Choose from available time slots, select your preferred learning method, and confirm your booking instantly.</p>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card h-100 border-0 shadow-hover" style="
-                    transition: all 0.3s ease;
-                    border-radius: 20px;
-                    overflow: hidden;
-                " onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)'"
-                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.08)'">
+                <div class="card h-100 border-0 step-card">
                     <div class="card-body text-center p-4">
-                        <div class="number-badge mb-4" style="
-                            width: 60px;
-                            height: 60px;
-                            border-radius: 50%;
-                            background: linear-gradient(135deg, #0B2E3D, #3BB2B8);
-                            color: white;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 1.5rem;
-                            font-weight: bold;
-                            margin: 0 auto;
-                        ">
-                            3
-                        </div>
-                        <div class="icon-wrapper mb-4" style="font-size: 3rem; color: #0B2E3D;">
+                        <div class="number-badge number-badge-3 mb-4">3</div>
+                        <div class="icon-wrapper icon-navy mb-4">
                             <i class="fas fa-graduation-cap"></i>
                         </div>
-                        <h4 style="color: #0B2E3D;">Learn & Excel</h4>
+                        <h4 class="step-title">Learn & Excel</h4>
                         <p class="text-muted">Engage in interactive sessions, track your progress, and achieve your academic goals with expert guidance.</p>
                     </div>
                 </div>
@@ -219,70 +117,36 @@
 <section class="py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold" style="color: #0B2E3D;">Why Choose TutorConnect?</h2>
+            <h2 class="display-5 fw-bold section-title">Why Choose TutorConnect?</h2>
         </div>
 
         <div class="row g-4">
             <div class="col-md-3 col-6">
                 <div class="text-center">
-                    <div class="feature-icon mb-3" style="
-                        width: 80px;
-                        height: 80px;
-                        border-radius: 20px;
-                        background: linear-gradient(135deg, #FF7E36, #FF9F66);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        margin: 0 auto;
-                        font-size: 2rem;
-                        color: white;
-                    ">
+                    <div class="feature-icon feature-icon-orange mb-3">
                         <i class="fas fa-certificate"></i>
                     </div>
-                    <h5 style="color: #0B2E3D;">Verified Tutors</h5>
+                    <h5 class="feature-title">Verified Tutors</h5>
                     <p class="text-muted small">All tutors are thoroughly verified</p>
                 </div>
             </div>
 
-
             <div class="col-md-3 col-6">
                 <div class="text-center">
-                    <div class="feature-icon mb-3" style="
-                        width: 80px;
-                        height: 80px;
-                        border-radius: 20px;
-                        background: linear-gradient(135deg, #3BB2B8, #6DD5DB);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        margin: 0 auto;
-                        font-size: 2rem;
-                        color: white;
-                    ">
+                    <div class="feature-icon feature-icon-teal mb-3">
                         <i class="fas fa-comments"></i>
                     </div>
-                    <h5 style="color: #0B2E3D;">24/7 Support</h5>
+                    <h5 class="feature-title">24/7 Support</h5>
                     <p class="text-muted small">Round-the-clock customer assistance</p>
                 </div>
             </div>
 
             <div class="col-md-3 col-6">
                 <div class="text-center">
-                    <div class="feature-icon mb-3" style="
-                        width: 80px;
-                        height: 80px;
-                        border-radius: 20px;
-                        background: linear-gradient(135deg, #0B2E3D, #2C5364);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        margin: 0 auto;
-                        font-size: 2rem;
-                        color: white;
-                    ">
+                    <div class="feature-icon feature-icon-navy mb-3">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h5 style="color: #0B2E3D;">Progress Tracking</h5>
+                    <h5 class="feature-title">Progress Tracking</h5>
                     <p class="text-muted small">Monitor your learning journey</p>
                 </div>
             </div>
@@ -291,20 +155,15 @@
 </section>
 
 <!-- CTA Section -->
-<section class="py-5" style="background: linear-gradient(135deg, #0B2E3D 0%, #3BB2B8 100%); color: white;">
+<section class="py-5 cta-section">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <h2 class="fw-bold mb-3">Ready to Start Your Learning Journey?</h2>
-                <p class="lead mb-4">Join thousands of students who are achieving their academic goals with TutorConnect.</p>
+                <h2 class="fw-bold mb-3 cta-title">Ready to Start Your Learning Journey?</h2>
+                <p class="lead mb-4 cta-subtitle">Join thousands of students who are achieving their academic goals with TutorConnect.</p>
             </div>
             <div class="col-lg-4 text-lg-end">
-                <a href="/Auth/Register" class="btn btn-light btn-lg" style="
-                    border-radius: 50px;
-                    padding: 15px 35px;
-                    font-weight: 600;
-                    color: #0B2E3D;
-                ">
+                <a href="/Auth/Register" class="btn btn-lg btn-cta">
                     Get Started Today
                 </a>
             </div>
@@ -313,20 +172,290 @@
 </section>
 
 <style>
-    .shadow-hover {
-        box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+    /* ===== NEW COLOR VARIABLES FOR HOME PAGE ===== */
+    :root, [data-theme="light"] {
+        --hero-gradient-start: #0B2E3D;
+        --hero-gradient-end: #3BB2B8;
+        --hero-text: #ffffff;
+        --hero-highlight: #42E695;
+        --hero-btn-bg: #42E695;
+        --hero-btn-text: #0B2E3D;
+        --hero-btn-shadow: rgba(66, 230, 149, 0.3);
+        --section-bg-light: #f8f9fa;
+        --section-title: #0B2E3D;
+        --step-card-shadow: rgba(0,0,0,0.08);
+        --step-card-hover-shadow: rgba(0,0,0,0.1);
+        --wave-fill: #ffffff;
+        --cta-bg-start: #0B2E3D;
+        --cta-bg-end: #3BB2B8;
+        --cta-text: #ffffff;
+        --cta-btn-bg: #ffffff;
+        --cta-btn-text: #0B2E3D;
     }
 
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    [data-theme="dark"] {
+        --hero-gradient-start: #1a3a4a;
+        --hero-gradient-end: #2d8a8f;
+        --hero-text: #ffffff;
+        --hero-highlight: #5FEBA0;
+        --hero-btn-bg: #5FEBA0;
+        --hero-btn-text: #121212;
+        --hero-btn-shadow: rgba(95, 235, 160, 0.3);
+        --section-bg-light: #1e1e1e;
+        --section-title: #ffffff;
+        --step-card-shadow: rgba(0,0,0,0.3);
+        --step-card-hover-shadow: rgba(0,0,0,0.4);
+        --wave-fill: #121212;
+        --cta-bg-start: #1a3a4a;
+        --cta-bg-end: #2d8a8f;
+        --cta-text: #ffffff;
+        --cta-btn-bg: #5FEBA0;
+        --cta-btn-text: #121212;
     }
 
+    /* ===== HERO SECTION ===== */
+    .hero-section {
+        background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-end) 100%);
+        padding: 100px 0;
+        color: var(--hero-text);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-title {
+        line-height: 1.2;
+        color: var(--hero-text);
+    }
+
+    .hero-highlight {
+        color: var(--hero-highlight);
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        color: var(--hero-text);
+    }
+
+    .btn-hero-primary {
+        background: var(--hero-btn-bg);
+        color: var(--hero-btn-text);
+        font-weight: bold;
+        border-radius: 50px;
+        padding: 15px 35px;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px var(--hero-btn-shadow);
+    }
+
+        .btn-hero-primary:hover {
+            background: var(--hero-highlight);
+            color: var(--hero-btn-text);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--hero-btn-shadow);
+        }
+
+    .hero-stat {
+        color: var(--hero-text);
+    }
+
+    .stat-number {
+        color: var(--hero-highlight);
+    }
+
+    .stat-label {
+        color: var(--hero-text);
+        opacity: 0.9;
+    }
+
+    .hero-image-accent {
+        background: linear-gradient(135deg, var(--hero-highlight), var(--hero-gradient-end));
+        height: 8px;
+        width: 100%;
+        position: absolute;
+        top: -10px;
+        left: 0;
+        z-index: 2;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        transform: perspective(1000px) rotateY(-5deg);
+        transition: transform 0.3s ease;
+    }
+
+        .hero-image:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+    .hero-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+    }
+
+        .hero-wave svg {
+            position: relative;
+            display: block;
+            width: calc(100% + 1.3px);
+            height: 80px;
+        }
+
+    .wave-fill {
+        fill: var(--wave-fill);
+    }
+
+    /* ===== HOW IT WORKS SECTION ===== */
+    .section-how-it-works {
+        background: var(--section-bg-light);
+    }
+
+    .section-title {
+        color: var(--section-title);
+    }
+
+    .step-card {
+        transition: all 0.3s ease;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px var(--step-card-shadow) !important;
+        background-color: var(--card-bg);
+    }
+
+        .step-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px var(--step-card-hover-shadow) !important;
+        }
+
+    .number-badge {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 0 auto;
+    }
+
+    .number-badge-1 {
+        background: linear-gradient(135deg, #3BB2B8, #42E695);
+    }
+
+    .number-badge-2 {
+        background: linear-gradient(135deg, #42E695, #3BB2B8);
+    }
+
+    .number-badge-3 {
+        background: linear-gradient(135deg, var(--secondary-color), #3BB2B8);
+    }
+
+    .icon-wrapper {
+        font-size: 3rem;
+    }
+
+    .icon-teal {
+        color: #3BB2B8;
+    }
+
+    .icon-green {
+        color: #42E695;
+    }
+
+    .icon-navy {
+        color: var(--secondary-color);
+    }
+
+    .step-title {
+        color: var(--section-title);
+    }
+
+    /* ===== FEATURES SECTION ===== */
     .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        font-size: 2rem;
+        color: white;
         transition: transform 0.3s ease;
     }
 
         .feature-icon:hover {
             transform: scale(1.1) rotate(5deg);
         }
+
+    .feature-icon-orange {
+        background: linear-gradient(135deg, var(--primary-color), #FF9F66);
+    }
+
+    .feature-icon-teal {
+        background: linear-gradient(135deg, #3BB2B8, #6DD5DB);
+    }
+
+    .feature-icon-navy {
+        background: linear-gradient(135deg, var(--secondary-color), #2C5364);
+    }
+
+    .feature-title {
+        color: var(--section-title);
+    }
+
+    /* ===== CTA SECTION ===== */
+    .cta-section {
+        background: linear-gradient(135deg, var(--cta-bg-start) 0%, var(--cta-bg-end) 100%);
+        color: var(--cta-text);
+    }
+
+    .cta-title,
+    .cta-subtitle {
+        color: var(--cta-text);
+    }
+
+    .btn-cta {
+        border-radius: 50px;
+        padding: 15px 35px;
+        font-weight: 600;
+        background-color: var(--cta-btn-bg);
+        color: var(--cta-btn-text);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            background-color: var(--hero-highlight);
+            color: var(--cta-btn-text);
+        }
+
+    /* ===== RESPONSIVE ===== */
+    @@media (max-width: 768px) {
+        .hero-section
+
+    {
+        padding: 60px 0;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+
+    }
 </style>

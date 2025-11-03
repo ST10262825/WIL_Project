@@ -8,20 +8,20 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
-                <h2 style="color: #0B2E3D;">🏆 Achievements Gallery</h2>
-                <a href="@Url.Action("Profile")" class="btn btn-outline-primary">
+                <h2 class="page-title">🏆 Achievements Gallery</h2>
+                <a href="@Url.Action("Profile")" class="btn btn-outline-primary btn-back">
                     <i class="fas fa-arrow-left me-2"></i>Back to Profile
                 </a>
             </div>
             <p class="text-muted">Unlock achievements to earn bonus XP and showcase your progress</p>
 
             <!-- Progress Summary -->
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card border-0 shadow-sm mb-4 summary-card">
                 <div class="card-body text-center">
-                    <h4 style="color: #0B2E3D;">@Model.EarnedCount out of @Model.TotalCount Achievements Unlocked</h4>
-                    <div class="progress mx-auto" style="max-width: 400px; height: 15px;">
-                        <div class="progress-bar"
-                             style="width: @((Model.EarnedCount * 100) / Model.TotalCount)%; background: linear-gradient(90deg, #42E695, #3BB2B8);">
+                    <h4 class="summary-title">@Model.EarnedCount out of @Model.TotalCount Achievements Unlocked</h4>
+                    <div class="progress mx-auto custom-progress-bar">
+                        <div class="progress-bar progress-bar-gradient"
+                             style="width: @((Model.EarnedCount * 100) / Model.TotalCount)%;">
                         </div>
                     </div>
                     <small class="text-muted">@(((Model.EarnedCount * 100) / Model.TotalCount))% Complete</small>
@@ -44,21 +44,21 @@
                         <div class="achievement-icon mb-3">
                             @if (isEarned)
                             {
-                                <i class="fas fa-trophy fa-3x" style="color: #FFD700;"></i>
+                                <i class="fas fa-trophy fa-3x icon-earned"></i>
                             }
                             else
                             {
-                                <i class="fas fa-lock fa-3x" style="color: #6c757d;"></i>
+                                <i class="fas fa-lock fa-3x icon-locked"></i>
                             }
                         </div>
 
                         <!-- Achievement Info -->
-                        <h5 class="card-title" style="color: #0B2E3D;">@achievement.Name</h5>
+                        <h5 class="card-title achievement-title">@achievement.Name</h5>
                         <p class="card-text text-muted small">@achievement.Description</p>
 
                         <!-- Points -->
                         <div class="points-badge mb-3">
-                            <span class="badge" style="background: #42E695; color: #0B2E3D;">
+                            <span class="badge points-badge-style">
                                 +@achievement.PointsReward XP
                             </span>
                         </div>
@@ -67,7 +67,7 @@
                         @if (isEarned)
                         {
                             <div class="earned-info">
-                                <small class="text-success">
+                                <small class="earned-text">
                                     <i class="fas fa-check-circle me-1"></i>
                                     Earned on @userAchievement.EarnedAt.ToString("MMM dd, yyyy")
                                 </small>
@@ -97,31 +97,165 @@
 </div>
 
 <style>
-    .achievement-earned {
-        border-left: 4px solid #42E695;
-        background: linear-gradient(135deg, #f8f9fa, #E8F5E8);
+    /* ===== THEME VARIABLES ===== */
+    :root, [data-theme="light"] {
+        --page-title-color: #0B2E3D;
+        --summary-title-color: #0B2E3D;
+        --summary-card-bg: #ffffff;
+        --achievement-title-color: #0B2E3D;
+        --achievement-earned-bg: linear-gradient(135deg, #f8f9fa, #E8F5E8);
+        --achievement-earned-border: #42E695;
+        --achievement-locked-bg: #f8f9fa;
+        --achievement-locked-border: #6c757d;
+        --icon-earned-color: #FFD700;
+        --icon-locked-color: #6c757d;
+        --points-badge-bg: #42E695;
+        --points-badge-text: #0B2E3D;
+        --progress-gradient: linear-gradient(90deg, #42E695, #3BB2B8);
+        --progress-bg: #e9ecef;
+        --earned-text-color: #28a745;
+        --btn-back-color: #0d6efd;
+        --btn-back-border: #0d6efd;
+        --btn-back-hover-bg: #0d6efd;
     }
 
-    .achievement-locked {
-        border-left: 4px solid #6c757d;
-        background: #f8f9fa;
-        opacity: 0.8;
+    [data-theme="dark"] {
+        --page-title-color: #ffffff;
+        --summary-title-color: #ffffff;
+        --summary-card-bg: #1e1e1e;
+        --achievement-title-color: #ffffff;
+        --achievement-earned-bg: linear-gradient(135deg, #2d2d2d, #1f3a2d);
+        --achievement-earned-border: #5FEBA0;
+        --achievement-locked-bg: #2d2d2d;
+        --achievement-locked-border: #718096;
+        --icon-earned-color: #FFD700;
+        --icon-locked-color: #718096;
+        --points-badge-bg: #5FEBA0;
+        --points-badge-text: #121212;
+        --progress-gradient: linear-gradient(90deg, #5FEBA0, #5DD5DB);
+        --progress-bg: #404040;
+        --earned-text-color: #48bb78;
+        --btn-back-color: #4299e1;
+        --btn-back-border: #4299e1;
+        --btn-back-hover-bg: #4299e1;
     }
 
+    /* ===== PAGE TITLE ===== */
+    .page-title {
+        color: var(--page-title-color);
+    }
+
+    /* ===== SUMMARY CARD ===== */
+    .summary-card {
+        background-color: var(--summary-card-bg);
+    }
+
+    .summary-title {
+        color: var(--summary-title-color);
+    }
+
+    .custom-progress-bar {
+        max-width: 400px;
+        height: 15px;
+        background-color: var(--progress-bg);
+    }
+
+    .progress-bar-gradient {
+        background: var(--progress-gradient);
+    }
+
+    /* ===== ACHIEVEMENT CARDS ===== */
     .card {
         transition: transform 0.2s ease-in-out;
+        background-color: var(--card-bg);
+        color: var(--text-primary);
     }
 
         .card:hover {
             transform: translateY(-5px);
         }
 
+    .achievement-earned {
+        border-left: 4px solid var(--achievement-earned-border);
+        background: var(--achievement-earned-bg) !important;
+    }
+
+    .achievement-locked {
+        border-left: 4px solid var(--achievement-locked-border);
+        background: var(--achievement-locked-bg) !important;
+        opacity: 0.8;
+    }
+
+    .achievement-title {
+        color: var(--achievement-title-color);
+    }
+
+    /* ===== ACHIEVEMENT ICONS ===== */
     .achievement-icon {
         transition: transform 0.3s ease-in-out;
     }
 
     .achievement-earned .achievement-icon:hover {
         transform: scale(1.1) rotate(5deg);
+    }
+
+    .icon-earned {
+        color: var(--icon-earned-color);
+    }
+
+    .icon-locked {
+        color: var(--icon-locked-color);
+    }
+
+    /* ===== POINTS BADGE ===== */
+    .points-badge-style {
+        background: var(--points-badge-bg);
+        color: var(--points-badge-text);
+        font-weight: 600;
+    }
+
+    /* ===== STATUS TEXT ===== */
+    .earned-text {
+        color: var(--earned-text-color);
+    }
+
+    /* ===== TYPE BADGES ===== */
+    .badge.bg-primary {
+        background-color: var(--badge-primary-bg) !important;
+    }
+
+    .badge.bg-success {
+        background-color: var(--badge-success-bg) !important;
+    }
+
+    .badge.bg-warning {
+        background-color: var(--badge-warning-bg) !important;
+        color: var(--badge-warning-text) !important;
+    }
+
+    .badge.bg-info {
+        background-color: var(--badge-info-bg) !important;
+    }
+
+    .badge.bg-secondary {
+        background-color: var(--badge-secondary-bg) !important;
+    }
+
+    /* ===== BACK BUTTON ===== */
+    .btn-back {
+        color: var(--btn-back-color);
+        border-color: var(--btn-back-border);
+    }
+
+        .btn-back:hover {
+            background-color: var(--btn-back-hover-bg);
+            border-color: var(--btn-back-border);
+            color: white;
+        }
+
+    /* ===== UTILITIES ===== */
+    .text-muted {
+        color: var(--text-muted) !important;
     }
 </style>
 

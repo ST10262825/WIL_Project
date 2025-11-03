@@ -1,6 +1,6 @@
 ﻿﻿
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -12,6 +12,9 @@
     <script src="~/js/backNavigation.js" asp-append-version="true"></script>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/themes.css" asp-append-version="true" />
+
     <style>
         .navbar {
             padding: 15px 0;
@@ -166,12 +169,14 @@
         }
     </style>
 </head>
-<body>
+<body data-user-authenticated="@(User.Identity.IsAuthenticated.ToString().ToLower())"
+      data-user-theme="@(User.Identity.IsAuthenticated ? "user" : "anonymous")">
+
+
+    @Html.AntiForgeryToken()
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-white">
             <div class="container">
-
-
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="/images/klante.jpg" alt="TutorConnect Logo" height="40">
                     TutorConnect
@@ -203,7 +208,6 @@
                                     <i class="fas fa-tachometer-alt"></i> Dashboard
                                 </a>
                             </li>
-
                         }
 
                         <!-- Tutor Navigation -->
@@ -224,8 +228,6 @@
                                     <i class="fas fa-tachometer-alt"></i> Dashboard
                                 </a>
                             </li>
-
-
                         }
 
                         <!-- Public Navigation (visible to all) -->
@@ -235,12 +237,17 @@
                             </a>
                         </li>
 
-                        @*  <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">
-                                <i class="fas fa-info-circle"></i> About Us
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/About">
+                                <i class="fas fa-info-circle me-1"></i> About
                             </a>
-                        </li> *@
+                        </li>
                     </ul>
+
+
+
 
                     <!-- Chatbot Widget -->
                     <partial name="_ChatbotWidget" />
@@ -249,7 +256,8 @@
                     <div class="d-flex align-items-center auth-buttons">
                         @if (User.Identity?.IsAuthenticated ?? false)
                         {
-
+                            <!-- THEME TOGGLE -->
+                            <partial name="_ThemeToggle" />
 
                             <!-- User Dropdown -->
                             <div class="dropdown">
@@ -273,16 +281,6 @@
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    @*  <li>
-                                        <a class="dropdown-item" asp-controller="Profile" asp-action="Index">
-                                            <i class="fas fa-user me-2"></i>Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Auth" asp-action="ChangePassword">
-                                            <i class="fas fa-key me-2"></i>Change Password
-                                        </a>
-                                    </li> *@
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form asp-controller="Auth" asp-action="Logout" method="post" class="d-inline">
@@ -314,7 +312,6 @@
         <partial name="_NavigationHeader" />
     </div>
 
-
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -339,6 +336,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/theme.js" asp-append-version="true"></script>
 
     <script>
         // Enhanced back button functionality
@@ -358,6 +356,130 @@
                     window.location.href = '/';
                 }
             });
+        });
+
+            // Enhanced theme initialization that respects force theme
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('=== THEME INITIALIZATION START ===');
+
+            // First, check if we have a force theme cookie (set during logout)
+            const forceTheme = getCookie('force_theme');
+            if (forceTheme === 'light') {
+                console.log('Force theme detected - using light theme');
+                resetThemeToLight();
+                clearThemeCookie('force_theme');
+                return;
+            }
+
+            // Normal theme initialization
+            try {
+                console.log('Getting theme from server...');
+                const response = await fetch('/Theme/GetTheme');
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const serverTheme = data.theme;
+                    const localTheme = localStorage.getItem('theme') || 'light';
+
+                    // Use server theme if user is authenticated and server theme is not default
+                    const isAuthenticated = document.body.getAttribute('data-user-authenticated') === 'true';
+                    const finalTheme = (isAuthenticated && serverTheme && serverTheme !== 'light') ? serverTheme : localTheme;
+
+                    console.log('Server theme:', serverTheme, 'Local theme:', localTheme, 'Final theme:', finalTheme);
+
+                    applyTheme(finalTheme);
+                    updateThemeButton(finalTheme);
+                    localStorage.setItem('theme', finalTheme);
+                } else {
+                    // Fallback to local storage
+                    const localTheme = localStorage.getItem('theme') || 'light';
+                    console.log('Using local theme (server failed):', localTheme);
+                    applyTheme(localTheme);
+                    updateThemeButton(localTheme);
+                }
+            } catch (error) {
+                console.log('Error initializing theme from server, using local storage:', error);
+                const localTheme = localStorage.getItem('theme') || 'light';
+                applyTheme(localTheme);
+                updateThemeButton(localTheme);
+            }
+
+            console.log('=== THEME INITIALIZATION COMPLETE ===');
+        });
+
+
+             // Enhanced logout theme reset
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Setting up logout handlers...');
+
+            // Find all logout forms and buttons
+            const logoutForms = document.querySelectorAll('form[action*="/Auth/Logout"]');
+
+            logoutForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    console.log('Logout form submitted - resetting theme to light');
+
+                    // Reset theme immediately for better UX
+                    resetThemeToLight();
+
+                    // Let the form submit normally
+                    // No need to prevent default or delay
+                });
+            });
+
+            // Also handle any logout links
+            const logoutLinks = document.querySelectorAll('a[href*="/Auth/Logout"]');
+            logoutLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    console.log('Logout link clicked - resetting theme to light');
+                    resetThemeToLight();
+                });
+            });
+        });
+
+        // Function to reset theme to light
+        function resetThemeToLight() {
+            console.log('Resetting theme to light mode');
+
+            // Update localStorage
+            localStorage.setItem('theme', 'light');
+
+            // Update UI immediately
+            document.documentElement.setAttribute('data-theme', 'light');
+
+            // Update theme toggle button if it exists
+            updateThemeButton('light');
+
+            console.log('Theme reset to light completed');
+        }
+
+        // Check for force_theme cookie on page load and apply light theme
+        function checkForceThemeCookie() {
+            const forceTheme = getCookie('force_theme');
+            if (forceTheme === 'light') {
+                console.log('Force theme cookie detected - applying light theme');
+                resetThemeToLight();
+                clearThemeCookie('force_theme');
+            }
+        }
+
+        // Cookie helper functions
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function clearThemeCookie(name) {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            console.log('Cleared theme cookie:', name);
+        }
+
+        // Initialize theme and check for force theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Checking for force theme cookie...');
+            checkForceThemeCookie();
         });
     </script>
 

@@ -5,7 +5,6 @@
     int unreadMessages = ViewBag.UnreadMessagesCount ?? 0;
     string tutorName = ViewBag.TutorName ?? "Tutor";
 
-    // FIX: Add status filter to only include Accepted and Pending sessions
     var upcomingSessions = Model?.Where(b => b.StartTime >= DateTime.Today &&
                                            (b.Status == "Accepted" || b.Status == "Pending"))
                                 .OrderBy(b => b.StartTime)
@@ -13,7 +12,6 @@
 
     var pendingBookings = Model?.Count(b => b.Status == "Pending") ?? 0;
 }
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,23 +22,106 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
-        :root {
+        /* ===== THEME VARIABLES ===== */
+        :root, [data-theme="light"] {
+            /* Brand colors */
             --primary-color: #0B2E3D;
             --secondary-color: #3BB2B8;
             --accent-color: #42E695;
             --orange-color: #FF7E36;
-            --light-bg: #f9f9f9;
+            /* Backgrounds */
+            --body-bg: #f5f7fa;
+            --card-bg: #ffffff;
+            --sidebar-bg: #ffffff;
+            --hover-bg: #f8f9fa;
+            --active-bg: #e8f5fe;
+            --session-bg: #f8f9fa;
+            /* Text colors */
+            --text-primary: #212529;
+            --text-secondary: #555555;
+            --text-muted: #6c757d;
+            /* Borders */
+            --border-color: #f1f1f1;
+            --border-strong: #dee2e6;
+            /* Shadows */
+            --shadow-sm: 0 0 20px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 20px rgba(0,0,0,0.1);
+            /* Activity colors */
+            --activity-bg: #f8f9fa;
+            --achievement-color: #FFD700;
+            --xp-color: #42E695;
+            --level-color: #3BB2B8;
+            --session-color: #FF7E36;
+            /* Toast backgrounds */
+            --toast-achievement-bg: linear-gradient(135deg, #fff9e6, #fff);
+            --toast-xp-bg: linear-gradient(135deg, #e8f5e8, #fff);
+            --toast-level-bg: linear-gradient(135deg, #e3f2fd, #fff);
+            /* Status badges */
+            --badge-success-bg: #28a745;
+            --badge-warning-bg: #ffc107;
+            --badge-warning-text: #000000;
+            --badge-danger-bg: #dc3545;
+            --badge-primary-bg: #0d6efd;
+            --badge-secondary-bg: #6c757d;
+            --badge-info-bg: #17a2b8;
         }
 
+        [data-theme="dark"] {
+            /* Brand colors - adjusted for dark mode */
+            --primary-color: #8BB4C8;
+            --secondary-color: #5DD5DB;
+            --accent-color: #5FEBA0;
+            --orange-color: #FF9A5C;
+            /* Backgrounds */
+            --body-bg: #121212;
+            --card-bg: #1e1e1e;
+            --sidebar-bg: #1e1e1e;
+            --hover-bg: #2d2d2d;
+            --active-bg: #2a4a5a;
+            --session-bg: #2d2d2d;
+            /* Text colors */
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --text-muted: #8a8a8a;
+            /* Borders */
+            --border-color: #404040;
+            --border-strong: #4a4a4a;
+            /* Shadows */
+            --shadow-sm: 0 0 20px rgba(0,0,0,0.3);
+            --shadow-md: 0 10px 20px rgba(0,0,0,0.4);
+            /* Activity colors - brighter for dark mode */
+            --activity-bg: #2d2d2d;
+            --achievement-color: #FFD700;
+            --xp-color: #5FEBA0;
+            --level-color: #5DD5DB;
+            --session-color: #FF9A5C;
+            /* Toast backgrounds */
+            --toast-achievement-bg: linear-gradient(135deg, #3a3520, #2d2d2d);
+            --toast-xp-bg: linear-gradient(135deg, #1e3a2d, #2d2d2d);
+            --toast-level-bg: linear-gradient(135deg, #1e2f3a, #2d2d2d);
+            /* Status badges - adjusted */
+            --badge-success-bg: #48bb78;
+            --badge-warning-bg: #ed8936;
+            --badge-warning-text: #121212;
+            --badge-danger-bg: #f56565;
+            --badge-primary-bg: #4299e1;
+            --badge-secondary-bg: #718096;
+            --badge-info-bg: #4299e1;
+        }
+
+        /* ===== BASE STYLES ===== */
         body {
-            background-color: #f5f7fa;
+            background-color: var(--body-bg);
+            color: var(--text-primary);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* ===== SIDEBAR ===== */
         .sidebar {
-            background-color: white;
+            background-color: var(--sidebar-bg);
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 20px;
         }
@@ -52,7 +133,7 @@
         }
 
             .sidebar-menu li {
-                border-bottom: 1px solid #f1f1f1;
+                border-bottom: 1px solid var(--border-color);
                 position: relative;
             }
 
@@ -64,19 +145,19 @@
                 display: flex;
                 align-items: center;
                 padding: 15px 20px;
-                color: #555;
+                color: var(--text-secondary);
                 text-decoration: none;
                 transition: all 0.3s;
                 justify-content: space-between;
             }
 
                 .sidebar-menu a:hover {
-                    background-color: #f8f9fa;
+                    background-color: var(--hover-bg);
                     color: var(--orange-color);
                 }
 
                 .sidebar-menu a.active {
-                    background-color: #e8f5fe;
+                    background-color: var(--active-bg);
                     color: var(--orange-color);
                     font-weight: 500;
                     border-left: 4px solid var(--orange-color);
@@ -88,6 +169,7 @@
                 text-align: center;
             }
 
+        /* ===== PROFILE ===== */
         .profile-image {
             width: 100px;
             height: 100px;
@@ -96,36 +178,41 @@
             object-fit: cover;
         }
 
-        .course-badge {
-            background: linear-gradient(135deg, #3BB2B8, #0B2E3D);
-            color: white;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
+        .sidebar .text-muted {
+            color: var(--text-muted) !important;
         }
 
+        /* ===== DASHBOARD HEADER ===== */
         .dashboard-header {
-            background-color: white;
+            background-color: var(--card-bg);
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
             position: relative;
             padding: 20px;
             margin-bottom: 20px;
         }
 
+            .dashboard-header h4 {
+                color: var(--text-primary);
+            }
+
+        /* ===== STATS CARDS ===== */
         .stats-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s;
             text-align: center;
         }
 
             .stats-card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                box-shadow: var(--shadow-md);
+            }
+
+            .stats-card h5 {
+                color: var(--text-primary);
             }
 
         .stats-icon {
@@ -139,20 +226,62 @@
             margin: 0 auto 15px auto;
         }
 
+            /* Stats icon colors - keep vibrant in both modes */
+            .stats-icon.icon-blue {
+                background-color: #e3f2fd;
+                color: #1976d2;
+            }
+
+            .stats-icon.icon-orange {
+                background-color: #fff3e0;
+                color: #ff9800;
+            }
+
+            .stats-icon.icon-purple {
+                background-color: #f3e5f5;
+                color: #9c27b0;
+            }
+
+            .stats-icon.icon-green {
+                background-color: #e8f5e9;
+                color: #2e7d32;
+            }
+
+        [data-theme="dark"] .stats-icon.icon-blue {
+            background-color: #1a2e3f;
+            color: #64b5f6;
+        }
+
+        [data-theme="dark"] .stats-icon.icon-orange {
+            background-color: #3a2e1f;
+            color: #ffb74d;
+        }
+
+        [data-theme="dark"] .stats-icon.icon-purple {
+            background-color: #2e1f3a;
+            color: #ba68c8;
+        }
+
+        [data-theme="dark"] .stats-icon.icon-green {
+            background-color: #1f3a2e;
+            color: #66bb6a;
+        }
+
+        /* ===== DASHBOARD CARDS ===== */
         .dashboard-card {
-            background: white;
+            background: var(--card-bg);
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
             margin-bottom: 20px;
         }
 
             .dashboard-card h5 {
-                border-bottom: 1px solid #f1f1f1;
+                border-bottom: 1px solid var(--border-color);
                 padding-bottom: 10px;
                 margin-bottom: 20px;
                 font-weight: 600;
-                color: var(--primary-color);
+                color: var(--text-primary);
                 display: flex;
                 align-items: center;
             }
@@ -162,14 +291,20 @@
                     margin-right: 10px;
                 }
 
+            .dashboard-card h6 {
+                color: var(--text-primary);
+            }
+
+        /* ===== UPCOMING SESSIONS ===== */
         .upcoming-session {
             border-left: 4px solid var(--accent-color);
             margin-bottom: 15px;
-            background-color: #f8f9fa;
+            background-color: var(--session-bg);
             border-radius: 5px;
             padding: 15px;
         }
 
+        /* ===== BUTTONS ===== */
         .btn-orange {
             background-color: var(--orange-color);
             color: white;
@@ -184,21 +319,70 @@
                 color: white;
             }
 
-        /* Toast Notifications */
+        /* ===== BADGES ===== */
+        .badge.bg-success {
+            background-color: var(--badge-success-bg) !important;
+        }
+
+        .badge.bg-warning {
+            background-color: var(--badge-warning-bg) !important;
+            color: var(--badge-warning-text) !important;
+        }
+
+        .badge.bg-danger {
+            background-color: var(--badge-danger-bg) !important;
+        }
+
+        .badge.bg-primary {
+            background-color: var(--badge-primary-bg) !important;
+        }
+
+        .badge.bg-secondary {
+            background-color: var(--badge-secondary-bg) !important;
+        }
+
+        .badge.bg-info {
+            background-color: var(--badge-info-bg) !important;
+        }
+
+        /* ===== ALERTS ===== */
+        .alert-warning {
+            background-color: var(--toast-achievement-bg);
+            border-color: var(--badge-warning-bg);
+            color: var(--text-primary);
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
         .toast-achievement {
-            border-left: 4px solid #FFD700;
-            background: linear-gradient(135deg, #fff9e6, #fff);
+            border-left: 4px solid var(--achievement-color);
+            background: var(--toast-achievement-bg);
         }
 
         .toast-xp {
-            border-left: 4px solid #42E695;
-            background: linear-gradient(135deg, #e8f5e8, #fff);
+            border-left: 4px solid var(--xp-color);
+            background: var(--toast-xp-bg);
         }
 
         .toast-level-up {
-            border-left: 4px solid #3BB2B8;
-            background: linear-gradient(135deg, #e3f2fd, #fff);
+            border-left: 4px solid var(--level-color);
+            background: var(--toast-level-bg);
             animation: pulse 2s infinite;
+        }
+
+        .toast {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .toast-header {
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toast-body {
+            color: var(--text-primary);
         }
 
         @@keyframes pulse {
@@ -237,6 +421,83 @@
         .journey-notification {
             background: linear-gradient(135deg, #FFD700, #FFA500);
         }
+
+        /* ===== ACTIVITY FEED ===== */
+        .activity-item {
+            background: var(--activity-bg);
+            color: var(--text-primary);
+            border-radius: 5px;
+        }
+
+        .activity-icon-achievement {
+            color: var(--achievement-color);
+        }
+
+        .activity-icon-xp {
+            color: var(--xp-color);
+        }
+
+        .activity-icon-level {
+            color: var(--level-color);
+        }
+
+        .activity-icon-session {
+            color: var(--session-color);
+        }
+
+        /* ===== EMPTY STATES ===== */
+        .empty-state {
+            color: var(--text-muted);
+        }
+
+        /* ===== COURSE BADGE ===== */
+        .course-badge {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* ===== FORM ELEMENTS ===== */
+        .form-check-input {
+            background-color: var(--card-bg);
+            border-color: var(--border-strong);
+        }
+
+            .form-check-input:checked {
+                background-color: var(--badge-success-bg);
+                border-color: var(--badge-success-bg);
+            }
+
+        .form-check-label {
+            color: var(--text-primary);
+        }
+
+        /* ===== BOOTSTRAP OVERRIDES ===== */
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        small.text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .btn-outline-secondary {
+            color: var(--text-secondary);
+            border-color: var(--border-strong);
+        }
+
+            .btn-outline-secondary:hover {
+                background-color: var(--hover-bg);
+                color: var(--text-primary);
+                border-color: var(--border-strong);
+            }
+
+        .spinner-border {
+            color: var(--primary-color) !important;
+        }
     </style>
 </head>
 <body>
@@ -245,12 +506,10 @@
             <!-- Sidebar -->
             <div class="col-lg-3 mb-4">
                 <div class="sidebar">
-                    <!-- Update the profile section in the sidebar -->
                     <div class="p-4 text-center">
                         <img src="@ViewBag.TutorProfileImageUrl" alt="Profile" class="profile-image">
                         <h5 class="mt-3 mb-1">@ViewBag.TutorName</h5>
                         <p class="text-muted mb-0">@ViewBag.TutorBio</p>
-                        <!-- ADD COURSE BADGE HERE -->
                         @if (!string.IsNullOrEmpty(ViewBag.CourseName))
                         {
                             <div class="mt-2">
@@ -273,12 +532,9 @@
                                 }
                             </a>
                         </li>
-                        <!-- ADD LEARNING MATERIALS TAB HERE -->
                         <li>
                             <a href="/Tutor/Materials">
                                 <span><i class="fas fa-folder-open me-1"></i> Learning Materials</span>
-                                @* Optional: Add badge for new materials count if needed *@
-                                @* <span class="badge bg-primary rounded-pill">3</span> *@
                             </a>
                         </li>
                         <li>
@@ -296,7 +552,11 @@
                                 }
                             </a>
                         </li>
-                        <li><a href="#"><span><i class="fas fa-cog"></i> Settings</span></a></li>
+                        <li>
+                            <a href="/Tutor/Settings">
+                                <span><i class="fas fa-cog"></i> Settings</span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -304,13 +564,11 @@
             <!-- Main Content -->
             <div class="col-lg-9">
                 <!-- Dashboard Header -->
-                <!-- Dashboard Header -->
                 <div class="dashboard-header">
                     <div class="profile-info">
                         <h4>Welcome back, @tutorName!</h4>
                         <p class="text-muted mb-0">Here's what's happening with your tutoring business today.</p>
 
-                        <!-- Course Information -->
                         <div class="mt-2">
                             @if (!string.IsNullOrEmpty(ViewBag.CourseName))
                             {
@@ -334,35 +592,33 @@
                 <div class="row mb-4">
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
-                            <div class="stats-icon" style="background-color: #e3f2fd; color: #1976d2;"><i class="fas fa-book"></i></div>
+                            <div class="stats-icon icon-blue"><i class="fas fa-book"></i></div>
                             <h5 class="mb-0" id="upcomingCount">@upcomingSessions.Count</h5>
                             <p class="text-muted mb-0">Upcoming Sessions</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
-                            <div class="stats-icon" style="background-color: #fff3e0; color: #ff9800;"><i class="fas fa-users"></i></div>
+                            <div class="stats-icon icon-orange"><i class="fas fa-users"></i></div>
                             <h5 class="mb-0">@(Model?.Select(b => b.StudentId).Distinct().Count() ?? 0)</h5>
                             <p class="text-muted mb-0">Total Students</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
-                            <div class="stats-icon" style="background-color: #f3e5f5; color: #9c27b0;"><i class="fas fa-hourglass-half"></i></div>
+                            <div class="stats-icon icon-purple"><i class="fas fa-hourglass-half"></i></div>
                             <h5 class="mb-0" id="pendingCount">@pendingBookings</h5>
                             <p class="text-muted mb-0">Pending Bookings</p>
                         </div>
                     </div>
                     <div class="col-md-3 mb-3">
                         <div class="stats-card">
-                            <div class="stats-icon" style="background-color: #e8f5e9; color: #2e7d32;"><i class="fas fa-check-circle"></i></div>
+                            <div class="stats-icon icon-green"><i class="fas fa-check-circle"></i></div>
                             <h5 class="mb-0" id="completedCount">@(Model?.Count(b => b.Status == "Completed") ?? 0)</h5>
                             <p class="text-muted mb-0">Completed Sessions</p>
                         </div>
                     </div>
                 </div>
-
-                
 
                 <!-- Upcoming Sessions -->
                 <div class="dashboard-card">
@@ -370,9 +626,9 @@
 
                     @if (!upcomingSessions.Any())
                     {
-                        <div class="text-center py-4">
-                            <i class="fas fa-calendar-times text-muted" style="font-size: 3rem; opacity: 0.3;"></i>
-                            <p class="text-muted mt-3 mb-0">No upcoming sessions scheduled.</p>
+                        <div class="text-center py-4 empty-state">
+                            <i class="fas fa-calendar-times" style="font-size: 3rem; opacity: 0.3;"></i>
+                            <p class="mt-3 mb-0">No upcoming sessions scheduled.</p>
                         </div>
                     }
                     else
@@ -393,18 +649,14 @@
                                             @(session.StartTime.Date == DateTime.Today ? "Today" : session.StartTime.ToString("MMM dd"))
                                         </span>
                                         <br />
-                                        <span class="badge session-status
-                                    @(session.Status == "Pending" ? "bg-warning text-dark" :
-                                                                                                                  session.Status == "Accepted" ? "bg-primary" :
-                                                                                                                  session.Status == "Declined" ? "bg-danger" :
-                                                                                                                  session.Status == "Completed" ? "bg-success" : "bg-secondary")">
-                                    @session.Status
-                                </span>
-                            </div>
-                        </div>
+                                        <span class="badge session-status @(session.Status == "Pending" ? "bg-warning text-dark" : session.Status == "Accepted" ? "bg-primary" : session.Status == "Declined" ? "bg-danger" : session.Status == "Completed" ? "bg-success" : "bg-secondary")">
+                                            @session.Status
+                                        </span>
+                                    </div>
+                                </div>
 
                                 <div class="mt-3">
-                            @if (session.Status == "Pending")
+                                    @if (session.Status == "Pending")
                                     {
                                         <div class="pending-actions">
                                             <button type="button" class="btn btn-success btn-sm me-1 update-status-btn"
@@ -417,7 +669,6 @@
                                             </button>
                                         </div>
                                     }
-
                                     else if (session.Status == "Accepted")
                                     {
                                         <div class="form-check">
@@ -444,7 +695,7 @@
                     <h5><i class="fas fa-bell"></i> Recent Activity</h5>
                     <div id="recentActivity">
                         <div class="text-center py-3">
-                            <div class="spinner-border text-primary" role="status">
+                            <div class="spinner-border" role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>
@@ -473,102 +724,95 @@
     <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    
+   
+
+
+
     <script>
         $(document).ready(function () {
-            // Load recent activity and check for new achievements
             loadRecentActivity();
             checkNewAchievements();
-
-            // Set up polling for new achievements (every 30 seconds)
             setInterval(checkNewAchievements, 30000);
 
-            // Notification functions
-                    function showAchievementNotification(achievementName, description, iconUrl) {
-            const toastHtml = `
-                <div class="toast toast-achievement" role="alert" data-bs-delay="10000"> <!-- Changed from 5000 to 10000 (10 seconds) -->
-                    <div class="toast-header">
-                        <i class="fas fa-trophy text-warning me-2"></i>
-                        <strong class="me-auto">Achievement Unlocked!</strong>
-                        <small>Just now</small>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-                    </div>
-                    <div class="toast-body">
-                        <div class="d-flex align-items-center">
-                            <img src="${iconUrl || '/images/achievements/default.png'}"
-                                 class="rounded me-3" style="width: 40px; height: 40px;"
-                                 alt="${achievementName}">
-                            <div>
-                                <h6 class="mb-1">${achievementName}</h6>
-                                <p class="mb-0 text-muted small">${description}</p>
+            function showAchievementNotification(achievementName, description, iconUrl) {
+                const toastHtml = `
+                    <div class="toast toast-achievement" role="alert" data-bs-delay="10000">
+                        <div class="toast-header">
+                            <i class="fas fa-trophy text-warning me-2"></i>
+                            <strong class="me-auto">Achievement Unlocked!</strong>
+                            <small>Just now</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            <div class="d-flex align-items-center">
+                                <img src="${iconUrl || '/images/achievements/default.png'}"
+                                     class="rounded me-3" style="width: 40px; height: 40px;"
+                                     alt="${achievementName}">
+                                <div>
+                                    <h6 class="mb-1">${achievementName}</h6>
+                                    <p class="mb-0 text-muted small">${description}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+                $('#toastContainer').append(toastHtml);
+                new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
+            }
 
-            $('#toastContainer').append(toastHtml);
-            new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
-        }
-
-        function showXPNotification(points, reason) {
-            const toastHtml = `
-                <div class="toast toast-xp" role="alert" data-bs-delay="8000"> <!-- Changed from 3000 to 8000 (8 seconds) -->
-                    <div class="toast-header">
-                        <i class="fas fa-star text-success me-2"></i>
-                        <strong class="me-auto">XP Earned!</strong>
-                        <small>Just now</small>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-                    </div>
-                    <div class="toast-body">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <h6 class="mb-1">+${points} XP</h6>
-                                <p class="mb-0 text-muted small">${reason}</p>
+            function showXPNotification(points, reason) {
+                const toastHtml = `
+                    <div class="toast toast-xp" role="alert" data-bs-delay="8000">
+                        <div class="toast-header">
+                            <i class="fas fa-star text-success me-2"></i>
+                            <strong class="me-auto">XP Earned!</strong>
+                            <small>Just now</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                        </div>
+                        <div class="toast-body">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <h6 class="mb-1">+${points} XP</h6>
+                                    <p class="mb-0 text-muted small">${reason}</p>
+                                </div>
+                                <i class="fas fa-arrow-up text-success fs-4"></i>
                             </div>
-                            <i class="fas fa-arrow-up text-success fs-4"></i>
                         </div>
                     </div>
-                </div>
-            `;
+                `;
+                $('#toastContainer').append(toastHtml);
+                new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
+            }
 
-            $('#toastContainer').append(toastHtml);
-            new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
-        }
-
-        function showLevelUpNotification(newLevel) {
-            const toastHtml = `
-                <div class="toast toast-level-up" role="alert" data-bs-delay="15000"> <!-- Changed from 7000 to 15000 (15 seconds) -->
-                    <div class="toast-header">
-                        <i class="fas fa-arrow-up text-primary me-2"></i>
-                        <strong class="me-auto">Level Up! 🎉</strong>
-                        <small>Congratulations!</small>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-                    </div>
-                    <div class="toast-body text-center">
-                        <div class="level-badge mb-2"
-                             style="width: 60px; height: 60px; background: linear-gradient(135deg, #42E695, #3BB2B8);
-                                    border-radius: 50%; display: inline-flex; align-items: center;
-                                    justify-content: center; font-size: 1.5rem; font-weight: bold; color: white;">
-                            ${newLevel}
+            function showLevelUpNotification(newLevel) {
+                const toastHtml = `
+                    <div class="toast toast-level-up" role="alert" data-bs-delay="15000">
+                        <div class="toast-header">
+                            <i class="fas fa-arrow-up text-primary me-2"></i>
+                            <strong class="me-auto">Level Up! 🎉</strong>
+                            <small>Congratulations!</small>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
                         </div>
-                        <h5 class="mb-1">You reached Level ${newLevel}!</h5>
-                        <p class="mb-0 text-muted">Keep up the great work!</p>
+                        <div class="toast-body text-center">
+                            <div class="level-badge mb-2"
+                                 style="width: 60px; height: 60px; background: linear-gradient(135deg, #42E695, #3BB2B8);
+                                        border-radius: 50%; display: inline-flex; align-items: center;
+                                        justify-content: center; font-size: 1.5rem; font-weight: bold; color: white;">
+                                ${newLevel}
+                            </div>
+                            <h5 class="mb-1">You reached Level ${newLevel}!</h5>
+                            <p class="mb-0 text-muted">Keep up the great work!</p>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+                $('#toastContainer').append(toastHtml);
+                new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
+            }
 
-            $('#toastContainer').append(toastHtml);
-            new bootstrap.Toast($('#toastContainer .toast').last()[0]).show();
-        }
-
-            // Check for new achievements
             function checkNewAchievements() {
                 $.get('/api/gamification/recent-achievements', function(data) {
                     if (data.newAchievements > 0) {
                         updateAchievementBadge(data.newAchievements);
-
-                        // Show toast for each new achievement
                         if (data.achievements && data.achievements.length > 0) {
                             data.achievements.forEach(achievement => {
                                 showAchievementNotification(
@@ -584,7 +828,6 @@
                 });
             }
 
-            // Update achievement notification badge
             function updateAchievementBadge(count) {
                 const badge = $('#achievementNotification');
                 if (count > 0) {
@@ -594,9 +837,7 @@
                 }
             }
 
-            // Load recent activity
             function loadRecentActivity() {
-                // Simulate API call - replace with actual API endpoint
                 setTimeout(() => {
                     const activities = [
                         { type: 'session', message: 'Completed session with John Doe', points: 50, timestamp: new Date(Date.now() - 300000) },
@@ -614,10 +855,9 @@
 
                     activities.forEach(activity => {
                         const activityHtml = `
-                            <div class="d-flex align-items-center mb-3 p-2 rounded" style="background: #f8f9fa;">
+                            <div class="d-flex align-items-center mb-3 p-2 rounded activity-item">
                                 <div class="flex-shrink-0">
-                                    <i class="fas ${getActivityIcon(activity.type)} me-3"
-                                       style="color: ${getActivityColor(activity.type)}"></i>
+                                    <i class="fas ${getActivityIcon(activity.type)} me-3 activity-icon-${activity.type}"></i>
                                 </div>
                                 <div class="flex-grow-1">
                                     <p class="mb-1 small">${activity.message}</p>
@@ -641,16 +881,6 @@
                 return icons[type] || 'fa-bell';
             }
 
-            function getActivityColor(type) {
-                const colors = {
-                    'achievement': '#FFD700',
-                    'xp': '#42E695',
-                    'level': '#3BB2B8',
-                    'session': '#FF7E36'
-                };
-                return colors[type] || '#6c757d';
-            }
-
             function formatTime(timestamp) {
                 const now = new Date();
                 const diff = now - new Date(timestamp);
@@ -664,36 +894,28 @@
                 return `${days}d ago`;
             }
 
-            // Demo notifications (remove in production)
-            setTimeout(() => {
-                // Uncomment to test notifications
-                // showXPNotification(50, "Completed a tutoring session");
-                // showAchievementNotification("First Session", "Complete your first tutoring session", "/images/achievements/first-session.png");
-            }, 2000);
+                    function updateStats(upcomingDelta, pendingDelta, completedDelta) {
+            let upcomingCount = parseInt($("#upcomingCount").text()) + upcomingDelta;
+            $("#upcomingCount").text(upcomingCount);
 
-            // Existing booking management functions
-            function updateStats(upcomingDelta, pendingDelta, completedDelta) {
-                let upcomingCount = parseInt($("#upcomingCount").text()) + upcomingDelta;
-                $("#upcomingCount").text(upcomingCount);
+            let pendingCount = parseInt($("#pendingCount").text()) + pendingDelta;
+            $("#pendingCount").text(pendingCount);
 
-                let pendingCount = parseInt($("#pendingCount").text()) + pendingDelta;
-                $("#pendingCount").text(pendingCount);
+            let completedCount = parseInt($("#completedCount").text()) + completedDelta;
+            $("#completedCount").text(completedCount);
 
-                let completedCount = parseInt($("#completedCount").text()) + completedDelta;
-                $("#completedCount").text(completedCount);
-
-                const sidebarPendingBadge = $(".sidebar-menu .badge.bg-danger");
-                if (sidebarPendingBadge.length > 0) {
-                    const newPendingCount = parseInt(sidebarPendingBadge.text()) + pendingDelta;
-                    if (newPendingCount > 0) {
-                        sidebarPendingBadge.text(newPendingCount);
-                    } else {
-                        sidebarPendingBadge.remove();
-                    }
+            // FIX: Target only the sessions badge, not all bg-danger badges
+            const sidebarPendingBadge = $(".sidebar-menu a[href='/Tutor/MySessions'] .badge.bg-danger");
+            if (sidebarPendingBadge.length > 0) {
+                const newPendingCount = parseInt(sidebarPendingBadge.text()) + pendingDelta;
+                if (newPendingCount > 0) {
+                    sidebarPendingBadge.text(newPendingCount);
+                } else {
+                    sidebarPendingBadge.remove();
                 }
             }
+        }
 
-            // Accept / Decline buttons
             $(".update-status-btn").click(function () {
                 const button = $(this);
                 const bookingId = button.data("booking-id");
@@ -741,7 +963,6 @@
 
                         updateStats(upcomingDelta, pendingDelta, completedDelta);
 
-                        // Show XP notification when session is completed
                         if (status === "Completed") {
                             showXPNotification(50, "Completed a tutoring session");
                         }
@@ -755,7 +976,6 @@
                 });
             });
 
-            // Mark Complete checkbox
             $(".complete-session-checkbox").change(function () {
                 const checkbox = $(this);
                 const bookingId = checkbox.data("booking-id");
@@ -771,10 +991,7 @@
                             const sessionDiv = $("#session_" + bookingId);
                             sessionDiv.remove();
                             updateStats(-1, 0, 1);
-
-                            // Show XP notification
                             showXPNotification(50, "Completed a tutoring session");
-
                             alert("Session marked as completed!");
                         },
                         error: function () {

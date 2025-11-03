@@ -218,12 +218,92 @@ namespace TutorConnect.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("Cookies");
-       
-            Response.Cookies.Delete(".AspNetCore.Cookies");
-            return RedirectToAction("Login");
+            try
+            {
+                Console.WriteLine("[AuthController] Logout - Resetting theme to light");
+
+                // Set a temporary cookie to force light theme
+                Response.Cookies.Append("force_theme", "light", new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(5), // Short expiration
+                    HttpOnly = false,
+                    IsEssential = true,
+                    Path = "/"
+                });
+
+                // Your existing logout logic
+                await HttpContext.SignOutAsync("Cookies");
+                Response.Cookies.Delete(".AspNetCore.Cookies");
+
+                Console.WriteLine("[AuthController] Logout completed");
+
+                return RedirectToAction("Login");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[AuthController] Logout error: {ex.Message}");
+                return RedirectToAction("Login");
+            }
         }
 
+
+        // GET: /Account/ForgotPassword
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        // POST: /Account/ForgotPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                await _apiService.ForgotPasswordAsync(model.Email);
+                TempData["SuccessMessage"] = "If an account with that email exists, a password reset code has been sent.";
+                return RedirectToAction("ResetPassword");
+            }
+            catch (HttpRequestException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
+            }
+        }
+
+        // GET: /Auth/ResetPassword
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
+        // POST: /Auth/ResetPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                await _apiService.ResetPasswordAsync(model.Token, model.NewPassword, model.ConfirmPassword);
+                TempData["SuccessMessage"] = "Password has been reset successfully! You can now log in.";
+                return RedirectToAction("Login");
+            }
+            catch (HttpRequestException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
+            }
+        }
 
     }
 }

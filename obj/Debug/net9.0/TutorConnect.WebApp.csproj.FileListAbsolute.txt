@@ -120,3 +120,6 @@ C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\obj\Debug\net9.0\
 C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\obj\Debug\net9.0\TutorConnect.WebApp.pdb
 C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\obj\Debug\net9.0\TutorConnect.WebApp.genruntimeconfig.cache
 C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\obj\Debug\net9.0\ref\TutorConnect.WebApp.dll
+C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\obj\Debug\net9.0\compressed\rlv2bcyiir-fbjn5d9xn3.gz
+C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\obj\Debug\net9.0\compressed\1f1x2ikkws-87jfymb88o.gz
+C:\Users\lab_services_student\source\repos\TutorConnect.WebApp\bin\Debug\net9.0\appsettings.Production.json

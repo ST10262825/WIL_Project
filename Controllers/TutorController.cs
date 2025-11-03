@@ -604,5 +604,48 @@ namespace TutorConnect.WebApp.Controllers
             return RedirectToAction("Materials");
         }
 
+        // GET: /Tutor/ChangePassword
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        // GET: /Tutor/Settings
+        public IActionResult Settings()
+        {
+            return View();
+        }
+
+        
+        // POST: /Tutor/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                await _apiService.ChangePasswordAsync(model);
+                TempData["SuccessMessage"] = "Password changed successfully!";
+                return RedirectToAction("Settings");
+            }
+            catch (HttpRequestException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while changing password. Please try again.");
+                return View(model);
+            }
+        }
+
+
+
     }
 }

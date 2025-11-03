@@ -1383,14 +1383,17 @@
             sendBtn.disabled = true;
 
             if (connection && connection.state === signalR.HubConnectionState.Connected) {
-                try {
-                    await connection.invoke("SendMessage", currentUserId, parseInt(selectedReceiverId), message);
-                    updateSidebarConversation(parseInt(selectedReceiverId), message, new Date(), false);
-                    messageInput.value = "";
-                    updateSendButtonState();
-                    updateCharCounter();
-                    autoResizeTextarea();
-                } catch (err) {
+                        try {
+            await connection.invoke("SendMessage", currentUserId, parseInt(selectedReceiverId), message);
+
+            // Clear the input immediately after successful send
+            messageInput.value = "";
+            messageInput.style.height = '45px';
+
+            updateSidebarConversation(parseInt(selectedReceiverId), message, new Date(), false);
+            updateSendButtonState();
+            updateCharCounter();
+        } catch (err) {
                     console.error("Error sending message:", err);
                     showToast('Failed to send message', 'error');
                 } finally {
