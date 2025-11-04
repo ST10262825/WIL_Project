@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,6 +35,10 @@ namespace TutorConnect.WebApp.Controllers
                 var courses = await _apiService.GetCoursesAsync();
                 ViewBag.Courses = new SelectList(courses ?? new List<CourseDTO>(), "CourseId", "Title");
 
+                // Add POPIA information to ViewBag
+                ViewBag.POPIAVersion = "1.0";
+                ViewBag.CurrentYear = DateTime.Now.Year;
+
                 return View();
             }
             catch (Exception ex)
@@ -41,6 +46,8 @@ namespace TutorConnect.WebApp.Controllers
                 // If courses fail to load, still show the form but log the error
                 Console.WriteLine($"Error loading courses: {ex.Message}");
                 ViewBag.Courses = new SelectList(new List<CourseDTO>(), "CourseId", "Title");
+                ViewBag.POPIAVersion = "1.0";
+                ViewBag.CurrentYear = DateTime.Now.Year;
                 return View();
             }
         }
@@ -89,12 +96,12 @@ namespace TutorConnect.WebApp.Controllers
 
                 // Claims for cookie
                 var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, loginDto.Email),
-            new Claim(ClaimTypes.NameIdentifier, userId ?? ""),
-            new Claim("Token", token),
-            new Claim("JWT_Expires", jwtToken.ValidTo.ToString("o"))
-        };
+                {
+                    new Claim(ClaimTypes.Name, loginDto.Email),
+                    new Claim(ClaimTypes.NameIdentifier, userId ?? ""),
+                    new Claim("Token", token),
+                    new Claim("JWT_Expires", jwtToken.ValidTo.ToString("o"))
+                };
 
                 if (!string.IsNullOrEmpty(role))
                     claims.Add(new Claim(ClaimTypes.Role, role));
@@ -141,10 +148,6 @@ namespace TutorConnect.WebApp.Controllers
             }
         }
 
-
-
-
-
         // =============================
         // Email Verification
         // =============================
@@ -156,7 +159,7 @@ namespace TutorConnect.WebApp.Controllers
                 var success = await _apiService.VerifyEmailAsync(token);
                 if (success)
                 {
-                    // NEW: Enhanced verification success message
+                    // Enhanced verification success message
                     TempData["SuccessMessage"] = "🎉 Email verified successfully! You've earned 50 points. You can now log in and start earning more points!";
                     return RedirectToAction("Login");
                 }
@@ -174,43 +177,176 @@ namespace TutorConnect.WebApp.Controllers
         }
 
         // =============================
-        // Register
+        // Register - UPDATED FOR POPIA
         // =============================
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterStudentDTO dto)
         {
             if (!ModelState.IsValid)
             {
-                // Reload courses on validation error
-                var courses = await _apiService.GetCoursesAsync();
-                ViewBag.Courses = new SelectList(courses ?? new List<CourseDTO>(), "CourseId", "Title");
+                // Reload courses and POPIA info on validation error
+                await LoadRegistrationViewData();
                 return View(dto);
             }
 
             try
             {
+                // Ensure POPIA acceptance
+                if (!dto.HasAcceptedPOPIA)
+                {
+                    ModelState.AddModelError("HasAcceptedPOPIA", "You must accept the terms and conditions to register.");
+                    await LoadRegistrationViewData();
+                    return View(dto);
+                }
+
                 await _apiService.RegisterStudentAsync(new RegisterStudentDTO
                 {
                     Email = dto.Email,
                     Password = dto.Password,
                     Name = dto.Name,
-                    CourseId = dto.CourseId // CHANGE FROM Course TO CourseId
+                    CourseId = dto.CourseId,
+                    // POPIA Fields
+                    HasAcceptedPOPIA = dto.HasAcceptedPOPIA,
+                    MarketingConsent = dto.MarketingConsent
                 });
 
-                // NEW: Enhanced success message with gamification benefits
+                // Enhanced success message with gamification benefits
                 TempData["SuccessMessage"] = "Registration successful! 🎉 You've earned 100 welcome points! Please verify your email to earn 50 more points.";
                 return RedirectToAction("Verify", new { email = dto.Email });
             }
             catch (HttpRequestException ex)
             {
+                // Handle specific POPIA-related errors
+                if (ex.Message.Contains("POPIA", StringComparison.OrdinalIgnoreCase) ||
+                    ex.Message.Contains("terms", StringComparison.OrdinalIgnoreCase))
+                {
+                    ModelState.AddModelError("HasAcceptedPOPIA", ex.Message);
+                }
+                else
+                {
+                    ViewBag.Error = ex.Message;
+                }
+
                 // Reload courses on API error
-                var courses = await _apiService.GetCoursesAsync();
-                ViewBag.Courses = new SelectList(courses ?? new List<CourseDTO>(), "CourseId", "Title");
-                ViewBag.Error = ex.Message;
+                await LoadRegistrationViewData();
+                return View(dto);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "An unexpected error occurred. Please try again.";
+                await LoadRegistrationViewData();
                 return View(dto);
             }
         }
 
+        // =============================
+        // NEW: POPIA Consent Management
+        // =============================
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ConsentManagement()
+        {
+            try
+            {
+                var consentStatus = await _apiService.GetConsentStatusAsync();
+                return View(consentStatus);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = "Error loading consent settings.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateConsent(UpdateConsentDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("ConsentManagement", dto);
+            }
+
+            try
+            {
+                await _apiService.UpdateConsentAsync(dto);
+                TempData["SuccessMessage"] = "Your consent preferences have been updated successfully.";
+                return RedirectToAction("ConsentManagement");
+            }
+            catch (HttpRequestException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("ConsentManagement");
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult RequestDataExport()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RequestDataExport(DataExportRequestDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                var result = await _apiService.RequestDataExportAsync();
+                TempData["SuccessMessage"] = result.Message;
+                return RedirectToAction("Index", "Home");
+            }
+            catch (HttpRequestException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return View(dto);
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult RequestAccountDeletion()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RequestAccountDeletion(DeletionRequestDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                var result = await _apiService.RequestAccountDeletionAsync(dto);
+                TempData["SuccessMessage"] = result.Message;
+
+                // Log user out after deletion request
+                await HttpContext.SignOutAsync("Cookies");
+                Response.Cookies.Delete(".AspNetCore.Cookies");
+
+                return RedirectToAction("Login");
+            }
+            catch (HttpRequestException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return View(dto);
+            }
+        }
 
         // =============================
         // Logout
@@ -245,7 +381,6 @@ namespace TutorConnect.WebApp.Controllers
                 return RedirectToAction("Login");
             }
         }
-
 
         // GET: /Account/ForgotPassword
         public IActionResult ForgotPassword()
@@ -305,5 +440,15 @@ namespace TutorConnect.WebApp.Controllers
             }
         }
 
+        // =============================
+        // Helper Methods
+        // =============================
+        private async Task LoadRegistrationViewData()
+        {
+            var courses = await _apiService.GetCoursesAsync();
+            ViewBag.Courses = new SelectList(courses ?? new List<CourseDTO>(), "CourseId", "Title");
+            ViewBag.POPIAVersion = "1.0";
+            ViewBag.CurrentYear = DateTime.Now.Year;
+        }
     }
 }

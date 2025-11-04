@@ -1063,6 +1063,79 @@ namespace TutorConnect.WebApp.Services
         }
 
 
+        public async Task<ConsentStatusDTO> GetConsentStatusAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.GetAsync("api/auth/consent-status");
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<ConsentStatusDTO>();
+                }
+                return new ConsentStatusDTO();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error getting consent status: {ex.Message}");
+                return new ConsentStatusDTO();
+            }
+        }
+
+        public async Task<bool> UpdateConsentAsync(UpdateConsentDTO dto)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/auth/update-consent", dto);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating consent: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<dynamic> RequestDataExportAsync()
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PostAsync("api/auth/request-data-export", null);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<dynamic>();
+                }
+                throw new HttpRequestException("Failed to request data export");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error requesting data export: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<dynamic> RequestAccountDeletionAsync(DeletionRequestDTO dto)
+        {
+            AddAuthHeader();
+            try
+            {
+                var response = await _client.PostAsJsonAsync("api/auth/request-account-deletion", dto);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<dynamic>();
+                }
+                throw new HttpRequestException("Failed to request account deletion");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error requesting account deletion: {ex.Message}");
+                throw;
+            }
+        }
+
+
         // Create a small class to map the API response
         public class ReviewedResponse
         {

@@ -161,44 +161,69 @@
 
 @section Scripts {
     <script>
-        // Theme Toggle
-               // Simple theme toggle with page reload
-        document.getElementById('themeToggleBtn').addEventListener('click', async function() {
+        // Delete Account - SINGLE EVENT LISTENER
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+            const confirmation = document.getElementById('deleteConfirmation').value;
             const btn = this;
             const originalText = btn.innerHTML;
 
+            console.log('Delete button clicked, confirmation text:', confirmation);
+
+            // Check if user typed the exact confirmation phrase
+            if (confirmation.toLowerCase() !== 'delete my account') {
+                showNotification('Please type "delete my account" exactly to confirm.', 'error');
+                return;
+            }
+
+            // Double confirmation for safety
+            if (!confirm('⚠️ FINAL WARNING: This will permanently delete your account, all sessions, progress, and data. This cannot be undone! Are you absolutely sure?')) {
+                return;
+            }
+
             try {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Switching...';
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
 
-                const response = await fetch('@Url.Action("ToggleTheme", "Student")', {
+                // Call the API to delete account
+                const response = await fetch('@Url.Action("DeleteAccount", "Student")', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
-                    }
+                    },
+                    body: JSON.stringify({ Confirmation: confirmation })
                 });
 
-                const result = await response.json();
+                console.log('Delete response status:', response.status);
 
-                if (result.success) {
-                    showNotification(result.message, 'success');
-                    // Always reload the page to apply theme
-                    setTimeout(() => location.reload(), 1000);
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Delete result:', result);
+
+                    if (result.success) {
+                        showNotification('Account deleted successfully. Redirecting to login...', 'success');
+                        // Redirect to login page after successful deletion
+                        setTimeout(() => {
+                            window.location.href = result.redirectUrl || '/Auth/Login';
+                        }, 2000);
+                    } else {
+                        showNotification(result.message || 'Failed to delete account', 'error');
+                    }
                 } else {
-                    showNotification(result.message, 'error');
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
+                    const errorText = await response.text();
+                    showNotification('Error: ' + errorText, 'error');
                 }
             } catch (error) {
-                showNotification('Error switching theme: ' + error.message, 'error');
+                console.error('Delete account error:', error);
+                showNotification('Network error: ' + error.message, 'error');
+            } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
             }
         });
 
-                // Change Password Form - UPDATED VERSION
-               document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+        // Change Password Form
+        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const currentPassword = document.querySelector('input[name="CurrentPassword"]').value;
@@ -237,7 +262,6 @@
                 };
 
                 console.log('Sending data:', data);
-                console.log('Stringified data:', JSON.stringify(data));
 
                 const response = await fetch('@Url.Action("ChangePassword", "Student")', {
                     method: 'POST',
@@ -272,53 +296,23 @@
             }
         });
 
-        // Delete Account
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
-            const confirmation = document.getElementById('deleteConfirmation').value;
-            const btn = this;
-            const originalText = btn.innerHTML;
+        // Enable/disable delete button based on confirmation text (visual feedback only)
+        const deleteConfirmationInput = document.getElementById('deleteConfirmation');
+        if (deleteConfirmationInput) {
+            deleteConfirmationInput.addEventListener('input', function() {
+                const deleteBtn = document.getElementById('confirmDeleteBtn');
+                const confirmation = this.value.toLowerCase();
 
-            if (confirmation.toLowerCase() !== 'delete my account') {
-                showNotification('Please type "delete my account" exactly to confirm.', 'error');
-                return;
-            }
-
-            if (!confirm('Are you absolutely sure? This cannot be undone!')) {
-                return;
-            }
-
-            try {
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-
-                const response = await fetch('@Url.Action("DeleteAccount", "Student")', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({ confirmation: confirmation })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    showNotification(result.message, 'success');
-                    if (result.redirectUrl) {
-                        setTimeout(() => window.location.href = result.redirectUrl, 2000);
-                    }
+                // Visual feedback when typing
+                if (confirmation === 'delete my account') {
+                    deleteBtn.classList.add('pulse-animation');
                 } else {
-                    showNotification(result.message, 'error');
+                    deleteBtn.classList.remove('pulse-animation');
                 }
-            } catch (error) {
-                showNotification('Error deleting account: ' + error.message, 'error');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        });
+            });
+        }
 
-        // Notification function (reuse from your existing code)
+        // Notification function
         function showNotification(message, type) {
             const existingNotifications = document.querySelectorAll('.custom-notification');
             existingNotifications.forEach(notif => notif.remove());
@@ -349,13 +343,52 @@
         }
 
         // Reset modals when closed
-        document.getElementById('changePasswordModal').addEventListener('hidden.bs.modal', function () {
-            document.getElementById('changePasswordForm').reset();
-        });
+        const changePasswordModal = document.getElementById('changePasswordModal');
+        if (changePasswordModal) {
+            changePasswordModal.addEventListener('hidden.bs.modal', function () {
+                document.getElementById('changePasswordForm').reset();
+            });
+        }
 
-        document.getElementById('deleteAccountModal').addEventListener('hidden.bs.modal', function () {
-            document.getElementById('deleteConfirmation').value = '';
-        });
+        const deleteAccountModal = document.getElementById('deleteAccountModal');
+        if (deleteAccountModal) {
+            deleteAccountModal.addEventListener('hidden.bs.modal', function () {
+                const confirmationInput = document.getElementById('deleteConfirmation');
+                const deleteBtn = document.getElementById('confirmDeleteBtn');
+                if (confirmationInput) confirmationInput.value = '';
+                if (deleteBtn) deleteBtn.classList.remove('pulse-animation');
+            });
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @@keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @@keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .pulse-animation {
+                animation: pulse 2s infinite;
+            }
+            @@keyframes pulse {
+                0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+            }
+            #confirmDeleteBtn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('Settings page JavaScript loaded successfully');
+        console.log('Delete button found:', document.getElementById('confirmDeleteBtn'));
+        console.log('Change password form found:', document.getElementById('changePasswordForm'));
     </script>
 
     <style>
@@ -445,4 +478,5 @@
             border: 1px solid #f1f1f1;
         }
     </style>
+
 }

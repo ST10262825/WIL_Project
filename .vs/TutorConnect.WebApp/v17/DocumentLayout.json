@@ -3,6 +3,46 @@
   "WorkspaceRootPath": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\student\\settings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\settings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\registerstudentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\registerstudentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\mustbetrueattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\mustbetrueattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\auth\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\register.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\popiadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\popiadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\auth\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\home\\about.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\home\\about.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
@@ -23,20 +63,8 @@
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\login.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\auth\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\resetpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\auth\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\auth\\forgotpassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:services\\apiservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\changepassworddto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -45,10 +73,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\settings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\settings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\tutor\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\tutor\\changepassword.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -91,10 +115,6 @@
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\models\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:models\\bookingdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -127,10 +147,6 @@
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\gamification\\profile.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\views\\student\\settings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:views\\student\\settings.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|c:\\users\\lab_services_student\\source\\repos\\tutorconnect.webapp\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{4301EC4F-3B40-47BF-BD26-C9DF02A05A15}|TutorConnect.WebApp.csproj|solutionrelative:wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
@@ -146,37 +162,47 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAPUAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T00:11:23.678Z",
-              "EditorCaption": ""
+              "DocumentIndex": 6,
+              "Title": "ApiService.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Services\\ApiService.cs",
+              "RelativeDocumentMoniker": "Services\\ApiService.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Services\\ApiService.cs",
+              "RelativeToolTip": "Services\\ApiService.cs",
+              "ViewState": "AgIAAFAEAAAAAAAAAAAkwG8EAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T12:36:22.09Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAkAAABgmZmZmZklwBwAAAAJAAAAAAAAAA==",
+              "Title": "RegisterStudentDTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\RegisterStudentDTO.cs",
+              "RelativeDocumentMoniker": "Models\\RegisterStudentDTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\RegisterStudentDTO.cs",
+              "RelativeToolTip": "Models\\RegisterStudentDTO.cs",
+              "ViewState": "AgIAAAUAAAAAaWZmZmYTwBkAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T00:10:46.963Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-03T09:45:22.501Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
+              "Title": "Register.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Register.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\Register.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Register.cshtml",
+              "RelativeToolTip": "Views\\Auth\\Register.cshtml",
+              "ViewState": "AgIAAOcAAAAAAAAAAAAowAcBAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T09:48:28.533Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "About.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Home\\About.cshtml",
               "RelativeDocumentMoniker": "Views\\Home\\About.cshtml",
@@ -184,34 +210,44 @@
               "RelativeToolTip": "Views\\Home\\About.cshtml",
               "ViewState": "AgIAAAcBAAAANzMzM5MwwBUBAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T00:09:36.853Z",
+              "WhenOpened": "2025-11-03T00:09:36.853Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Settings.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Settings.cshtml",
+              "RelativeDocumentMoniker": "Views\\Student\\Settings.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Settings.cshtml",
+              "RelativeToolTip": "Views\\Student\\Settings.cshtml",
+              "ViewState": "AgIAAMkBAAAAnpmZmZnxv+ABAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-10-29T22:37:38.944Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Privacy.cshtml",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Home\\Privacy.cshtml",
-              "RelativeDocumentMoniker": "Views\\Home\\Privacy.cshtml",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Home\\Privacy.cshtml",
-              "RelativeToolTip": "Views\\Home\\Privacy.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-03T00:09:07.198Z",
-              "EditorCaption": ""
+              "DocumentIndex": 7,
+              "Title": "POPIADTO.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\POPIADTO.cs",
+              "RelativeDocumentMoniker": "Models\\POPIADTO.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\POPIADTO.cs",
+              "RelativeToolTip": "Models\\POPIADTO.cs",
+              "ViewState": "AgIAACAAAAAAAAAAAAAowCoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T09:47:17.744Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Login.cshtml",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Login.cshtml",
-              "RelativeDocumentMoniker": "Views\\Auth\\Login.cshtml",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Login.cshtml",
-              "RelativeToolTip": "Views\\Auth\\Login.cshtml",
-              "ViewState": "AgIAAC0AAAAAm5mZmVkqwEUAAAAiAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-02T23:54:27.886Z",
-              "EditorCaption": ""
+              "DocumentIndex": 1,
+              "Title": "StudentController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\StudentController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StudentController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\StudentController.cs",
+              "RelativeToolTip": "Controllers\\StudentController.cs",
+              "ViewState": "AgIAACACAAAAAAAAAAAuwEICAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-01T12:30:46.765Z"
             },
             {
               "$type": "Document",
@@ -221,27 +257,97 @@
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\AuthController.cs",
               "RelativeToolTip": "Controllers\\AuthController.cs",
-              "ViewState": "AgIAABgBAABAzczMzMwwwBYBAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAADkBAAAAAQAAAIAXwD0BAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T23:53:39.016Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T23:53:39.016Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 14,
+              "Title": "Login.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Login.cshtml",
+              "RelativeDocumentMoniker": "Views\\Auth\\Login.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\Login.cshtml",
+              "RelativeToolTip": "Views\\Auth\\Login.cshtml",
+              "ViewState": "AgIAAC0AAAAAm5mZmVkqwEUAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-02T23:54:27.886Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Privacy.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Home\\Privacy.cshtml",
+              "RelativeDocumentMoniker": "Views\\Home\\Privacy.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Home\\Privacy.cshtml",
+              "RelativeToolTip": "Views\\Home\\Privacy.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T00:09:07.198Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MustBeTrueAttribute.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\MustBeTrueAttribute.cs",
+              "RelativeDocumentMoniker": "Models\\MustBeTrueAttribute.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\MustBeTrueAttribute.cs",
+              "RelativeToolTip": "Models\\MustBeTrueAttribute.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T10:09:00.691Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAkAAABgmZmZmZklwBwAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-03T00:10:46.963Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "ResetPassword.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\ResetPassword.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\ResetPassword.cshtml",
               "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\ResetPassword.cshtml",
               "RelativeToolTip": "Views\\Auth\\ResetPassword.cshtml",
-              "ViewState": "AgIAABQAAAAAAAAAAAAQwDQAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAwzczMzMwnwDQAAAAGAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-02T23:52:59.127Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T23:52:59.127Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
+              "Title": "ChangePassword.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\ChangePassword.cshtml",
+              "RelativeDocumentMoniker": "Views\\Tutor\\ChangePassword.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\ChangePassword.cshtml",
+              "RelativeToolTip": "Views\\Tutor\\ChangePassword.cshtml",
+              "ViewState": "AgIAADkAAAAAMzMzMzMrwEEAAABlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-02T23:32:08.134Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "_Layout.cshtml",
+              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\_Layout.cshtml",
+              "RelativeDocumentMoniker": "Views\\Shared\\_Layout.cshtml",
+              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\_Layout.cshtml",
+              "RelativeToolTip": "Views\\Shared\\_Layout.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAPUAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-03T00:11:23.678Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "ForgotPassword.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Auth\\ForgotPassword.cshtml",
               "RelativeDocumentMoniker": "Views\\Auth\\ForgotPassword.cshtml",
@@ -249,12 +355,11 @@
               "RelativeToolTip": "Views\\Auth\\ForgotPassword.cshtml",
               "ViewState": "AgIAAAYAAAAAAAAAAAAYwBUAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-02T23:52:04.583Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T23:52:04.583Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 16,
               "Title": "ChangePasswordDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ChangePasswordDTO.cs",
               "RelativeDocumentMoniker": "Models\\ChangePasswordDTO.cs",
@@ -262,12 +367,11 @@
               "RelativeToolTip": "Models\\ChangePasswordDTO.cs",
               "ViewState": "AgIAAAQAAAAAMzMzM5M4wB4AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T23:51:05.921Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T23:51:05.921Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 17,
               "Title": "Settings.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Settings.cshtml",
               "RelativeDocumentMoniker": "Views\\Tutor\\Settings.cshtml",
@@ -275,25 +379,11 @@
               "RelativeToolTip": "Views\\Tutor\\Settings.cshtml",
               "ViewState": "AgIAADkAAABANDMzMzMrwEUAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-02T23:40:10.217Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T23:40:10.217Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "ChangePassword.cshtml",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\ChangePassword.cshtml",
-              "RelativeDocumentMoniker": "Views\\Tutor\\ChangePassword.cshtml",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\ChangePassword.cshtml",
-              "RelativeToolTip": "Views\\Tutor\\ChangePassword.cshtml",
-              "ViewState": "AgIAAE4AAABAZmZmZiYowH4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-02T23:32:08.134Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 22,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -301,12 +391,11 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAACYAAAAAAAAAAAAUwEcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T19:35:38.583Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-29T19:35:38.583Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 21,
               "Title": "ChatController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\ChatController.cs",
               "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
@@ -314,12 +403,11 @@
               "RelativeToolTip": "Controllers\\ChatController.cs",
               "ViewState": "AgIAACYAAABAmJmZmZkswDQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-01T11:35:16.521Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-01T11:35:16.521Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 20,
               "Title": "Chat.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\Chat.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\Chat.cshtml",
@@ -327,25 +415,11 @@
               "RelativeToolTip": "Views\\Shared\\Chat.cshtml",
               "ViewState": "AgIAAN8DAAAAAAAAAAAAAN8DAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-30T11:25:38.847Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-30T11:25:38.847Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ApiService.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Services\\ApiService.cs",
-              "RelativeDocumentMoniker": "Services\\ApiService.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Services\\ApiService.cs",
-              "RelativeToolTip": "Services\\ApiService.cs",
-              "ViewState": "AgIAAP8DAAAAmJmZmZn3vyYEAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-01T12:36:22.09Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "TutorController.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\TutorController.cs",
               "RelativeDocumentMoniker": "Controllers\\TutorController.cs",
@@ -353,12 +427,11 @@
               "RelativeToolTip": "Controllers\\TutorController.cs",
               "ViewState": "AgIAAGICAAAAXGZmZiYkwGoCAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-01T12:10:28.688Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-01T12:10:28.688Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "Dashboard.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Tutor\\Dashboard.cshtml",
               "RelativeDocumentMoniker": "Views\\Tutor\\Dashboard.cshtml",
@@ -366,12 +439,11 @@
               "RelativeToolTip": "Views\\Tutor\\Dashboard.cshtml",
               "ViewState": "AgIAABkCAAAALAAAAAARwC4CAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-30T11:10:19.194Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-30T11:10:19.194Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 23,
               "Title": "appsettings.Production.json",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\appsettings.Production.json",
               "RelativeDocumentMoniker": "appsettings.Production.json",
@@ -379,12 +451,11 @@
               "RelativeToolTip": "appsettings.Production.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-02T17:20:37.801Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T17:20:37.801Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 24,
               "Title": "_ChatbotWidget.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Shared\\_ChatbotWidget.cshtml",
               "RelativeDocumentMoniker": "Views\\Shared\\_ChatbotWidget.cshtml",
@@ -392,12 +463,11 @@
               "RelativeToolTip": "Views\\Shared\\_ChatbotWidget.cshtml",
               "ViewState": "AgIAAM8AAACAmZmZmfkwwOQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-02T22:00:44.75Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T22:00:44.75Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 25,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\appsettings.Development.json",
               "RelativeDocumentMoniker": "appsettings.Development.json",
@@ -405,12 +475,11 @@
               "RelativeToolTip": "appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-02T17:20:41.99Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T17:20:41.99Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 33,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Chat\\Index.cshtml",
               "RelativeDocumentMoniker": "Views\\Chat\\Index.cshtml",
@@ -422,19 +491,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "StudentController.cs",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\StudentController.cs",
-              "RelativeDocumentMoniker": "Controllers\\StudentController.cs",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Controllers\\StudentController.cs",
-              "RelativeToolTip": "Controllers\\StudentController.cs",
-              "ViewState": "AgIAAA8CAAAAAAAAAAAuwC8CAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-01T12:30:46.765Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 26,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -442,12 +499,11 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-02T16:55:03.291Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-02T16:55:03.291Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 30,
               "Title": "CreateTutor.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\CreateTutor.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\CreateTutor.cshtml",
@@ -459,7 +515,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 27,
               "Title": "Dashboard.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Dashboard.cshtml",
               "RelativeDocumentMoniker": "Views\\Student\\Dashboard.cshtml",
@@ -467,12 +523,11 @@
               "RelativeToolTip": "Views\\Student\\Dashboard.cshtml",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-30T06:15:10.832Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-30T06:15:10.832Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 29,
               "Title": "ChatbotDTOs.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\ChatbotDTOs.cs",
               "RelativeDocumentMoniker": "Models\\ChatbotDTOs.cs",
@@ -484,7 +539,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 28,
               "Title": "BookingDTO.cs",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Models\\BookingDTO.cs",
               "RelativeDocumentMoniker": "Models\\BookingDTO.cs",
@@ -496,7 +551,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 32,
               "Title": "Inbox.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Chat\\Inbox.cshtml",
               "RelativeDocumentMoniker": "Views\\Chat\\Inbox.cshtml",
@@ -508,7 +563,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 31,
               "Title": "Tutors.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Admin\\Tutors.cshtml",
               "RelativeDocumentMoniker": "Views\\Admin\\Tutors.cshtml",
@@ -520,7 +575,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 35,
               "Title": "Profile.cshtml",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Gamification\\Profile.cshtml",
               "RelativeDocumentMoniker": "Views\\Gamification\\Profile.cshtml",
@@ -532,19 +587,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
-              "Title": "Settings.cshtml",
-              "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Settings.cshtml",
-              "RelativeDocumentMoniker": "Views\\Student\\Settings.cshtml",
-              "ToolTip": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\Views\\Student\\Settings.cshtml",
-              "RelativeToolTip": "Views\\Student\\Settings.cshtml",
-              "ViewState": "AgIAAE4AAACAMjMzM/MmwFMAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-10-29T22:37:38.944Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 36,
               "Title": "site.css",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\site.css",
@@ -556,7 +599,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 37,
               "Title": "themes.css",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\css\\themes.css",
               "RelativeDocumentMoniker": "wwwroot\\css\\themes.css",
@@ -568,7 +611,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 34,
               "Title": "theme.js",
               "DocumentMoniker": "C:\\Users\\lab_services_student\\source\\repos\\TutorConnect.WebApp\\wwwroot\\js\\theme.js",
               "RelativeDocumentMoniker": "wwwroot\\js\\theme.js",

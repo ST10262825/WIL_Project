@@ -95,6 +95,37 @@
                             </div>
                         </div>
 
+                        <!-- POPIA Compliance Section -->
+                        <div class="mb-4">
+                            <div class="card border-0" style="background-color: #f8f9fa;">
+                                <div class="card-body">
+                                    <h6 class="card-title mb-3" style="color: #0B2E3D;">
+                                        <i class="fas fa-shield-alt me-2"></i>Privacy & Terms
+                                    </h6>
+
+                                    <!-- POPIA Consent Checkbox -->
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" asp-for="HasAcceptedPOPIA" id="HasAcceptedPOPIA">
+                                        <label class="form-check-label" for="HasAcceptedPOPIA">
+                                            <strong>
+                                                I accept the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms of Service</a>
+                                                and <a href="#" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy Policy</a>
+                                            </strong>
+                                        </label>
+                                        <span asp-validation-for="HasAcceptedPOPIA" class="text-danger d-block mt-1"></span>
+                                    </div>
+
+                                    <!-- Marketing Consent Checkbox -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" asp-for="MarketingConsent" id="MarketingConsent">
+                                        <label class="form-check-label" for="MarketingConsent">
+                                            I agree to receive occasional updates about new features, learning tips, and platform improvements
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn w-100 mb-3" style="background-color: #3BB2B8; color: white; border-radius: 30px;">
                             <i class="fas fa-rocket me-2"></i>Start Learning Journey
                         </button>
@@ -107,6 +138,126 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms of Service Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">TutorConnect Terms of Service</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                <h6>Last Updated: @DateTime.Now.ToString("MMMM dd, yyyy")</h6>
+
+                <h6 class="mt-4">1. Acceptance of Terms</h6>
+                <p>By accessing and using TutorConnect, you accept and agree to be bound by these Terms of Service.</p>
+
+                <h6>2. User Responsibilities</h6>
+                <ul>
+                    <li>Provide accurate and complete registration information</li>
+                    <li>Maintain the security of your account credentials</li>
+                    <li>Use the platform for legitimate educational purposes only</li>
+                    <li>Respect all other users and maintain professional conduct</li>
+                    <li>Adhere to scheduled sessions and provide reasonable notice for cancellations</li>
+                </ul>
+
+                <h6>3. Tutor-Student Relationship</h6>
+                <p>TutorConnect facilitates connections between tutors and students. We are not responsible for the quality of tutoring sessions or learning outcomes.</p>
+
+                <h6>4. Payment and Fees</h6>
+                <p>All tutoring services are provided free of charge to registered VCConnect students.</p>
+
+                <h6>5. Intellectual Property</h6>
+                <p>Learning materials shared on the platform remain the property of their respective owners.</p>
+
+                <h6>6. Termination</h6>
+                <p>We reserve the right to suspend or terminate accounts that violate these terms or engage in misconduct.</p>
+
+                <h6>7. Limitation of Liability</h6>
+                <p>TutorConnect is not liable for any indirect, incidental, or consequential damages arising from platform use.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="privacyModalLabel">POPIA Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                <h6>Last Updated: @DateTime.Now.ToString("MMMM dd, yyyy")</h6>
+                <p class="text-muted">This Privacy Policy complies with the Protection of Personal Information Act (POPIA) of South Africa.</p>
+
+                <h6 class="mt-4">1. Information We Collect</h6>
+                <ul>
+                    <li><strong>Personal Information:</strong> Name, email address, student number, course information</li>
+                    <li><strong>Academic Information:</strong> Course enrollment, tutoring preferences, session history</li>
+                    <li><strong>Usage Data:</strong> Platform interaction, session attendance, learning progress</li>
+                    <li><strong>Communication Data:</strong> Messages between tutors and students</li>
+                </ul>
+
+                <h6>2. How We Use Your Information</h6>
+                <ul>
+                    <li>Facilitate tutor-student matching and session scheduling</li>
+                    <li>Provide personalized learning experiences</li>
+                    <li>Monitor and improve platform performance</li>
+                    <li>Send important notifications about your account</li>
+                    <li>Generate anonymized analytics for institutional reporting</li>
+                </ul>
+
+                <h6>3. Information Sharing</h6>
+                <p>We do not sell your personal information. We may share information with:</p>
+                <ul>
+                    <li>Authorized VCConnect staff for academic support purposes</li>
+                    <li>Tutors you choose to work with (limited to necessary information)</li>
+                    <li>Service providers who assist in platform operation (under strict confidentiality)</li>
+                </ul>
+
+                <h6>4. Data Security</h6>
+                <p>We implement appropriate technical and organizational measures to protect your personal information, including encryption, access controls, and regular security assessments.</p>
+
+                <h6>5. Your Rights Under POPIA</h6>
+                <ul>
+                    <li><strong>Right to Access:</strong> Request a copy of your personal information</li>
+                    <li><strong>Right to Correction:</strong> Update or correct inaccurate information</li>
+                    <li><strong>Right to Deletion:</strong> Request deletion of your personal information</li>
+                    <li><strong>Right to Object:</strong> Object to certain processing activities</li>
+                    <li><strong>Right to Complain:</strong> Lodge a complaint with the Information Regulator</li>
+                </ul>
+
+                <h6>6. Data Retention</h6>
+                <p>We retain your personal information for as long as necessary to provide our services and comply with legal obligations. Student records are typically retained for 5 years after course completion.</p>
+
+                <h6>7. Contact Information</h6>
+                <p>For privacy-related inquiries or to exercise your rights, contact:</p>
+                <p>
+                    <strong>Information Officer:</strong> VCConnect Administration<br>
+                    <strong>Email:</strong> privacy@vcconnect.edu.za<br>
+                    <strong>Phone:</strong> [Institution Phone Number]
+                </p>
+
+                <h6>8. Changes to This Policy</h6>
+                <p>We may update this policy to reflect changes in our practices. We will notify you of any material changes and require renewed consent when necessary.</p>
+
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>POPIA Compliance:</strong> This platform operates in accordance with the Protection of Personal Information Act 4 of 2013. Your privacy rights are protected by South African law.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

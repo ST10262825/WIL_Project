@@ -512,17 +512,33 @@ public async Task<IActionResult> MySessions()
 
 
         [HttpPost]
-        public async Task<IActionResult> DeleteAccount(string confirmation)
+        public async Task<IActionResult> DeleteAccount()
         {
             try
             {
-                if (confirmation?.ToLower() != "delete my account")
+                // Read the raw request body to see what's being sent
+                using var reader = new StreamReader(Request.Body);
+                var requestBody = await reader.ReadToEndAsync();
+                Console.WriteLine($"[DeleteAccount] Request body: {requestBody}");
+
+                // Try to parse the JSON
+                var dto = System.Text.Json.JsonSerializer.Deserialize<DeleteAccountRequestDTO>(requestBody, new System.Text.Json.JsonSerializerOptions
                 {
-                    return Json(new { success = false, message = "Please type 'delete my account' to confirm." });
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (dto?.Confirmation?.ToLower() != "delete my account")
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Please type 'delete my account' exactly to confirm deletion."
+                    });
                 }
 
                 var student = await _apiService.GetStudentByUserIdAsync();
-                if (student == null) return Json(new { success = false, message = "Student not found" });
+                if (student == null)
+                    return Json(new { success = false, message = "Student not found" });
 
                 var success = await _apiService.DeleteAccountAsync();
                 if (success)
@@ -531,22 +547,38 @@ public async Task<IActionResult> MySessions()
                     return Json(new
                     {
                         success = true,
-                        message = "Account deleted successfully.",
+                        message = "Account deleted successfully. Redirecting to login...",
                         redirectUrl = Url.Action("Login", "Auth")
                     });
                 }
                 else
                 {
-                    return Json(new { success = false, message = "Failed to delete account. Please try again." });
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Failed to delete account. Please try again or contact support."
+                    });
                 }
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Error deleting account: " + ex.Message });
+                Console.WriteLine($"[DeleteAccount] Error: {ex.Message}");
+                Console.WriteLine($"[DeleteAccount] Stack: {ex.StackTrace}");
+                return Json(new
+                {
+                    success = false,
+                    message = $"Error deleting account: {ex.Message}"
+                });
             }
         }
 
-       
+        // Add this DTO class to your models
+        public class DeleteAccountRequestDTO
+        {
+            public string Confirmation { get; set; }
+        }
+
+
 
 
 
