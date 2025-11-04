@@ -14,6 +14,14 @@
         public string? PasswordResetToken { get; set; }
         public DateTime? ResetTokenExpires { get; set; }
 
+
+        // POPIA Compliance Fields
+        public bool HasAcceptedPOPIA { get; set; } = false;
+        public DateTime? POPIAAcceptedDate { get; set; }
+        public string? POPIAVersion { get; set; } // Track which version of terms they accepted
+        public bool MarketingConsent { get; set; } = false;
+        public DateTime? LastConsentUpdate { get; set; }
+
         // ✅ ADD THEME PREFERENCE
         public string ThemePreference { get; set; } = "light"; // Default to light theme
 

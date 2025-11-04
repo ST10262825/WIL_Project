@@ -7,5 +7,9 @@
         public string Name { get; set; }
      
         public int CourseId { get; set; }
+
+        // POPIA Consent Fields
+        public bool HasAcceptedPOPIA { get; set; }
+        public bool MarketingConsent { get; set; }
     }
 }

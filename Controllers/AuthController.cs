@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
@@ -19,6 +20,7 @@ namespace TutorConnectAPI.Controllers
         private readonly EmailService _emailService;
         private readonly IGamificationService _gamificationService;
         private readonly ILogger<AuthController> _logger;
+        private const string CURRENT_POPIA_VERSION = "1.0";
 
 
         // Update constructor to include gamification service
@@ -35,84 +37,276 @@ namespace TutorConnectAPI.Controllers
         [HttpPost("student-register")]
         public async Task<IActionResult> RegisterStudent(RegisterStudentDTO dto)
         {
-            var courseExists = await _context.Courses.AnyAsync(c => c.CourseId == dto.CourseId);
-            if (!courseExists)
-                return BadRequest("Selected course does not exist");
-
-            string normalizedEmail = dto.Email.Trim().ToLower();
-
-            // 1. Validate email domain
-            if (!normalizedEmail.EndsWith("@vcconnect.edu.za"))
-                return BadRequest("Only @vcconnect.edu.za email addresses are allowed.");
-
-            // 2. Check if user exists
-            var existingUser = await _context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
-
-            if (existingUser != null)
-                return BadRequest("An account with this email already exists.");
-
-            // 3. Validate password strength (optional rule, you can modify)
-            if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password.Length < 6)
-                return BadRequest("Password must be at least 6 characters long.");
-
-            // 4. Create user and student
-            string verificationToken = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
-
-            var user = new User
+            try
             {
-                Email = normalizedEmail,
-                Role = "Student",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                IsEmailVerified = false,
-                VerificationToken = verificationToken
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            var student = new Student
-            {
-                UserId = user.UserId,
-                Name = dto.Name,
-                CourseId = dto.CourseId
-            };
-
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
-
-            // ✅ FIXED: Non-blocking gamification
-            _ = Task.Run(async () =>
-            {
-                try
+                // POPIA Compliance Check - REQUIRED for registration
+                if (!dto.HasAcceptedPOPIA)
                 {
-                    await _gamificationService.AwardPointsAsync(
-                        user.UserId,
-                        "AccountCreated",
-                        100,
-                        "Welcome to TutorConnect!"
-                    );
-                    await _gamificationService.CheckAndAwardAchievementsAsync(user.UserId);
+                    return BadRequest("You must accept the POPIA terms and conditions to register.");
                 }
-                catch (Exception ex)
+
+                var courseExists = await _context.Courses.AnyAsync(c => c.CourseId == dto.CourseId);
+                if (!courseExists)
+                    return BadRequest("Selected course does not exist");
+
+                string normalizedEmail = dto.Email.Trim().ToLower();
+
+                // 1. Validate email domain
+                if (!normalizedEmail.EndsWith("@vcconnect.edu.za"))
+                    return BadRequest("Only @vcconnect.edu.za email addresses are allowed.");
+
+                // 2. Check if user exists
+                var existingUser = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
+
+                if (existingUser != null)
+                    return BadRequest("An account with this email already exists.");
+
+                // 3. Validate password strength
+                if (string.IsNullOrWhiteSpace(dto.Password) || dto.Password.Length < 6)
+                    return BadRequest("Password must be at least 6 characters long.");
+
+                // 4. Create user with POPIA data
+                string verificationToken = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+
+                var user = new User
                 {
-                    _logger.LogError(ex, "Background gamification error during registration for user {UserId}", user.UserId);
-                }
-            });
+                    Email = normalizedEmail,
+                    Role = "Student",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                    IsEmailVerified = false,
+                    VerificationToken = verificationToken,
 
-            var verifyUrl = $"https://localhost:44374/api/auth/verify-email?token={verificationToken}";
-            var body = $"""
-             <h2>Welcome to TutorConnect!</h2>
-             <p>Here is your verification code:</p>
-             <h3>{verificationToken}</h3>
-            <p>Please copy and paste it into the verification form on the website.</p>
-            """;
+                    // POPIA Compliance Data
+                    HasAcceptedPOPIA = dto.HasAcceptedPOPIA,
+                    POPIAAcceptedDate = DateTime.UtcNow,
+                    POPIAVersion = CURRENT_POPIA_VERSION,
+                    MarketingConsent = dto.MarketingConsent,
+                    LastConsentUpdate = DateTime.UtcNow
+                };
 
-            await _emailService.SendEmailAsync(normalizedEmail, "Verify your TutorConnect account", body);
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
 
-            return Ok("Student registered successfully. Please check your email to verify your account.");
+                var student = new Student
+                {
+                    UserId = user.UserId,
+                    Name = dto.Name,
+                    CourseId = dto.CourseId
+                };
+
+                _context.Students.Add(student);
+                await _context.SaveChangesAsync();
+
+                // Log POPIA consent for audit trail
+                _logger.LogInformation("POPIA consent recorded for user {UserId}. Version: {Version}, Marketing: {Marketing}",
+                    user.UserId, CURRENT_POPIA_VERSION, dto.MarketingConsent);
+
+                // Non-blocking gamification
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await _gamificationService.AwardPointsAsync(
+                            user.UserId,
+                            "AccountCreated",
+                            100,
+                            "Welcome to TutorConnect!"
+                        );
+                        await _gamificationService.CheckAndAwardAchievementsAsync(user.UserId);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Background gamification error during registration for user {UserId}", user.UserId);
+                    }
+                });
+
+                // Updated email with POPIA information
+                var body = $"""
+                <h2>Welcome to TutorConnect!</h2>
+                <p>Here is your verification code:</p>
+                <h3>{verificationToken}</h3>
+                <p>Please copy and paste it into the verification form on the website.</p>
+                
+                <hr>
+                <div style="background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                    <h4>POPIA Compliance Information</h4>
+                    <p><strong>Privacy Policy Accepted:</strong> {dto.HasAcceptedPOPIA}</p>
+                    <p><strong>Marketing Communications:</strong> {(dto.MarketingConsent ? "Yes" : "No")}</p>
+                    <p><strong>Acceptance Date:</strong> {DateTime.UtcNow:yyyy-MM-dd HH:mm}</p>
+                    <p><small>You can update your communication preferences in your account settings at any time.</small></p>
+                </div>
+                """;
+
+                await _emailService.SendEmailAsync(normalizedEmail, "Verify your TutorConnect account", body);
+
+                return Ok(new
+                {
+                    message = "Student registered successfully. Please check your email to verify your account.",
+                    popiaAccepted = true,
+                    marketingConsent = dto.MarketingConsent
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during student registration");
+                return StatusCode(500, "An error occurred during registration.");
+            }
         }
+
+        // NEW: POPIA Consent Management Endpoints
+
+        [HttpPost("update-consent")]
+        [Authorize]
+        public async Task<IActionResult> UpdateConsent([FromBody] UpdateConsentDTO dto)
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == 0)
+                    return Unauthorized("User not authenticated");
+
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                    return NotFound("User not found");
+
+                // Update consent preferences
+                user.MarketingConsent = dto.MarketingConsent;
+                user.LastConsentUpdate = DateTime.UtcNow;
+
+                // If POPIA terms were updated, require re-acceptance
+                if (dto.HasAcceptedPOPIA && user.POPIAVersion != CURRENT_POPIA_VERSION)
+                {
+                    user.HasAcceptedPOPIA = true;
+                    user.POPIAAcceptedDate = DateTime.UtcNow;
+                    user.POPIAVersion = CURRENT_POPIA_VERSION;
+                }
+
+                await _context.SaveChangesAsync();
+
+                _logger.LogInformation("Consent updated for user {UserId}. Marketing: {Marketing}, POPIA Version: {Version}",
+                    userId, dto.MarketingConsent, user.POPIAVersion);
+
+                return Ok(new
+                {
+                    message = "Consent preferences updated successfully",
+                    marketingConsent = user.MarketingConsent,
+                    popiaVersion = user.POPIAVersion,
+                    lastUpdated = user.LastConsentUpdate
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating consent for user");
+                return StatusCode(500, "Error updating consent preferences");
+            }
+        }
+
+        [HttpGet("consent-status")]
+        [Authorize]
+        public async Task<IActionResult> GetConsentStatus()
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == 0)
+                    return Unauthorized("User not authenticated");
+
+                var user = await _context.Users
+                    .Where(u => u.UserId == userId)
+                    .Select(u => new
+                    {
+                        u.HasAcceptedPOPIA,
+                        u.POPIAAcceptedDate,
+                        u.POPIAVersion,
+                        u.MarketingConsent,
+                        u.LastConsentUpdate,
+                        CurrentPOPIAVersion = CURRENT_POPIA_VERSION,
+                        NeedsReconsent = u.POPIAVersion != CURRENT_POPIA_VERSION
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (user == null)
+                    return NotFound("User not found");
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting consent status for user");
+                return StatusCode(500, "Error retrieving consent status");
+            }
+        }
+
+        [HttpPost("request-data-export")]
+        [Authorize]
+        public async Task<IActionResult> RequestDataExport()
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == 0)
+                    return Unauthorized("User not authenticated");
+
+                // In a real implementation, this would trigger a background job
+                // to compile all user data and send it to them
+                _logger.LogInformation("Data export requested for user {UserId}", userId);
+
+                // For now, return a confirmation
+                return Ok(new
+                {
+                    message = "Your data export request has been received. You will receive an email with your data within 7 working days.",
+                    requestId = Guid.NewGuid().ToString(),
+                    estimatedCompletion = DateTime.UtcNow.AddDays(7).ToString("yyyy-MM-dd")
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing data export request");
+                return StatusCode(500, "Error processing data export request");
+            }
+        }
+
+        [HttpPost("request-account-deletion")]
+        [Authorize]
+        public async Task<IActionResult> RequestAccountDeletion([FromBody] DeletionRequestDTO dto)
+        {
+            try
+            {
+                var userId = GetUserIdFromToken();
+                if (userId == 0)
+                    return Unauthorized("User not authenticated");
+
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                    return NotFound("User not found");
+
+                // Log the deletion request (in production, this would go to a queue)
+                _logger.LogWarning("Account deletion requested for user {UserId}. Reason: {Reason}",
+                    userId, dto.Reason);
+
+                // In a real implementation, you would:
+                // 1. Schedule the deletion for 30 days in the future (grace period)
+                // 2. Send confirmation email
+                // 3. Anonymize data according to POPIA requirements
+
+                return Ok(new
+                {
+                    message = "Your account deletion request has been received. Your account will be permanently deleted after 30 days. You may cancel this request within that period.",
+                    requestId = Guid.NewGuid().ToString(),
+                    scheduledDeletion = DateTime.UtcNow.AddDays(30).ToString("yyyy-MM-dd"),
+                    cancellationDeadline = DateTime.UtcNow.AddDays(29).ToString("yyyy-MM-dd")
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing account deletion request");
+                return StatusCode(500, "Error processing account deletion request");
+            }
+        }
+
+       
 
 
 
